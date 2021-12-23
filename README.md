@@ -8,6 +8,7 @@
     <li>JUnit: 4.13.1</li>
     <li>JQuery: 3.6.0</li>
     <li>Oracle SQL Developer: 20.4.1</li>
+    <li>JPA: 2.6.0</li>
     <li>Apache Tomcat: 9.0.43</li>
     <li>STS: 3.9.11</li>
   </ul>
