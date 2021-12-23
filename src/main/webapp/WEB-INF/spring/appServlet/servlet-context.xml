@@ -12,6 +12,20 @@
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
 
+	<!-- Tiles -->
+	<beans:bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<beans:property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView" />
+		<beans:property name="order" value="1" />
+	</beans:bean>
+	
+	<beans:bean class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<beans:property name="definitions">
+			<beans:list>
+				<beans:value>/WEB-INF/tiles/tiles-config.xml</beans:value>
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
 
@@ -19,9 +33,14 @@
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
+		<beans:property name="order" value="2" />
 	</beans:bean>
 	
 	<context:component-scan base-package="com.revervation.controller" />
+	
+	<resources location="/resources/**" mapping="/resources"></resources>
+	
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"></beans:bean>
 	
 	
 	
