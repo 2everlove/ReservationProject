@@ -36,7 +36,7 @@
 		<beans:property name="order" value="2" />
 	</beans:bean>
 	
-	<context:component-scan base-package="com.revervation.controller" />
+	<context:component-scan base-package="com.reservation.controller" />
 	
 	<resources location="/resources/**" mapping="/resources"></resources>
 	
