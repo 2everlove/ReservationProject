@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 import lombok.*;
 
@@ -15,12 +16,15 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @ToString(exclude = "roomInfo")
+@SequenceGenerator(
+		name = "RESERVE_SEQ_GENERATOR",
+		sequenceName = "RESERVE_SEQ",
+		initialValue = 1, allocationSize = 1)
 public class Reserve extends BaseEntity{
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RESERVE_SEQ_GENERATOR")
 	private int no;
 	
 	private String name;
@@ -29,7 +33,7 @@ public class Reserve extends BaseEntity{
 	private String child;
 	private String startDate;
 	private String endDate;
-	private String option;
+	private String options;
 	private String paymentFlg;
 	private int totalCost;
 	private String cancelFlg;

@@ -25,14 +25,15 @@ public class ConsultServiceTests {
 	//@Transactional
 	@Test
 	public void wrtieTest() throws Exception {
-		Consultation consultation = new Consultation();
-		consultation.setName("testName");
-		consultation.setContents("testC");
-		consultation.setTitle("testT");
-		consultation.setDepth(0);
-		consultation.setGrno(1);
-		consultation.setGrgrod(2);
-		consultation.setPasswd("1234");
+		Consultation consultation = Consultation.builder()
+				.name("tester")
+				.depth(0)
+				.grgrod(2)
+				.grno(1)
+				.title("testT")
+				.contents("testC")
+				.passwd("1234")
+				.build();
 		System.out.println("==============================================================");
 		System.out.println("=============================================================="+consultation);
 		int saveNo = consultationService.write(consultation);
