@@ -48,16 +48,16 @@ public class ConsultReposiTests {
 	
 	@Test
 	public void testPagingQuery() {
-		Pageable pageable = new PageRequest(0, 10, Sort.Direction.DESC, "no");
+		Pageable pageable = new PageRequest(0, 10, Sort.Direction.DESC, "no"); //page, size, sort, sort baseProperty
 		QConsultation qConsultation = QConsultation.consultation;
-		String keyword = "1";
+		String keyword = "t";
 		BooleanBuilder builder = new BooleanBuilder();
 		BooleanExpression expression = qConsultation.title.contains(keyword);
 		builder.and(expression);
 		Page<Consultation> result = consultationRepository.findAll(builder, pageable);
 		
 		result.getContent().stream().forEach(i -> {
-			System.out.println(i);
+			System.out.println(i+" "+i.getCreatedAt());
 		});
 	}
 

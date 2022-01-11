@@ -12,9 +12,8 @@
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<tx:annotation-driven />
 	
-	
 	<jpa:repositories base-package="com.reservation.repository" entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager"/>
-	
+	<!-- auditing -->
 	
 	<context:component-scan base-package="com.reservation.service, com.reservation.repository"/>
 	
