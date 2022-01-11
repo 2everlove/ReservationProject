@@ -4,6 +4,14 @@ target/generated-sources
 /.metadata/
 .metadata
 
+.project
+
+.springBeans
+
+.classpath
+
+.factorypath
+
 bin/
 
 tmp/
