@@ -1,8 +1,5 @@
 package com.reservation.entity;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,11 +23,6 @@ import lombok.ToString;
 		name = "CONSULTATION_SEQ_GENERATOR",
 		sequenceName = "CONSULTATION_SEQ",
 		initialValue = 1, allocationSize = 1)
-@AttributeOverrides({
-	@AttributeOverride(name="createdAt", column = @Column(name="createdAt")),
-	@AttributeOverride(name="updatedAt", column = @Column(name="updatedAt")),
-	@AttributeOverride(name="deleteFlg", column = @Column(name="deleteFlg")),
-})
 public class Consultation extends BaseEntity{
 	
 	@Id
