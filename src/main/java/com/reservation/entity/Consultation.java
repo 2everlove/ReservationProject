@@ -45,5 +45,6 @@ public class Consultation extends BaseEntity{
 	private String name;
 	private String passwd;
 	private String lockFlg;
+	private String deleteFlg;
 	
 }

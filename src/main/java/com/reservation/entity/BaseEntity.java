@@ -19,7 +19,7 @@ public class BaseEntity {
     @Column(updatable = false) // (2)
     private Date createdAt;
     private Date updatedAt;
-    private String deleteFlg;
+    
 
     @PrePersist // (3)
     public void before() {

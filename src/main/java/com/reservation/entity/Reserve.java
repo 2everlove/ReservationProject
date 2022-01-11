@@ -41,6 +41,7 @@ public class Reserve extends BaseEntity{
 	private String bankbranchcde;
 	private String bankNo;
 	private int buildCd;
+	private String deleteFlg;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private RoomInfo roomInfo;

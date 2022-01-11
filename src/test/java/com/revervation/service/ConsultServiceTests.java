@@ -1,14 +1,14 @@
 package com.revervation.service;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.reservation.dto.ConsultationDTO;
+import com.reservation.dto.PageRequestDTO;
+import com.reservation.dto.PageResultDTO;
 import com.reservation.entity.Consultation;
 import com.reservation.repository.ConsultationRepository;
 import com.reservation.service.ConsultationService;
@@ -25,7 +25,7 @@ public class ConsultServiceTests {
 	//@Transactional
 	@Test
 	public void wrtieTest() throws Exception {
-		Consultation consultation = Consultation.builder()
+		ConsultationDTO consultationDTO = ConsultationDTO.builder()
 				.name("tester")
 				.depth(0)
 				.grgrod(2)
@@ -35,9 +35,32 @@ public class ConsultServiceTests {
 				.passwd("1234")
 				.build();
 		System.out.println("==============================================================");
-		System.out.println("=============================================================="+consultation);
-		int saveNo = consultationService.write(consultation);
+		System.out.println("=============================================================="+consultationDTO);
+		int saveNo = consultationService.wrtiteConsultation(consultationDTO);
 		System.out.println("=============================================================="+saveNo);
 		//assertEquals(consultation, consultationRepository.findOne(saveNo));
+	}
+	
+	@Test
+	public void testPagingOriginList() {
+		PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(2).size(10).build();
+		PageResultDTO<ConsultationDTO, Consultation> resultDTO = consultationService.getList(pageRequestDTO);
+		for(ConsultationDTO dto : resultDTO.getDtoList()) {
+			System.out.println(dto);
+		}
+	}
+	
+	@Test
+	public void testPagingList() {
+		PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(2).size(10).build();
+		PageResultDTO<ConsultationDTO, Consultation> resultDTO = consultationService.getList(pageRequestDTO);
+		System.out.println("PREV: "+resultDTO.isPrev());
+		System.out.println("NEXT: "+resultDTO.isNext());
+		System.out.println("TOTAL: "+resultDTO.getTotalPage());
+		for(ConsultationDTO dto : resultDTO.getDtoList()) {
+			System.out.println(dto);
+		}
+		System.out.println("=============");
+		resultDTO.getPageList().forEach(i -> System.out.println(i));
 	}
 }

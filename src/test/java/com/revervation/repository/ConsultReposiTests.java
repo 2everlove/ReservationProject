@@ -48,7 +48,7 @@ public class ConsultReposiTests {
 	
 	@Test
 	public void testPagingQuery() {
-		Pageable pageable = new PageRequest(0, 10, Sort.Direction.DESC, "no"); //page, size, sort, sort baseProperty
+		Pageable pageable = new PageRequest(0, 10, new Sort(Direction.DESC, "no")); //page, size, sort, sort baseProperty
 		QConsultation qConsultation = QConsultation.consultation;
 		String keyword = "t";
 		BooleanBuilder builder = new BooleanBuilder();

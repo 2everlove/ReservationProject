@@ -34,6 +34,7 @@ public class RoomInfo extends BaseEntity{
 	private String images;
 	private String colorCd;
 	private int buildCd;
+	private String deleteFlg;
 
 	
 }

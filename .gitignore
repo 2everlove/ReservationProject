@@ -1,6 +1,7 @@
 
 target/m2e-wtp/web-resources/META-INF/maven/jmp.spring/ojdbc/pom.properties
 target/generated-sources
+target/classes
 /.metadata/
 .metadata
 

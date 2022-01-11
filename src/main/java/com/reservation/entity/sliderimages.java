@@ -28,5 +28,6 @@ public class sliderimages extends BaseEntity{
 	private String filename;
 	private String sortNo;
 	private String Activity;
+	private String deleteFlg;
 	
 }

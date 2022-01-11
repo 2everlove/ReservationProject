@@ -28,6 +28,7 @@ public class Notice extends BaseEntity{
 	private String title;
 	private String contents;
 	private int buildCd;
+	private String deleteFlg;
 
 	
 }
