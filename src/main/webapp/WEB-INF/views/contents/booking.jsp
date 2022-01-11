@@ -4,18 +4,33 @@
 <script type="text/javascript" src="/resources/js/calendar.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	calendarMaker($("#calendarForm"),new Date());
+	//calendarMaker($("#calendarForm"),new Date());
 	
 	$(".btn-calender-display").click(function(){
-		$("#calendarForm").toggle("fast");
+		$("#calendar").toggle("fast");
 		$(".btn-calender-display").toggle();
 	});
 });
 
 	
 </script>
+<script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth'
+        });
+        calendar.render();
+      });
+
+    </script>
 <body>
-	<div id="calendarForm"></div>
-	<button class="btn-calender-display">Hide</button>
-	<button class="btn-calender-display" style="display: none">Show</button>
+	<!-- <div id="calendarForm"></div> -->
+	<div class="container">
+		<div id='calendar'></div>
+		<button class="btn-calender-display">Hide</button>
+		<button class="btn-calender-display" style="display: none">Show</button>
+	</div>
+	
 </body>
