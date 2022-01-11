@@ -1,2 +1,25 @@
 
 target/m2e-wtp/web-resources/META-INF/maven/jmp.spring/ojdbc/pom.properties
+target/generated-sources
+/.metadata/
+.metadata
+
+bin/
+
+tmp/
+
+*.tmp
+
+*.bak
+
+*.swp
+
+*~.nib
+
+local.properties
+
+.settings/
+
+.loadpath
+
+.recommenders
