@@ -18,11 +18,12 @@
 	.navbar__outer-area{
 		display: flex;
 		justify-content: space-evenly;
+		align-items: center;
 	}
 </style>
-<header id="header">
+<header class="justify-content-center py-3 mb-4 border-bottom" id="header">
 	<div class="work_area">
-		<h1>Header</h1>
+		<div class="b-example-divider"></div>
 		<nav>
 			<div class="navbar__outer-area">
 				<div>
@@ -30,8 +31,8 @@
 						<i class="fas fa-hotel" id="navbar__log-bar"></i>
 					</a>
 				</div>
-					<nav class="navbar navbar-expand-sm bg-light">
-						<ul class="navbar-nav">
+					<nav class="nav navbar" style="flex-direction: column; width: 50%; align-items: normal; flex-wrap: nowrap;">
+						<ul class="nav nav-pills nav-justified">
 							<li class="nav-item"><a class="nav-link" href="#">お知らせ</a></li>
 							<li class="nav-item"><a class="nav-link" href="#">予約</a></li>
 							<li class="nav-item"><a class="nav-link" href="#">相談</a></li>
