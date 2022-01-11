@@ -16,6 +16,10 @@
 	
 	<!--CDN 링크 -->
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"	rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css"	rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js"></script>
+	
 	<!-- icon api -->
 	<script src="https://kit.fontawesome.com/e8e06f0e5f.js" crossorigin="anonymous"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
