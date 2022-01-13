@@ -4,61 +4,32 @@
 	.work_area {
 		margin: 0px auto;
 	}
+	a{
+		color: black;
+	}
 	ul{
 		list-style: none;
-	}
-	a {
-		color: black;
-		text-decoration: none;
 	}
 	#navbar__log-bar {
 		font-size: 50px;
 		color: #ff7f50;
 	}
-	.navbar__outer-area{
-		display: flex;
-		justify-content: space-evenly;
-		align-items: center;
-	}
-	.nav-item:hover {
-		background-color: #dfe6e9
-	}
+	
 </style>
-<header class="justify-content-center py-3 mb-4 border-bottom" id="header">
-	<div class="work_area">
-		<div class="b-example-divider"></div>
-		<nav>
-			<div class="navbar__outer-area">
-				<div>
-					<a href="/main">
-						<i class="fas fa-hotel" id="navbar__log-bar"></i>
-					</a>
-				</div>
-					<nav style="flex-direction: column; width: 50%; align-items: normal; flex-wrap: nowrap;">
-						<ul class="nav nav-pills nav-justified">
-							<li role="presentation" class="nav-item"><a class="nav-link" href="#">お知らせ</a></li>
-							<li role="presentation" class="nav-item"><a class="nav-link" href="/booking">予約</a></li>
-							<li role="presentation" class="nav-item"><a class="nav-link" href="#">相談</a></li>
-						</ul>
-					</nav>
-				<div class="dropdown">
-				  <a class="btn btn-secondary data-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-				    <i class="fas fa-bars"></i>
-					<i class="fas fa-user"></i>	
-				  </a>
-				
-				  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-				    <li><a class="dropdown-item" href="#">Reservation</a></li>
-				    <li><a class="dropdown-item" href="#">Another action</a></li>
-				    <li><a class="dropdown-item" href="#">Something else here</a></li>
-				    <li><a class="dropdown-item" href="#">Action</a></li>
-				    <li><a class="dropdown-item" href="#">Another action</a></li>
-				    <li><hr class="dropdown-divider"></li>
-				    <li><a class="dropdown-item" href="#">Login</a></li>
-				    <li><a class="dropdown-item" href="#">Logout</a></li>
-				  </ul>
-				</div>
-			</div>
-		</nav>
-	</div>
-</header>
+
+	<body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="/main"><i class="fas fa-hotel" id="navbar__log-bar"></i></a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto my-2 my-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="/notice">お知らせ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/booking">予約</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/consultation">相談</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>

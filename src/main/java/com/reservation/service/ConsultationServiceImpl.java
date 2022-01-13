@@ -14,15 +14,17 @@ import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
 import com.reservation.entity.Consultation;
 import com.reservation.repository.ConsultationRepository;
+import com.reservation.repository.RoomInfoRepository;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Service
 @Log4j2
+@RequiredArgsConstructor
 public class ConsultationServiceImpl implements ConsultationService {
-
-	@Autowired
-	ConsultationRepository consultationRepository;
+	
+	private final ConsultationRepository consultationRepository;
 	
 	@Override
 	public Long wrtiteConsultation(ConsultationDTO dto) {

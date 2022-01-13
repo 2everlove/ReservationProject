@@ -16,14 +16,15 @@ import com.reservation.dto.RoomInfoDTO;
 import com.reservation.entity.RoomInfo;
 import com.reservation.repository.RoomInfoRepository;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Service
 @Log4j2
+@RequiredArgsConstructor
 public class RoomInfoServiceImpl implements RoomInfoService {
 	
-	@Autowired
-	RoomInfoRepository RoomInfoRepository;
+	private final RoomInfoRepository RoomInfoRepository;
 
 	@Override
 	public PageResultDTO<RoomInfoDTO, RoomInfo> getList(PageRequestDTO requestDTO) {

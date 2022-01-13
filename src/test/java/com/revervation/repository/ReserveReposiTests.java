@@ -2,6 +2,9 @@ package com.revervation.repository;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
@@ -80,6 +83,17 @@ public class ReserveReposiTests {
 		result.getContent().stream().forEach(i -> {
 			System.out.println(i+" "+i.getCreatedAt());
 		});
+	}
+	
+	@Test
+	public void getListTests() {
+		Calendar cal = Calendar.getInstance();
+		cal.add(cal.MONTH, 1);
+		
+		List<Object[]> result = reserveRepository.getDateList(cal);
+		for(Object[] objects : result) {
+			System.out.println(Arrays.toString(objects));
+		}
 	}
 
 }

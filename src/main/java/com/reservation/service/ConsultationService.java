@@ -15,6 +15,7 @@ public interface ConsultationService {
 	
 	default Consultation dtoToEntity(ConsultationDTO dto) {
 		Consultation entity = Consultation.builder()
+				.no(dto.getNo())
 				.grno(dto.getGrno())
 				.grgrod(dto.getGrgrod())
 				.depth(dto.getDepth())

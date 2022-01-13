@@ -32,6 +32,7 @@ public interface RoomInfoService {
 	
 	default RoomInfo dtoToEntity(RoomInfoDTO dto) {
 		RoomInfo entity = RoomInfo.builder()
+				.no(dto.getNo())
 				.roomNum(dto.getRoomNum())
 				.roomTitle(dto.getRoomTitle())
 				.max(dto.getMax())

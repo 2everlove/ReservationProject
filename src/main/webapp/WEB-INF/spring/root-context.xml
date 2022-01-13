@@ -42,7 +42,6 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 	
-	
 	<!-- JPA 예외를 스프링 예외로 변환 -->
     <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 

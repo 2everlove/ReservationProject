@@ -1,7 +1,11 @@
 package com.revervation.repository;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.IntStream;
 
 import org.junit.Test;
@@ -14,15 +18,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.reservation.entity.Consultation;
-import com.reservation.entity.QConsultation;
 import com.reservation.entity.QRoomInfo;
 import com.reservation.entity.RoomInfo;
-import com.reservation.repository.ConsultationRepository;
 import com.reservation.repository.RoomInfoRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -41,9 +41,9 @@ public class RoomReposiTests {
 					.max(5)
 					.adultCost(20000L)
 					.childCost(10000L)
-					.explanation("good"+i)
+					.explanation("good"+(int)(Math.random()*10)+i)
 					.images("/save/"+i+"local")
-					.colorCd("#ffff"+i)
+					.colorCd("#ffff"+(int)(Math.random()*4)+i)
 					.deleteFlg("0")
 					.buildCd(7)
 					.build();
@@ -58,6 +58,17 @@ public class RoomReposiTests {
 		PageRequest pageRequest = new PageRequest(0, 50, new Sort(Direction.DESC, "no"));
 		Page<Object[]> result = roomInfoRepository.getListPage(pageRequest);
 		for(Object[] objects : result.getContent()) {
+			System.out.println(Arrays.toString(objects));
+		}
+	}
+	
+	@Test
+	public void getListTests() {
+		Calendar cal = Calendar.getInstance();
+		cal.add(cal.MONTH, 1);
+		
+		List<Object[]> result = roomInfoRepository.getDateList(cal);
+		for(Object[] objects : result) {
 			System.out.println(Arrays.toString(objects));
 		}
 	}

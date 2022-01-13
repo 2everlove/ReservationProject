@@ -4,28 +4,85 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <link rel="stylesheet" href="/resources/css/calendar.css">
 <script type="text/javascript" src="/resources/js/calendar.js"></script>
-<script type="text/javascript">
+<script type="text/javascript" async>
 $(document).ready(function(){
+	let amount = 0;
 	//calendarMaker($("#calendarForm"),new Date());
 	
-	$(".btn-calender-display").click(function(){
+	/* $(".btn-calender-display").click(function(){
 		$("#calendar").toggle("fast");
 		$(".btn-calender-display").toggle();
 	});
-	$('.roomList').on('click', '')
+	$('.roomList').on('click', '') */
+	
+	
+	//getDateList
+	checkReserve(amount)
+	
+	$('#calendar').click(function(e){
+		if(e.target == document.querySelector('button[title="Previous month"]') || e.target == document.querySelector('span[class="fc-icon fc-icon-chevron-left"]')){
+			amount = amount - 1;
+			checkReserve(amount);
+		} else if(e.target == document.querySelector('button[title="Next month"]') || e.target == document.querySelector('span[class="fc-icon fc-icon-chevron-right"]')){
+			amount = amount + 1;
+			checkReserve(amount)
+		} else if(e.target == document.querySelector('button[title="This month"]')){
+			amount = 0;
+			checkReserve(amount)
+		}
+		console.log(amount)
+		
+  	});
+	
 });
 
-	
-</script>
-<script>
+function checkReserve(amount) {
+	var today = new Date();
 
-      document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
+	var year = today.getFullYear();
+	var month = Number(('0' + (today.getMonth() + 1 + amount)).slice(-2));
+	if(month == 0 || month > 13|| amount<0) {
+	console.log(month)
+		let i = 0;
+		if(month % 13){
+			i--;
+		}
+		year = year-1-i;
+		month = 13+amount;
+	}
+	var day = ('0' + today.getDate()).slice(-2);
+
+	var dateString = year + '-' + ('0'+month).slice(-2)  + '-' + day;
+
+	console.log(dateString);
+	$.getJSON('/api/checkReserve/'+amount ,function(arr){
+		let jsonList = new Array();
+       	  $.each(arr, function(i, data){
+			let json = new Object();
+       		json.title = data[1].roomNo.roomTitle;
+       		json.start = moment(data[1].startDate).format('YYYY-MM-DD');
+       		json.end = moment(data[1].endDate).format('YYYY-MM-DD');
+       		json.color =data[0].colorCd;
+     		jsonList.push(json);
+       	  });
+       	var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth'
-        });
+          initialView: 'dayGridMonth',
+          initialDate: dateString,
+          events: jsonList,
+       });
+		
         calendar.render();
-      });
+	});
+}
+
+</script>
+<script defer>
+      $(document).ready(function(){
+    	  
+      })
+      
+     
       
 
 
@@ -52,10 +109,13 @@ $(document).ready(function(){
 
 
 
-    </script>
+</script>
 <body>
 	<!-- <div id="calendarForm"></div> -->
+	<div class="bg-dark " style="height: 94px"></div>
+	<section class="masthead">
 	<div class="container">
+	<div style="padding-top: 80px;">
 	<div class="d-flex justify-content-around mb-4">
 		<label>部屋番号<select>
 			<option value="">---</option>
@@ -69,7 +129,7 @@ $(document).ready(function(){
 		<label></label><input type="text" name="keyword" ></label>
 	</div>
 		<div class="d-flex justify-content-center mb-3" style="flex-direction: row; align-items: center">
-			<div class="col-lg-7"> 
+			<div class="col-lg-9"> 
 					<div id='calendar'></div>
 		<!-- 			<button class="btn-calender-display">Hide</button>
 					<button class="btn-calender-display" style="display: none">Show</button>  -->		
@@ -77,7 +137,7 @@ $(document).ready(function(){
 		</div>
 		<br/>
 	
-		
+		</div>
 	</div>
-	
+	</section>
 </body>

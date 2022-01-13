@@ -2,6 +2,8 @@ package com.reservation.dto;
 
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +25,7 @@ public class RoomInfoDTO {
 	private String colorCd;
 	private int buildCd;
 	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createdAt, updatedAt;
     private String deleteFlg;
 }
