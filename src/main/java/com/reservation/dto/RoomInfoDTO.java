@@ -1,6 +1,6 @@
 package com.reservation.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,17 +12,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class RoomInfoDTO {
-	private int no;
+	private Long no;
 	private String roomNum;
 	private String roomTitle;
 	private int max;
-	private int adultCost;
-	private int childCost;
-	private String explnation;
+	private Long adultCost;
+	private Long childCost;
+	private String explanation;
 	private String images;
 	private String colorCd;
 	private int buildCd;
 	
-	private Date createdAt, updatedAt;
+	private LocalDateTime createdAt, updatedAt;
     private String deleteFlg;
 }

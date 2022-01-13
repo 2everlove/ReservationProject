@@ -1,5 +1,6 @@
 package com.revervation.repository;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.stream.IntStream;
 
@@ -19,42 +20,57 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.reservation.entity.Consultation;
 import com.reservation.entity.QConsultation;
+import com.reservation.entity.QRoomInfo;
+import com.reservation.entity.RoomInfo;
 import com.reservation.repository.ConsultationRepository;
+import com.reservation.repository.RoomInfoRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
-public class ConsultReposiTests {
+public class RoomReposiTests {
 	
 	@Autowired
-	private ConsultationRepository consultationRepository;
+	private RoomInfoRepository roomInfoRepository;
 
 	@Test
 	public void test() {
-		IntStream.range(1, 100).forEach(i -> {
-			Consultation consultation = Consultation.builder()
-					.name("tester"+i)
-					.depth(0)
-					.grgrod(2L)
-					.grno(1L)
-					.title("testT"+i)
-					.contents("testC")
-					.passwd("1234")
+		IntStream.range(1, 6).forEach(i -> {
+			RoomInfo roominfo = RoomInfo.builder()
+					.roomNum("70"+i)
+					.roomTitle("Title"+i)
+					.max(5)
+					.adultCost(20000L)
+					.childCost(10000L)
+					.explanation("good"+i)
+					.images("/save/"+i+"local")
+					.colorCd("#ffff"+i)
+					.deleteFlg("0")
+					.buildCd(7)
 					.build();
-			System.out.println(consultation.toString());
-			consultationRepository.save(consultation);
+			System.out.println(roominfo.toString());
+			roomInfoRepository.save(roominfo);
 		});
 		
 	}
 	
 	@Test
+	public void getListPageTests() {
+		PageRequest pageRequest = new PageRequest(0, 50, new Sort(Direction.DESC, "no"));
+		Page<Object[]> result = roomInfoRepository.getListPage(pageRequest);
+		for(Object[] objects : result.getContent()) {
+			System.out.println(Arrays.toString(objects));
+		}
+	}
+	
+	@Test
 	public void testPagingQuery() {
 		Pageable pageable = new PageRequest(0, 10, new Sort(Direction.DESC, "no")); //page, size, sort, sort baseProperty
-		QConsultation qConsultation = QConsultation.consultation;
+		QRoomInfo qRoomInfo = QRoomInfo.roomInfo;
 		String keyword = "t";
 		BooleanBuilder builder = new BooleanBuilder();
-		BooleanExpression expression = qConsultation.title.contains(keyword);
+		BooleanExpression expression = qRoomInfo.roomTitle.contains(keyword);
 		builder.and(expression);
-		Page<Consultation> result = consultationRepository.findAll(builder, pageable);
+		Page<RoomInfo> result = roomInfoRepository.findAll(builder, pageable);
 		
 		result.getContent().stream().forEach(i -> {
 			System.out.println(i+" "+i.getCreatedAt());

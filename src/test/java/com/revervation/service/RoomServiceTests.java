@@ -9,18 +9,19 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.reservation.dto.ConsultationDTO;
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
+import com.reservation.dto.RoomInfoDTO;
 import com.reservation.entity.Consultation;
+import com.reservation.entity.RoomInfo;
 import com.reservation.repository.ConsultationRepository;
 import com.reservation.service.ConsultationService;
+import com.reservation.service.RoomInfoService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
-public class ConsultServiceTests {
+public class RoomServiceTests {
 
 	@Autowired
-	ConsultationService consultationService;
-	@Autowired
-	ConsultationRepository consultationRepository;
+	RoomInfoService roomInfoService;
 	
 	//@Transactional
 	@Test
@@ -36,16 +37,16 @@ public class ConsultServiceTests {
 				.build();
 		System.out.println("==============================================================");
 		System.out.println("=============================================================="+consultationDTO);
-		Long saveNo = consultationService.wrtiteConsultation(consultationDTO);
-		System.out.println("=============================================================="+saveNo);
+		//int saveNo = roomInfoService.wrtiteConsultation(consultationDTO);
+		//System.out.println("=============================================================="+saveNo);
 		//assertEquals(consultation, consultationRepository.findOne(saveNo));
 	}
 	
 	@Test
 	public void testPagingOriginList() {
-		PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(2).size(10).build();
-		PageResultDTO<ConsultationDTO, Consultation> resultDTO = consultationService.getList(pageRequestDTO);
-		for(ConsultationDTO dto : resultDTO.getDtoList()) {
+		PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(1).size(10).build();
+		PageResultDTO<RoomInfoDTO, RoomInfo> resultDTO = roomInfoService.getList(pageRequestDTO);
+		for(RoomInfoDTO dto : resultDTO.getDtoList()) {
 			System.out.println(dto);
 		}
 	}
@@ -53,11 +54,11 @@ public class ConsultServiceTests {
 	@Test
 	public void testPagingList() {
 		PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(1).size(10).build();
-		PageResultDTO<ConsultationDTO, Consultation> resultDTO = consultationService.getList(pageRequestDTO);
+		PageResultDTO<RoomInfoDTO, RoomInfo> resultDTO = roomInfoService.getList(pageRequestDTO);
 		System.out.println("PREV: "+resultDTO.isPrev());
 		System.out.println("NEXT: "+resultDTO.isNext());
 		System.out.println("TOTAL: "+resultDTO.getTotalPage());
-		for(ConsultationDTO dto : resultDTO.getDtoList()) {
+		for(RoomInfoDTO dto : resultDTO.getDtoList()) {
 			System.out.println(dto);
 		}
 		System.out.println("=============");

@@ -8,14 +8,13 @@ import com.reservation.entity.Consultation;
 public interface ConsultationService {
 	
 	//상담글 작성
-	public int wrtiteConsultation(ConsultationDTO dto);
+	public Long wrtiteConsultation(ConsultationDTO dto);
 	
 	//페이징 처리
 	PageResultDTO<ConsultationDTO, Consultation> getList(PageRequestDTO requestDTO);
 	
 	default Consultation dtoToEntity(ConsultationDTO dto) {
 		Consultation entity = Consultation.builder()
-				.no(dto.getNo())
 				.grno(dto.getGrno())
 				.grgrod(dto.getGrgrod())
 				.depth(dto.getDepth())

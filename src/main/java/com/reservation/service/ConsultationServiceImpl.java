@@ -19,14 +19,13 @@ import lombok.extern.log4j.Log4j2;
 
 @Service
 @Log4j2
-
 public class ConsultationServiceImpl implements ConsultationService {
 
 	@Autowired
 	ConsultationRepository consultationRepository;
 	
 	@Override
-	public int wrtiteConsultation(ConsultationDTO dto) {
+	public Long wrtiteConsultation(ConsultationDTO dto) {
 		log.info("DTO------");
 		log.info(dto);
 		

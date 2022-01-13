@@ -20,6 +20,9 @@
 		justify-content: space-evenly;
 		align-items: center;
 	}
+	.nav-item:hover {
+		background-color: #dfe6e9
+	}
 </style>
 <header class="justify-content-center py-3 mb-4 border-bottom" id="header">
 	<div class="work_area">
@@ -31,11 +34,11 @@
 						<i class="fas fa-hotel" id="navbar__log-bar"></i>
 					</a>
 				</div>
-					<nav class="nav navbar" style="flex-direction: column; width: 50%; align-items: normal; flex-wrap: nowrap;">
+					<nav style="flex-direction: column; width: 50%; align-items: normal; flex-wrap: nowrap;">
 						<ul class="nav nav-pills nav-justified">
-							<li class="nav-item"><a class="nav-link" href="#">お知らせ</a></li>
-							<li class="nav-item"><a class="nav-link" href="#">予約</a></li>
-							<li class="nav-item"><a class="nav-link" href="#">相談</a></li>
+							<li role="presentation" class="nav-item"><a class="nav-link" href="#">お知らせ</a></li>
+							<li role="presentation" class="nav-item"><a class="nav-link" href="/booking">予約</a></li>
+							<li role="presentation" class="nav-item"><a class="nav-link" href="#">相談</a></li>
 						</ul>
 					</nav>
 				<div class="dropdown">
@@ -51,6 +54,7 @@
 				    <li><a class="dropdown-item" href="#">Action</a></li>
 				    <li><a class="dropdown-item" href="#">Another action</a></li>
 				    <li><hr class="dropdown-divider"></li>
+				    <li><a class="dropdown-item" href="#">Login</a></li>
 				    <li><a class="dropdown-item" href="#">Logout</a></li>
 				  </ul>
 				</div>

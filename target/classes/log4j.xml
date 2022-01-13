@@ -36,18 +36,10 @@
 		<level value="warn" />
 	</logger>
 	
-	<!-- SQL Logger -->
-	<logger name="jdbc.sqlonly" level="DEBUG"/>
-    <logger name="jdbc.sqltiming" level="INFO"/>
-    <logger name="jdbc.audit" level="WARN"/>
-    <logger name="jdbc.resultset" level="WARN"/>
-    <logger name="jdbc.resultsettable" level="ERROR"/>
-    <logger name="jdbc.connection" level="INFO"/>
-
-
+	
 	<!-- Root Logger -->
 	<root>
-		<priority value="warn" />
+		<priority value="info" />
 		<appender-ref ref="console" />
 	</root>
 	

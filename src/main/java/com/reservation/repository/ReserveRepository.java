@@ -4,8 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
-import com.reservation.entity.Consultation;
+import com.reservation.entity.Reserve;
 
 @Repository
-public interface ConsultationRepository extends JpaRepository<Consultation, Long>, QueryDslPredicateExecutor<Consultation> {
+public interface ReserveRepository extends JpaRepository<Reserve, Long>, QueryDslPredicateExecutor<Reserve> {
 }

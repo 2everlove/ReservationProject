@@ -1,35 +1,38 @@
 package com.reservation.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.Convert;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+
+import com.reservation.utils.LocalDateTimeAttributeConverter;
 
 import lombok.Getter;
 
 
 
 @MappedSuperclass
-@Embeddable
 @Getter
 public class BaseEntity {
     @Column(updatable = false) // (2)
-    private Date createdAt;
-    private Date updatedAt;
+    @Convert(converter =  LocalDateTimeAttributeConverter.class)
+    private LocalDateTime createdAt;
+    @Convert(converter =  LocalDateTimeAttributeConverter.class)
+    private LocalDateTime updatedAt;
     
 
     @PrePersist // (3)
     public void before() {
-    	Date now = new Date();
+    	LocalDateTime now = LocalDateTime.now();
         this.createdAt = now;
         this.updatedAt = now;
     }
 
     @PreUpdate // (4)
     public void always() {
-        this.updatedAt = new Date();
+        this.updatedAt = LocalDateTime.now();
     }
 }

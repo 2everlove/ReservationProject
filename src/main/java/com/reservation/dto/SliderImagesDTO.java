@@ -1,6 +1,6 @@
 package com.reservation.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 @Data
 public class SliderImagesDTO {
 	
-	private int no;
+	private Long no;
 	private String filename;
 	private String sortNo;
 	private String Activity;
 	
-	private Date createdAt, updatedAt;
+	private LocalDateTime createdAt, updatedAt;
     private String deleteFlg;
 }

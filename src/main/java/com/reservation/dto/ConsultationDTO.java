@@ -1,6 +1,6 @@
 package com.reservation.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class ConsultationDTO {
 	
-	private int no;
-	private int grno;
-	private int grgrod;
+	private Long no;
+	private Long grno;
+	private Long grgrod;
 	private int depth;
 	private String title;
 	private String contents;
@@ -23,6 +23,6 @@ public class ConsultationDTO {
 	private String passwd;
 	private String lockFlg;
 	
-	private Date createdAt, updatedAt;
+	private LocalDateTime createdAt, updatedAt;
     private String deleteFlg;
 }

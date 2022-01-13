@@ -1,6 +1,6 @@
 package com.reservation.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class ReserveDTO {
 
-	private int no;
+	private Long no;
 	private String name;
 	private String phone;
 	private String adult;
@@ -22,7 +22,7 @@ public class ReserveDTO {
 	private String endDate;
 	private String options;
 	private String paymentFlg;
-	private int totalCost;
+	private Long totalCost;
 	private String cancelFlg;
 	private String bankName;
 	private String bankbranchcde;
@@ -30,6 +30,6 @@ public class ReserveDTO {
 	private int buildCd;
 	private int roomInfo;
 	
-	private Date createdAt, updatedAt;
+	private LocalDateTime createdAt, updatedAt;
     private String deleteFlg;
 }
