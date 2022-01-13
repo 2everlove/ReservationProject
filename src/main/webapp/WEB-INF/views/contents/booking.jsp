@@ -69,6 +69,10 @@ function checkReserve(amount) {
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
           initialDate: dateString,
+          dayMaxEvents: true, // allow "more" link when too many events
+          height: 1200,
+          contentHeight: 500,
+          aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
           events: jsonList,
        });
 		
@@ -110,6 +114,9 @@ function checkReserve(amount) {
 
 
 </script>
+<style>
+a{text-decoration: none;}
+</style>
 <body>
 	<!-- <div id="calendarForm"></div> -->
 	<div class="bg-dark " style="height: 94px"></div>

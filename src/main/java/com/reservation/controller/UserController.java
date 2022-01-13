@@ -22,9 +22,9 @@ public class UserController {
 	@Autowired
 	RoomInfoService roomInfoService;
 	
-	@GetMapping("/main")
-	public void main() {
-		System.out.println("main");
+	@GetMapping({"/","/main"})
+	public String main() {
+		return "main";
 	}
 	
 	@GetMapping("/booking")

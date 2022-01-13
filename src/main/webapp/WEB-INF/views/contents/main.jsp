@@ -6,12 +6,22 @@
 	    $(document).ready(function(){
 	    	var owl = $('.owl-carousel');
 	    	owl.owlCarousel({
+	    		items:4,
 	    	    autoWidth:true,
+	    	    center:true,
+	    	    autoplay:true,
+	    	    autoplayTimeout:5000,
+	    	    autoplayHoverPause:true,
+	    	    animateOut: 'slideOutDown',
+	    	    smartSpeed:700,
 	    	    stagePadding: 50,
 	    	    loop:true,
 	    	    nav:true,
+	    	    dots: true,
 	    	    navText : ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>'],
 	    	    margin:10,
+	    	    responsiveClass:true,
+	    	    rewind: true,
 	    	    responsive:{
 	    	        0:{
 	    	            items:1
@@ -20,11 +30,9 @@
 	    	            items:3
 	    	        },            
 	    	        960:{
-	    	            items:5
+	    	            items:4
 	    	        },
-	    	        1200:{
-	    	            items:6
-	    	        }
+	    	        
 	    	    }
 	    	});
 	    	owl.on('mousewheel', '.owl-stage', function (e) {
@@ -52,13 +60,11 @@
       	<div class="bg-dark " style="height: 94px"></div>
         <header class="masthead">
 			<div class="owl-carousel owl-theme owl-loaded owl-drag">
-				  <div><img src="/resources/assets/img/portfolio/thumbnails/1.jpg" alt="Los Angeles" width="1100" height="500"></div>
-				  <div><img src="/resources/assets/img/portfolio/thumbnails/2.jpg" alt="Los Angeles" width="1100" height="500"></div>
-				  <div><img src="/resources/assets/img/portfolio/thumbnails/3.jpg" alt="Los Angeles" width="1100" height="500"></div>
-				  <div><img src="/resources/assets/img/portfolio/thumbnails/4.jpg" alt="Los Angeles" width="1100" height="500"></div>
-				  <div><img src="/resources/assets/img/portfolio/thumbnails/5.jpg" alt="Los Angeles" width="1100" height="500"></div>
-				  <div class="owl-nav"></div>
-				  <div class="owl-dot"></div>
+				  <div><img src="/resources/assets/img/room/room1.jpg" alt="Los Angeles" width="1100" height="500"></div>
+				  <div><img src="/resources/assets/img/room/room2.jpg" alt="Los Angeles" width="1100" height="500"></div>
+				  <div><img src="/resources/assets/img/room/room3.jpg" alt="Los Angeles" width="1100" height="500"></div>
+				  <div><img src="/resources/assets/img/room/room4.jpg" alt="Los Angeles" width="1100" height="500"></div>
+				  <div><img src="/resources/assets/img/room/room5.jpg" alt="Los Angeles" width="1100" height="500"></div>
 			</div>
         </header>
         
