@@ -11,6 +11,8 @@ public interface RoomInfoService {
 	
 	PageResultDTO<RoomInfoDTO,RoomInfo> getList(PageRequestDTO requestDTO);
 	
+	List<RoomInfoDTO> findAll();
+	
 	default RoomInfoDTO entityToDTO(RoomInfo entity) {
 		RoomInfoDTO dto = RoomInfoDTO.builder()
 				.no(entity.getNo())

@@ -1,6 +1,7 @@
 package com.reservation.service;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -43,6 +44,15 @@ public class ReserveServiceImpl implements ReserveService {
 		Function<Object[], ReserveDTO> fn = (en -> entityToDTO((RoomInfo)en[0], (Reserve)en[1]));
 		Page<Object[]> result = reserveRepository.getListPage(requestDTO.getPageable(new Sort(Direction.DESC, "no")));
 		return new PageResultDTO<>(result, fn);
+	}
+
+	@Override
+	public List<Object[]> getDateList(Date dateStart, Date dateEnd, Long roomno) {
+		List<Object[]> result = reserveRepository.getDateList(dateStart, dateEnd, roomno);
+		System.out.println("--------------------");
+		System.out.println(result.toString());
+		System.out.println("--------------------");
+		return result;
 	}
 
 	

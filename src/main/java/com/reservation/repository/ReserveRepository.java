@@ -1,6 +1,7 @@
 package com.reservation.repository;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -19,14 +20,23 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, QueryDs
 	@Query("select i, r from RoomInfo i " +
 			"left join Reserve r on r.roomNo.no = i " + 
 			"where RPAD(to_char(add_months(sysdate,-1),'yyyymm'),8,'00') < RPAD(to_char(to_date(r.startDate,'yyyy/mm/dd'),'yyyymm'),8,'00') " + 
-			"and RPAD(to_char(add_months(sysdate,1),'yyyymm'),8,'00') > RPAD(to_char(to_date(r.endDate,'yyyy/mm/dd'),'yyyymm'),8,'00')"
+			"and RPAD(to_char(add_months(sysdate,1),'yyyymm'),8,'00') > RPAD(to_char(to_date(r.endDate,'yyyy/mm/dd'),'yyyymm'),8,'00') "
+			+ "and r.paymentFlg = 0 and r.cancelFlg = 0 and r.deleteFlg = 0 order by r.roomNo.no"
 			)
 	Page<Object[]> getListPage(Pageable pageable);
 	
 	@Query("select i, r from RoomInfo i " +
 			"left join Reserve r on r.roomNo.no = i " +
 			"where RPAD(to_char(add_months(:date,-1),'yyyymm'),8,'00') < RPAD(to_char(to_date(r.startDate,'yyyy/mm/dd'),'yyyymm'),8,'00') " + 
-			"and RPAD(to_char(add_months(:date,1),'yyyymm'),8,'00') > RPAD(to_char(to_date(r.endDate,'yyyy/mm/dd'),'yyyymm'),8,'00')"
+			"and RPAD(to_char(add_months(:date,1),'yyyymm'),8,'00') > RPAD(to_char(to_date(r.endDate,'yyyy/mm/dd'),'yyyymm'),8,'00') "
+			+ "and r.paymentFlg = 0 and r.cancelFlg = 0 and r.deleteFlg = 0 order by r.roomNo.no"
 			)
 	List<Object[]> getDateList(@Param("date") Calendar date);
+	
+	@Query("select i, r from RoomInfo i " +
+			"right join Reserve r on r.roomNo.no = i "
+			+ "where r.roomNo.no = :roomno and to_date(r.startDate,'YYYYMMDD') > :dateStart and :dateEnd < to_date(r.endDate,'YYYYMMDD') "
+			+ "and r.paymentFlg = 0 and r.cancelFlg = 0 and r.deleteFlg = 0 order by r.roomNo.no"
+			)
+	List<Object[]> getDateList(@Param("dateStart") Date dateStart,@Param("dateEnd") Date dateEnd, @Param("roomno") Long roomno);
 }

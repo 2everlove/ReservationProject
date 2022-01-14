@@ -2,6 +2,7 @@ package com.revervation.service;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -55,6 +56,19 @@ public class ReserveServiceTests {
 		cal.add(cal.MONTH, 1);
 		
 		List<Object[]> result = reserveService.getDateList(cal);
+		for(Object objects : result) {
+			System.out.println(Arrays.asList(objects));
+		}
+	}
+	@Test
+	public void getDateList2Test() {
+		Calendar cal = Calendar.getInstance();
+		cal.add(cal.MONTH, -1);
+		Date dateStart = cal.getTime();
+		cal.add(cal.MONTH, 1);
+		Date dateEnd = cal.getTime();
+		Long roomNo = 1L;
+		List<Object[]> result = reserveService.getDateList(dateStart, dateEnd, roomNo);
 		for(Object objects : result) {
 			System.out.println(Arrays.asList(objects));
 		}

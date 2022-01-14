@@ -1,6 +1,7 @@
 package com.reservation.service;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -18,10 +19,36 @@ public interface ReserveService {
 	
 	PageResultDTO<ReserveDTO, Object[]> getList(PageRequestDTO requestDTO);
 	
+	List<Object[]> getDateList(Date dateStart, Date dateEnd, Long roomno);
+	
 	default ReserveDTO entityToDTO(RoomInfo roomInfo, Reserve reserve) {
 		ReserveDTO dto = ReserveDTO.builder()
 				.no(reserve.getNo())
 				.roomNo(roomInfo.getNo())
+				.name(reserve.getName())
+				.phone(reserve.getPhone())
+				.adult(reserve.getAdult())
+				.child(reserve.getChild())
+				.startDate(reserve.getStartDate())
+				.endDate(reserve.getEndDate())
+				.options(reserve.getOptions())
+				.paymentFlg(reserve.getPaymentFlg())
+				.totalCost(reserve.getTotalCost())
+				.cancelFlg(reserve.getCancelFlg())
+				.bankName(reserve.getBankName())
+				.bankbranchcde(reserve.getBankbranchcde())
+				.bankNo(reserve.getBankNo())
+				.deleteFlg(reserve.getDeleteFlg())
+				.createdAt(reserve.getCreatedAt())
+				.updatedAt(reserve.getUpdatedAt())
+				.buildCd(reserve.getBuildCd())
+				.build();
+		return dto;
+	}
+	default ReserveDTO entityToDTO(Reserve reserve) {
+		ReserveDTO dto = ReserveDTO.builder()
+				.no(reserve.getNo())
+				.roomNo(reserve.getRoomNo().getNo())
 				.name(reserve.getName())
 				.phone(reserve.getPhone())
 				.adult(reserve.getAdult())

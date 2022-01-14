@@ -15,11 +15,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
+@ToString
 public class ReserveDTO {
 
 	private Long no;

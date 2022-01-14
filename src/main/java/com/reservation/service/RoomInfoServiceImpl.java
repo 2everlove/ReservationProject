@@ -2,6 +2,7 @@ package com.reservation.service;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,14 +25,22 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class RoomInfoServiceImpl implements RoomInfoService {
 	
-	private final RoomInfoRepository RoomInfoRepository;
+	private final RoomInfoRepository roomInfoRepository;
 
 	@Override
 	public PageResultDTO<RoomInfoDTO, RoomInfo> getList(PageRequestDTO requestDTO) {
-		Pageable pageable = requestDTO.getPageable(new Sort(Direction.DESC, "no"));
-		Page<RoomInfo> result = RoomInfoRepository.findAll(pageable);
+		Pageable pageable = requestDTO.getPageable(new Sort(Direction.ASC, "no"));
+		Page<RoomInfo> result = roomInfoRepository.findAll(pageable);
 		Function<RoomInfo, RoomInfoDTO> fn = (entity -> entityToDTO(entity));
 		return new PageResultDTO<RoomInfoDTO, RoomInfo>(result, fn);
 	}
 
+	@Override
+	public List<RoomInfoDTO> findAll() {
+		List<RoomInfo> tempResult = roomInfoRepository.findAll();
+		Function<RoomInfo, RoomInfoDTO> fn = (entity -> entityToDTO(entity));
+		List<RoomInfoDTO> result =  tempResult.stream().map(fn).collect(Collectors.toList());
+		return result;
+	}
+	
 }

@@ -4,147 +4,130 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <link rel="stylesheet" href="/resources/css/calendar.css">
 <script type="text/javascript" src="/resources/js/calendar.js"></script>
-<script type="text/javascript" async>
-$(document).ready(function(){
-	let amount = 0;
-	//calendarMaker($("#calendarForm"),new Date());
-	
-	/* $(".btn-calender-display").click(function(){
-		$("#calendar").toggle("fast");
-		$(".btn-calender-display").toggle();
-	});
-	$('.roomList').on('click', '') */
-	
-	
-	//getDateList
-	checkReserve(amount)
-	
-	$('#calendar').click(function(e){
-		if(e.target == document.querySelector('button[title="Previous month"]') || e.target == document.querySelector('span[class="fc-icon fc-icon-chevron-left"]')){
-			amount = amount - 1;
-			checkReserve(amount);
-		} else if(e.target == document.querySelector('button[title="Next month"]') || e.target == document.querySelector('span[class="fc-icon fc-icon-chevron-right"]')){
-			amount = amount + 1;
-			checkReserve(amount)
-		} else if(e.target == document.querySelector('button[title="This month"]')){
-			amount = 0;
-			checkReserve(amount)
-		}
-		console.log(amount)
-		
-  	});
-	
-});
 
-function checkReserve(amount) {
-	var today = new Date();
-
-	var year = today.getFullYear();
-	var month = Number(('0' + (today.getMonth() + 1 + amount)).slice(-2));
-	if(month == 0 || month > 13|| amount<0) {
-	console.log(month)
-		let i = 0;
-		if(month % 13){
-			i--;
-		}
-		year = year-1-i;
-		month = 13+amount;
-	}
-	var day = ('0' + today.getDate()).slice(-2);
-
-	var dateString = year + '-' + ('0'+month).slice(-2)  + '-' + day;
-
-	console.log(dateString);
-	$.getJSON('/api/checkReserve/'+amount ,function(arr){
-		let jsonList = new Array();
-       	  $.each(arr, function(i, data){
-			let json = new Object();
-       		json.title = data[1].roomNo.roomTitle;
-       		json.start = moment(data[1].startDate).format('YYYY-MM-DD');
-       		json.end = moment(data[1].endDate).format('YYYY-MM-DD');
-       		json.color =data[0].colorCd;
-     		jsonList.push(json);
-       	  });
-       	var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-          initialDate: dateString,
-          dayMaxEvents: true, // allow "more" link when too many events
-          height: 1200,
-          contentHeight: 500,
-          aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
-          events: jsonList,
-       });
-		
-        calendar.render();
-	});
-}
-
-</script>
-<script defer>
-      $(document).ready(function(){
-    	  
-      })
-      
-     
-      
-
-
-      /* document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          selectable: true,
-          headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-          },
-          dateClick: function(info) {
-            alert('clicked ' + info.dateStr);
-          },
-          select: function(info) {
-            alert('selected ' + info.startStr + ' to ' + info.endStr);
-          }
-        });
-
-        calendar.render();
-      }); */
-
-
-
-</script>
 <style>
 a{text-decoration: none;}
 </style>
 <body>
 	<!-- <div id="calendarForm"></div> -->
 	<div class="bg-dark " style="height: 94px"></div>
-	<section class="masthead">
-	<div class="container">
-	<div style="padding-top: 80px;">
-	<div class="d-flex justify-content-around mb-4">
-		<label>部屋番号<select>
-			<option value="">---</option>
-			<c:forEach var="roomList" items="${roomInfoList}">
-				<option class="roomList">
-					${roomList.roomNum}
-				</<option>
-					
-			</c:forEach>
-		</select></label>
-		<label></label><input type="text" name="keyword" ></label>
-	</div>
-		<div class="d-flex justify-content-center mb-3" style="flex-direction: row; align-items: center">
-			<div class="col-lg-9"> 
-					<div id='calendar'></div>
-		<!-- 			<button class="btn-calender-display">Hide</button>
-					<button class="btn-calender-display" style="display: none">Show</button>  -->		
-			</div>
+	<div class="masthead">
+		<div style="padding-top: 0px;">
+            <c:forEach items="${roomInfoList}" var="roomInfo" varStatus="status">
+	        	<section class="projects-section bg-light" style="margin-top: 20px; padding-bottom: 40px;">
+		            <div class="container px-4 px-lg-5">
+		                <!-- Featured Project Row-->
+		                <h2 style="padding-top: 10px;">${roomInfo.roomNum }号</h2>
+		                <div class="row gx-0 mb-4 mb-lg-5 align-items-center" OnClick="location.href ='booking/${roomInfo.no}'" style="cursor:pointer; margin-bottom: 1rem; padding: 1rem 0 1rem 0;" onmouseout="this.style.background='#F8F9F7';" onmouseover="this.style.background= 'rgba(170, 166, 157,0.3)';">
+		                    <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="/resources/assets/img/room/room${status.count}.jpg" alt="..." /></div>
+		                    <div class="col-xl-4 col-lg-5">
+		                        <div class="featured-text text-center text-lg-left">
+		                            <h4>${roomInfo.roomTitle }</h4>
+		                            <p class="text-black mb-0" style="text-align: right; word-wrap: break-word; width:300px; height:320px; overflow: auto;">
+		                            <br/>
+		                            <br/>
+		                            </p>
+		                            <p class="text-black mb-0" style="text-align: right; margin-right: 30px;">
+		                            	<b>￥</b><span style="color: #e12d2d;"><fmt:formatNumber type="number" value="${roomInfo.adultCost }"/></span>
+		                            	<br/>
+		                            	<br/>
+			                            <button type="button" class="btn btn-primary btn-lg">Reserve</button>
+		                            </p>
+		                        </div>
+		                    </div>
+		                </div>
+		                
+		                <div class="table-responsive-lg">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th scope="col">Info</th>
+										<th scope="col">Adult</th>
+										<th scope="col">Child</th>
+										<th scope="col">最大人数</th>
+									</tr>
+								</thead>
+								<tbody>
+								<tr>
+									<th scope="row">${roomInfo.buildCd}層　${roomInfo.roomNum }号</th>
+									<td><b>￥</b><b><fmt:formatNumber type="number" value="${roomInfo.adultCost }"/></b></td>
+									<td><b>￥</b><b><fmt:formatNumber type="number" value="${roomInfo.childCost }"/></b></td>
+									<td><b>${roomInfo.max}</b> 人</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+	                <!-- 
+	                <div class="row gx-0 mb-5 mb-lg-0 justify-content-center">
+	                    <div class="col-lg-6"><img class="img-fluid" src="/resources/assets/img/room/room2.jpg" alt="..." /></div>
+	                    <div class="col-lg-6">
+	                        <div class="bg-black text-center h-100 project">
+	                            <div class="d-flex h-100">
+	                                <div class="project-text w-100 my-auto text-center text-lg-left">
+	                                    <h4 class="text-white">Misty</h4>
+	                                    <p class="mb-0 text-white-50">An example of where you can put an image of a project, or anything else, along with a description.</p>
+	                                    <hr class="d-none d-lg-block mb-0 ms-0" />
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	                Project Two Row
+	                <div class="row gx-0 justify-content-center">
+	                    <div class="col-lg-6"><img class="img-fluid" src="/resources/assets/img/room/room3.jpg" alt="..." /></div>
+	                    <div class="col-lg-6 order-lg-first">
+	                        <div class="bg-black text-center h-100 project">
+	                            <div class="d-flex h-100">
+	                                <div class="project-text w-100 my-auto text-center text-lg-right">
+	                                    <h4 class="text-white">Mountains</h4>
+	                                    <p class="mb-0 text-white-50">Another example of a project with its respective description. These sections work well responsively as well, try this theme on a small screen!</p>
+	                                    <hr class="d-none d-lg-block mb-0 me-0" />
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div> -->
+	            </div>
+	        	</section>			
+            	<div style="padding-top: 20px;"></div>
+                <hr style="border: none; font-size: 0; line-height: 0; margin: 40px 0 40px 0; color: rgba(132, 129, 122,1.0); background:rgba(132, 129, 122,1.0); height: 3px;"/>
+            	<div style="padding-top: 20px;"></div>
+           	</c:forEach>
+				<!-- <div class="table-responsive-lg">
+					<table class="table table-hover">
+					  <thead>
+					    <tr>
+					      <th scope="col">#</th>
+					      <th scope="col">First</th>
+					      <th scope="col">Last</th>
+					      <th scope="col">Handle</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					    <tr>
+					      <th scope="row">1</th>
+					      <td>Mark</td>
+					      <td>Otto</td>
+					      <td>@mdo</td>
+					    </tr>
+					    <tr>
+					      <th scope="row">2</th>
+					      <td>Jacob</td>
+					      <td>Thornton</td>
+					      <td>@fat</td>
+					    </tr>
+					    <tr>
+					      <th scope="row">3</th>
+					      <td colspan="2">Larry the Bird</td>
+					      <td>@twitter</td>
+					    </tr>
+					  </tbody>
+					</table>
+				</div> -->
 		</div>
-		<br/>
+	</div>
+<script type="text/javascript">
 	
-		</div>
-	</div>
-	</section>
+</script>
 </body>
+

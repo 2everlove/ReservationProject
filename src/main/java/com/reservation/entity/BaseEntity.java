@@ -27,6 +27,7 @@ public class BaseEntity {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class) 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createdAt;
+    
     @Convert(converter =  LocalDateTimeAttributeConverter.class)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class) 
@@ -45,6 +46,7 @@ public class BaseEntity {
     public void always() {
         this.updatedAt = LocalDateTime.now();
     }
+    
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class) 
@@ -52,6 +54,7 @@ public class BaseEntity {
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
+    
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class) 
