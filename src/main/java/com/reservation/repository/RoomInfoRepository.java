@@ -35,4 +35,5 @@ public interface RoomInfoRepository extends JpaRepository<RoomInfo, Long>, Query
 			"and RPAD(to_char(add_months(:date,1),'yyyymm'),8,'00') > RPAD(to_char(to_date(r.endDate,'yyyy/mm/dd'),'yyyymm'),8,'00')"
 			)
 	List<Object[]> getDateList(@Param("date") Calendar date);
+	
 }

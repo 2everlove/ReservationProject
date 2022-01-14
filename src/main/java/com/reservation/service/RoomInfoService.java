@@ -13,6 +13,8 @@ public interface RoomInfoService {
 	
 	List<RoomInfoDTO> findAll();
 	
+	RoomInfoDTO findAllSpecifyRoom(Long no);
+	
 	default RoomInfoDTO entityToDTO(RoomInfo entity) {
 		RoomInfoDTO dto = RoomInfoDTO.builder()
 				.no(entity.getNo())
@@ -48,4 +50,6 @@ public interface RoomInfoService {
 				.build();
 		return entity;
 	}
+
+	
 }

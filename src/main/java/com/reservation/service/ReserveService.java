@@ -19,7 +19,9 @@ public interface ReserveService {
 	
 	PageResultDTO<ReserveDTO, Object[]> getList(PageRequestDTO requestDTO);
 	
-	List<Object[]> getDateList(Date dateStart, Date dateEnd, Long roomno);
+	List<ReserveDTO> getDateList(Date dateStart, Date dateEnd, Long roomno);
+	
+	List<Object[]> getDateObjectList(Date dateStart, Date dateEnd, Long roomno);
 	
 	default ReserveDTO entityToDTO(RoomInfo roomInfo, Reserve reserve) {
 		ReserveDTO dto = ReserveDTO.builder()

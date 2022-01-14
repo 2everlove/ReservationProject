@@ -93,14 +93,14 @@ public class ReserveDTO {
 	public Long getRoomNo() {
 		return roomNo;
 	}
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class) 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class) 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)

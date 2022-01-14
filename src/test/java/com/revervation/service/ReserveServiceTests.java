@@ -24,8 +24,11 @@ import com.reservation.service.ConsultationService;
 import com.reservation.service.ReserveService;
 import com.reservation.service.RoomInfoService;
 
+import lombok.extern.log4j.Log4j2;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
+@Log4j2
 public class ReserveServiceTests {
 
 	@Autowired
@@ -68,9 +71,9 @@ public class ReserveServiceTests {
 		cal.add(cal.MONTH, 1);
 		Date dateEnd = cal.getTime();
 		Long roomNo = 1L;
-		List<Object[]> result = reserveService.getDateList(dateStart, dateEnd, roomNo);
+		List<ReserveDTO> result = reserveService.getDateList(dateStart, dateEnd, roomNo);
 		for(Object objects : result) {
-			System.out.println(Arrays.asList(objects));
+			Arrays.asList(objects).forEach(i -> log.info(i.getClass().getName()));;
 		}
 	}
 	

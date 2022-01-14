@@ -47,11 +47,19 @@ public class ReserveServiceImpl implements ReserveService {
 	}
 
 	@Override
-	public List<Object[]> getDateList(Date dateStart, Date dateEnd, Long roomno) {
-		List<Object[]> result = reserveRepository.getDateList(dateStart, dateEnd, roomno);
+	public List<ReserveDTO> getDateList(Date dateStart, Date dateEnd, Long roomno) {
+		List<Object[]> tempResult = reserveRepository.getDateList(dateStart, dateEnd, roomno);
+		Function<Object[], ReserveDTO> fn = (en -> entityToDTO((RoomInfo)en[0], (Reserve)en[1]));
+		List<ReserveDTO> result = tempResult.stream().map(fn).collect(Collectors.toList());
 		System.out.println("--------------------");
 		System.out.println(result.toString());
 		System.out.println("--------------------");
+		return result;
+	}
+
+	@Override
+	public List<Object[]> getDateObjectList(Date dateStart, Date dateEnd, Long roomno) {
+		List<Object[]> result = reserveRepository.getDateList(dateStart, dateEnd, roomno);
 		return result;
 	}
 

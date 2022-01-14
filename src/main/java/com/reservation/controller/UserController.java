@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +20,7 @@ import com.reservation.service.RoomInfoService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import net.sf.json.JSONArray;
 
 
 @Controller
@@ -53,8 +53,10 @@ public class UserController {
 		Date dateStart = cal.getTime();
 		cal.add(cal.MONTH, 1);
 		Date dateEnd = cal.getTime();
-		List<Object[]> result = reserveService.getDateList(dateStart, dateEnd, roomno);
+		List<ReserveDTO> result = reserveService.getDateList(dateStart, dateEnd, roomno);
+		RoomInfoDTO roomInfo = roomInfoService.findAllSpecifyRoom(roomno);
 		model.addAttribute("result", result);
+		model.addAttribute("roomInfo", roomInfo);
 		model.addAttribute("roomNum", roomno);
 		return "roomInfo";
 	}

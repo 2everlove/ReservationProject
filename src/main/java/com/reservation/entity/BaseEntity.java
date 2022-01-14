@@ -26,12 +26,14 @@ public class BaseEntity {
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class) 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
     
     @Convert(converter =  LocalDateTimeAttributeConverter.class)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class) 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
     
 
@@ -47,7 +49,7 @@ public class BaseEntity {
         this.updatedAt = LocalDateTime.now();
     }
     
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class) 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -55,7 +57,7 @@ public class BaseEntity {
 		return createdAt;
 	}
     
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class) 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)

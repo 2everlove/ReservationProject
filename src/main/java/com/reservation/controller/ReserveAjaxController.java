@@ -58,6 +58,6 @@ public class ReserveAjaxController {
 		cal.add(cal.MONTH, 1);
 		Date dateEnd = cal.getTime();
 		System.out.println("search whole booking on specify room");
-		return new ResponseEntity<List<Object[]>>(reserveService.getDateList(dateStart, dateEnd, roomNo),HttpStatus.OK);
+		return new ResponseEntity<List<Object[]>>(reserveService.getDateObjectList(dateStart, dateEnd, roomNo),HttpStatus.OK);
 	}
 }
