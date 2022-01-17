@@ -23,29 +23,54 @@ a{text-decoration: none;}
 	                            <div class="d-flex h-100">
 	                                <div class="project-text w-100 my-auto text-center text-lg-left">
 	                                    <h4 class="text-dark">
-						                   		${roomInfo.roomTitle }
-						                   
+					                   		${roomInfo.roomTitle}
 						                </h4>
 	                                    <p class="mb-0 text-dark">
 		                                    <form>
 			                                    <div class="form-group row" style="justify-content: flex-end;">
-													<label for="inputEmail3" class="col-sm-2 col-form-label">人数</label>
+													<label for="inputEmail3" class="col-sm-2 col-form-label">大人数</label>
 													<div class="col-sm-5">
-														<input type="number" class="form-control detail__count-adult" min="1"　max="5" placeholder="1人" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" value="1">
-														<input type="number" class="form-control detail__count-child"　placeholder="1人" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+														<input type="number" class="form-control detail__count-adult" min="1"　max="5" placeholder="1人" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" value="1" style="width: 80px;">
 													</div>
 												</div>
+			                                    <div class="form-group row" style="justify-content: flex-end;">
+													<label for="inputEmail3" class="col-sm-2 col-form-label">子供数</label>
+													<div class="col-sm-5">
+														<input type="number" class="form-control detail__count-child" value="0"　placeholder="1人" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width: 80px;">
+													</div>
+												</div>
+			                                    <div class="form-group row" style="justify-content: flex-end;">
+													<label for="inputEmail3" class="col-sm-2 col-form-label">期&nbsp;&nbsp;&nbsp;&nbsp;間</label>
+													<div class="col-sm-5">
+														<input type="text" class="form-control" id="demo" name="demo" value=""/>
+													</div>
+												</div>
+			                                    <div class="form-group row" style="justify-content: flex-end;">
+													<label for="inputEmail3" class="col-sm-2 col-form-label">総金額</label>
+													<div class="col-sm-5">
+														<input class="form-control detail__totalPrice" type="text" value="${roomInfo.adultCost }" placeholder="" readonly/>
+													</div>
+												</div>
+			                                    <div class="form-group row" style="justify-content: flex-end;">
+													大人: ￥<fmt:formatNumber type="number" value="${roomInfo.adultCost }"/> |
+													子供: ￥<fmt:formatNumber type="number" value="${roomInfo.childCost }"/>
+													
+												</div>
+			                                    <div class="form-group row" style="justify-content: flex-end;">
+			                                   		<div class="col-sm-3">
+			                                    		<button type="button" class="btn btn-primary btn-lg">Reserve</button>
+			                                    	</div>
+			                                    </div>
 											</form>
 	                                    </p>
-	                                    
 	                                </div>
 	                            </div>
 	                        </div>
 	                    </div>
 	                </div>
-                <div style="padding-top: 20px;"></div>
-                <hr style="border: none; font-size: 0; line-height: 0; margin: 40px 0 40px 0; color: rgba(132, 129, 122,1.0); background:rgba(132, 129, 122,1.0); height: 3px;"/>
-            	<div style="padding-top: 20px;"></div>
+					<div style="padding-top: 20px;"></div>
+					<hr style="border: none; font-size: 0; line-height: 0; margin: 40px 0 40px 0; color: rgba(132, 129, 122,1.0); background:rgba(132, 129, 122,1.0); height: 3px;"/>
+					<div style="padding-top: 20px;"></div>
             	
                 <!-- <div class="row gx-0 justify-content-center">
                     <div class="col-lg-6"><img class="img-fluid" src="/resources/assets/img/room/room3.jpg" alt="..." /></div>
@@ -61,14 +86,15 @@ a{text-decoration: none;}
                         </div>
                     </div>
                 </div> -->
-                <input type="text" id="demo" name="demo" value="" />
-                <div id='calendar'></div>
-            	</div>
+                
+                	<div id='calendar'></div>
+				</div>
            	<hr>
+           	${roomInfo }
            	<fmt:parseDate value="${ roomInfo.createdAt }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
            	${parsedDateTime }<br>
 			<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${ parsedDateTime }" />
-       	</section>			
+       	</section>
 	</div>
 </div>
 <script type="text/javascript">
@@ -76,7 +102,9 @@ a{text-decoration: none;}
 	$(document).ready(function(){
 	let disabledArr = [];
 		let amount = 0;
+		
 		checkReserve(amount)
+		
 		$('#calendar').click(function(e){
 			if(e.target == document.querySelector('button[title="Previous month"]') || e.target == document.querySelector('span[class="fc-icon fc-icon-chevron-left"]')){
 				amount = amount - 1;
@@ -105,14 +133,47 @@ a{text-decoration: none;}
 		});
 		
 		$(".detail__count-adult").change(function(){
-			if($(".detail__count-adult").val() > 5){
-				alert(${pBoard.pboard_unit_stocks}+"개 이하로 구매할 수 있습니다.");
-				$(".detail__count-adult").val(${pBoard.pboard_unit_stocks});
-				$(".pboard_unit_stocks").val(0);
-				$("input[name=pboard_unit_stocks]").val(0);
-				$(".detail__count-input").select();
+			if($(".detail__count-adult").val() > ${roomInfo.max}){
+				alert(${roomInfo.max}+"명 이하로 예약할 수 있습니다.");
+				$(".detail__count-adult").val("5");
+				$(".detail__count-child").val("0");
+				$(".detail__count-adult").select();
+			} else if (Number($(".detail__count-adult").val())+Number($(".detail__count-child").val()) > ${roomInfo.max}){
+				$(".detail__count-adult").val(Number($(".detail__count-adult").val()));
+				$(".detail__count-child").val(Number($(".detail__count-child").val())-1);
+				if($(".detail__count-adult").val() == ${roomInfo.max}){
+					$(".detail__count-adult").val("5");
+					$(".detail__count-child").val("0");
+				}
 			}
+			$(".detail__totalPrice").val(calculateTotal($(".detail__count-adult").val(), $(".detail__count-child").val()));
 		});
+		
+		$(".detail__count-child").change(function(){
+			if($(".detail__count-child").val() > ${roomInfo.max}-1){
+				alert("성인이 1명 있어야 합니다.");
+				$(".detail__count-child").val("4");
+				$(".detail__count-adult").val("1");
+				$(".detail__count-child").select();
+			} else if (Number($(".detail__count-adult").val())+Number($(".detail__count-child").val()) > ${roomInfo.max}){
+				$(".detail__count-adult").val(Number($(".detail__count-adult").val())-1);
+				$(".detail__count-child").val(Number($(".detail__count-child").val()));
+				if($(".detail__count-child").val() == ${roomInfo.max}-1){
+					$(".detail__count-child").val("4");
+					$(".detail__count-adult").val("1");
+				}
+			}
+			$(".detail__totalPrice").val(calculateTotal($(".detail__count-adult").val(), $(".detail__count-child").val()));
+		});
+		
+		function calculateTotal(a, c){
+			let total = 0;
+			let adultCost = ${roomInfo.adultCost};
+			let childCost = ${roomInfo.childCost};
+			total = adultCost*a + childCost*c
+			return total;
+		}
+		
 		//기간
 		function getRange(startDate, endDate, type) {
 			let fromDate = moment(startDate)
@@ -153,7 +214,7 @@ a{text-decoration: none;}
 		       		json.color =data[0].colorCd;
 		     		jsonList.push(json);
 		       	  });
-		       	var calendarEl = document.getElementById('calendar');
+		       	/* var calendarEl = document.getElementById('calendar');
 		        var calendar = new FullCalendar.Calendar(calendarEl, {
 		          initialView: 'dayGridMonth',
 		          initialDate: dateString,
@@ -161,9 +222,9 @@ a{text-decoration: none;}
 		          dayMaxEvents: true, // allow "more" link when too many events
 		          aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
 		          events: jsonList,
-		       });
+		       }); */
 				
-		        calendar.render();
+		        //calendar.render();
 		        
 			});
 		}
@@ -192,7 +253,7 @@ a{text-decoration: none;}
 		     },
 		     opens: 'left',
 			"locale": { 
-				"format": "YYYY/MM/DD", 
+				"format": "YYYY-MM-DD", 
 				"separator": " ~ ",
 				"applyLabel": "확인", 
 				"cancelLabel": "취소", 
@@ -200,8 +261,8 @@ a{text-decoration: none;}
 				"toLabel": "To", 
 				"customRangeLabel": "Custom", 
 				"weekLabel": "W", 
-				"daysOfWeek": ["일", "월", "화", "수", "목", "금", "토"], 
-				"monthNames": ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"], 
+				"daysOfWeek": ["日", "月", "火", "水", "木", "金", "土"], 
+				"monthNames": ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"], 
 			}, 
 			"startDate": new Date(), 
 			"endDate": new Date(), 
@@ -242,7 +303,7 @@ a{text-decoration: none;}
 		        //console.log("Cleared the input field...");
 
 		        // Alert user!
-		        alert("중복된 날짜가 있습니다. 다시 입력해주세요.");
+		        alert("해당기간에 예약된 날짜가 있습니다. 다시 입력해주세요.");
 		    }
 		});
 	});

@@ -32,3 +32,4 @@ local.properties
 .loadpath
 
 .recommenders
+target/m2e-wtp/web-resources/META-INF/maven/jpabook/springdata-reservation/pom.properties
