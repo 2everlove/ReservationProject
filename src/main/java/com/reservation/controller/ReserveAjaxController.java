@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.reservation.dto.Bank;
 import com.reservation.dto.ReserveDTO;
 import com.reservation.dto.RoomInfoDTO;
 import com.reservation.service.ReserveService;
@@ -59,5 +60,19 @@ public class ReserveAjaxController {
 		Date dateEnd = cal.getTime();
 		System.out.println("search whole booking on specify room");
 		return new ResponseEntity<List<Object[]>>(reserveService.getDateObjectList(dateStart, dateEnd, roomNo),HttpStatus.OK);
+	}
+	
+	//specify bank list
+	@GetMapping(value = "/payment/list/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Bank> showBank(@PathVariable("code") int bankCd){
+		return new ResponseEntity<Bank>(Bank.fromValue(bankCd), HttpStatus.OK);
+		
+	}
+	
+	//bank whole list
+	@GetMapping(value = "/payment/list", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Bank>> showBank(){
+		return new ResponseEntity<List<Bank>>(Bank.getAll(), HttpStatus.OK);
+		
 	}
 }

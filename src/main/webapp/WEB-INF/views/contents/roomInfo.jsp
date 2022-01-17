@@ -58,7 +58,7 @@ a{text-decoration: none;}
 												</div>
 			                                    <div class="form-group row" style="justify-content: flex-end;">
 			                                   		<div class="col-sm-3">
-			                                    		<button type="button" class="btn btn-primary btn-lg">Reserve</button>
+			                                    		<button type="button" class="btn btn-primary btn-lg registerReserve">Reserve</button>
 			                                    	</div>
 			                                    </div>
 											</form>
@@ -97,11 +97,57 @@ a{text-decoration: none;}
        	</section>
 	</div>
 </div>
+<div class="modal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Modal title</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<select class="bankSelect form-control mx-sm-10">
+					<option value="">---</option>
+				</select>
+				<p>Modal body text goes here.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary">Payment</button>
+			</div>
+		</div>
+	</div>
+</div>
 <script type="text/javascript">
 
 	$(document).ready(function(){
 	let disabledArr = [];
 		let amount = 0;
+		
+		let modal = $('.modal');
+		$('.registerReserve').click(function(){
+			modal.modal('show');
+			$('.bankSelect').html('<option value="">---</option>');
+			//은행정보
+			$.getJSON('/api/payment/list' ,function(arr){
+				console.log(arr);
+				$.each(arr, function(i, bank){
+					console.log(bank);
+					let optionGroup = document.createElement('option');
+					console.log(bank.bankName + bank.bankCd)
+					optionGroup.innerText = bank.bankName;
+					optionGroup.value=bank.bankCd;
+					$('.bankSelect').append(optionGroup);
+				})
+			});
+		});
+		$('.modal-footer .btn-secondary').click(function(){
+			modal.modal('hide');
+		});
+		$('.close span').click(function(){
+			modal.modal('hide');
+		});
 		
 		checkReserve(amount)
 		
@@ -119,18 +165,7 @@ a{text-decoration: none;}
 			console.log(amount)
 			
 	  	});
-			
 		
-		//방정보
-		$.getJSON('/api/checkReserve' ,function(arr){
-			//console.log(arr);
-			$.each(arr, function(i, room){
-				let optionGroup = document.createElement('option');
-				console.log(room.roomNum + room.roomTitle)
-				optionGroup.innerText = room.roomNum;
-				$('.roomSelect').append(optionGroup);
-			})
-		});
 		
 		$(".detail__count-adult").change(function(){
 			if($(".detail__count-adult").val() > ${roomInfo.max}){
@@ -306,6 +341,8 @@ a{text-decoration: none;}
 		        alert("해당기간에 예약된 날짜가 있습니다. 다시 입력해주세요.");
 		    }
 		});
+		
+		
 	});
 		
 	
