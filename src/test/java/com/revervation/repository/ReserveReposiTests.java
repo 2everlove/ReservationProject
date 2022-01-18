@@ -21,10 +21,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.reservation.dto.ReserveDTO;
 import com.reservation.entity.QReserve;
 import com.reservation.entity.Reserve;
 import com.reservation.entity.RoomInfo;
 import com.reservation.repository.ReserveRepository;
+import com.reservation.service.ReserveService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
@@ -32,10 +34,13 @@ public class ReserveReposiTests {
 	
 	@Autowired
 	private ReserveRepository reserveRepository;
+	
+	@Autowired
+	private ReserveService reserveService;
 
 	@Test
 	public void test() {
-		IntStream.range(1, 100).forEach(i -> {
+		IntStream.range(1, 200).forEach(i -> {
 			Long no = (long)((Math.random()*5)+1);
 			RoomInfo roomInfo = RoomInfo.builder().no(no).build();
 			
@@ -65,7 +70,9 @@ public class ReserveReposiTests {
 					.build();
 			System.out.println(roomInfo.toString());
 			System.out.println(reserve.toString());
-			reserveRepository.save(reserve);
+			
+			ReserveDTO dto = reserveService.entityToDTO(reserve);
+			reserveService.registerReserve(dto);
 		});
 		
 	}

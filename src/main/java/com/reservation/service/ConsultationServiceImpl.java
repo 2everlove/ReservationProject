@@ -43,7 +43,7 @@ public class ConsultationServiceImpl implements ConsultationService {
 	public PageResultDTO<ConsultationDTO, Consultation> getList(PageRequestDTO requestDTO) {
 		Pageable pageable = requestDTO.getPageable(new Sort(Direction.DESC, "no"));
 		Page<Consultation> result = consultationRepository.findAll(pageable);
-		Function<Consultation, ConsultationDTO> fn = (entity -> entityToDto(entity));
+		Function<Consultation, ConsultationDTO> fn = (entity -> entityToDTO(entity));
 		return new PageResultDTO<ConsultationDTO, Consultation>(result, fn);
 	}
 }

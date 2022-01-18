@@ -1,5 +1,7 @@
 package com.reservation.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
@@ -33,7 +36,7 @@ public class ReserveServiceImpl implements ReserveService {
 		log.info("ReserveService\ngetDateList");
 		Function<Object[], ReserveDTO> fn = (en -> entityToDTO((RoomInfo)en[0], (Reserve)en[1]));
 		List<Object[]> result = reserveRepository.getDateList(date);
-		System.out.println("--------------------");
+		System.out.println("ReserveService!getDateList--------------------");
 		System.out.println(result.toString());
 		System.out.println("--------------------");
 		return result;
@@ -51,7 +54,7 @@ public class ReserveServiceImpl implements ReserveService {
 		List<Object[]> tempResult = reserveRepository.getDateList(dateStart, dateEnd, roomno);
 		Function<Object[], ReserveDTO> fn = (en -> entityToDTO((RoomInfo)en[0], (Reserve)en[1]));
 		List<ReserveDTO> result = tempResult.stream().map(fn).collect(Collectors.toList());
-		System.out.println("--------------------");
+		System.out.println("getDateList--------------------");
 		System.out.println(result.toString());
 		System.out.println("--------------------");
 		return result;
@@ -63,6 +66,23 @@ public class ReserveServiceImpl implements ReserveService {
 		return result;
 	}
 
+	@Transactional
+	@Override
+	public Long registerReserve(ReserveDTO reserveDTO) {
+		Long result = reserveRepository.getDateCount(reserveDTO.getStartDate(), reserveDTO.getEndDate(), reserveDTO.getRoomNo());
+		System.out.println(result);
+		boolean resultBoolean = 0L == result;
+		System.out.println("registerReserve: "+resultBoolean);
+		if(resultBoolean) {
+			Reserve reserve = dtoToEntity(reserveDTO);
+			reserveRepository.save(reserve);
+			System.out.println("registerReserve: "+reserve);
+			return reserve.getNo();
+		}else {
+			return 1L;
+		}
+	}
+	
 	
 
 }

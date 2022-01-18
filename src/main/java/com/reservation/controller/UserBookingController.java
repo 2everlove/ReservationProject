@@ -26,7 +26,7 @@ import net.sf.json.JSONArray;
 @Controller
 @RequiredArgsConstructor
 @Log4j2
-public class UserController {
+public class UserBookingController {
 
 	private final RoomInfoService roomInfoService;
 	private final ReserveService reserveService;
@@ -61,9 +61,4 @@ public class UserController {
 		return "roomInfo";
 	}
 	
-	@GetMapping("/notice")
-	public String notice(Model model) {
-		
-		return "notice";
-	}
 }

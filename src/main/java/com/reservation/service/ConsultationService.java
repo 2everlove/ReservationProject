@@ -29,7 +29,7 @@ public interface ConsultationService {
 		return entity;
 	}
 	
-	default ConsultationDTO entityToDto(Consultation entity) {
+	default ConsultationDTO entityToDTO(Consultation entity) {
 		ConsultationDTO dto = ConsultationDTO.builder()
 				.no(entity.getNo())
 				.grno(entity.getGrno())

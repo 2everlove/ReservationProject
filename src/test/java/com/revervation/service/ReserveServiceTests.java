@@ -1,15 +1,21 @@
 package com.revervation.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.reservation.dto.ConsultationDTO;
 import com.reservation.dto.PageRequestDTO;
@@ -23,6 +29,7 @@ import com.reservation.repository.ConsultationRepository;
 import com.reservation.service.ConsultationService;
 import com.reservation.service.ReserveService;
 import com.reservation.service.RoomInfoService;
+import com.reservation.utils.Bank;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -32,25 +39,45 @@ import lombok.extern.log4j.Log4j2;
 public class ReserveServiceTests {
 
 	@Autowired
-	ReserveService reserveService;
+	private ReserveService reserveService;
 	
-	//@Transactional
+	@Commit
+	@Transactional
 	@Test
 	public void wrtieTest() throws Exception {
-		ConsultationDTO consultationDTO = ConsultationDTO.builder()
-				.name("tester")
-				.depth(0)
-				.grgrod(2L)
-				.grno(1L)
-				.title("testT")
-				.contents("testC")
-				.passwd("1234")
-				.build();
-		System.out.println("==============================================================");
-		System.out.println("=============================================================="+consultationDTO);
-		//int saveNo = roomInfoService.wrtiteConsultation(consultationDTO);
-		//System.out.println("=============================================================="+saveNo);
-		//assertEquals(consultation, consultationRepository.findOne(saveNo));
+		IntStream.range(1, 50).forEach(i -> {
+			Long no = (long)((Math.random()*5)+1);
+			RoomInfo roomInfo = RoomInfo.builder().no(no).build();
+			
+			long minDay = LocalDate.of(2022, 1, 1).toEpochDay();
+		    long maxDay = LocalDate.of(2022, 3, 31).toEpochDay();
+		    long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
+		    LocalDate randomDateStart = LocalDate.ofEpochDay(randomDay);
+		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		    String formattedStringS = randomDateStart.format(formatter);
+		    String formattedStringE = randomDateStart.plusDays((int)(Math.random()*5)+1).format(formatter);
+		    System.out.println(randomDateStart);
+
+
+			ReserveDTO reserve = ReserveDTO.builder()
+					.roomNo(roomInfo.getNo())
+					.name("guest"+(int)(Math.random()*10)+i)
+					.phone(String.valueOf((int)(Math.random()*10)+i))
+					.adult("4")
+					.child("1")
+					.startDate(formattedStringS)
+					.endDate(formattedStringE)
+					.options("1,2,3,4,5")
+					.totalCost(50000)
+					.bankName(Bank.fromValue((int)(Math.random()*12)+1).getBankName())
+					.bankbranchcde("bank"+String.valueOf((int)(Math.random()*12)+1))
+					.bankNo(String.valueOf((Bank.fromValue((int)(Math.random()*12)+1).getBankCd())))
+					.build();
+			System.out.println(roomInfo.toString());
+			System.out.println(reserve.toString());
+			
+			reserveService.registerReserve(reserve);
+		});
 	}
 	
 	@Test
@@ -71,7 +98,7 @@ public class ReserveServiceTests {
 		cal.add(cal.MONTH, 1);
 		Date dateEnd = cal.getTime();
 		Long roomNo = 1L;
-		List<ReserveDTO> result = reserveService.getDateList(dateStart, dateEnd, roomNo);
+		List<ReserveDTO> result = reserveService.getDateList(dateStart,dateEnd, roomNo);
 		for(Object objects : result) {
 			Arrays.asList(objects).forEach(i -> log.info(i.getClass().getName()));;
 		}

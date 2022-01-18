@@ -9,15 +9,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.reservation.dto.Bank;
 import com.reservation.dto.ReserveDTO;
 import com.reservation.dto.RoomInfoDTO;
 import com.reservation.service.ReserveService;
 import com.reservation.service.RoomInfoService;
+import com.reservation.utils.Bank;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -66,13 +68,21 @@ public class ReserveAjaxController {
 	@GetMapping(value = "/payment/list/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Bank> showBank(@PathVariable("code") int bankCd){
 		return new ResponseEntity<Bank>(Bank.fromValue(bankCd), HttpStatus.OK);
-		
 	}
 	
 	//bank whole list
 	@GetMapping(value = "/payment/list", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Bank>> showBank(){
 		return new ResponseEntity<List<Bank>>(Bank.getAll(), HttpStatus.OK);
+		
+	}
+	
+	//bank whole list
+	@PostMapping("/reserve/register")
+	public ResponseEntity<Long> registerReserve(@RequestBody ReserveDTO reserveDTO){
+		log.info(reserveDTO);
+		Long no = reserveService.registerReserve(reserveDTO);
+		return new ResponseEntity<Long>(no, HttpStatus.OK);
 		
 	}
 }

@@ -1,4 +1,4 @@
-package com.reservation.dto;
+package com.reservation.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.reservation.dto.BankDto;
 
 import lombok.Builder;
 

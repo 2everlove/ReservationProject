@@ -90,10 +90,11 @@ a{text-decoration: none;}
 		$.getJSON('/api/checkReserve/'+amount ,function(arr){
 			let jsonList = new Array();
 	       	  $.each(arr, function(i, data){
+	       		console.log(data[1])
 				let json = new Object();
 	       		json.title = data[1].roomNo.roomTitle;
 	       		json.start = moment(data[1].startDate).format('YYYY-MM-DD');
-	       		json.end = moment(data[1].endDate).format('YYYY-MM-DD');
+	       		json.end = moment(moment(data[1].endDate).add(1, 'days')).format('YYYY-MM-DD');
 	       		json.color =data[0].colorCd;
 	     		jsonList.push(json);
 	       	  });

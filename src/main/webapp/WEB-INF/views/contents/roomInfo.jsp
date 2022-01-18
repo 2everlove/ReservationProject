@@ -28,25 +28,25 @@ a{text-decoration: none;}
 	                                    <p class="mb-0 text-dark">
 		                                    <form>
 			                                    <div class="form-group row" style="justify-content: flex-end;">
-													<label for="inputEmail3" class="col-sm-2 col-form-label">大人数</label>
+													<label for="" class="col-sm-2 col-form-label">大人数</label>
 													<div class="col-sm-5">
 														<input type="number" class="form-control detail__count-adult" min="1"　max="5" placeholder="1人" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" value="1" style="width: 80px;">
 													</div>
 												</div>
 			                                    <div class="form-group row" style="justify-content: flex-end;">
-													<label for="inputEmail3" class="col-sm-2 col-form-label">子供数</label>
+													<label for="" class="col-sm-2 col-form-label">子供数</label>
 													<div class="col-sm-5">
 														<input type="number" class="form-control detail__count-child" value="0"　placeholder="1人" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width: 80px;">
 													</div>
 												</div>
 			                                    <div class="form-group row" style="justify-content: flex-end;">
-													<label for="inputEmail3" class="col-sm-2 col-form-label">期&nbsp;&nbsp;&nbsp;&nbsp;間</label>
+													<label for="" class="col-sm-2 col-form-label">期&nbsp;&nbsp;&nbsp;&nbsp;間</label>
 													<div class="col-sm-5">
 														<input type="text" class="form-control" id="demo" name="demo" value=""/>
 													</div>
 												</div>
 			                                    <div class="form-group row" style="justify-content: flex-end;">
-													<label for="inputEmail3" class="col-sm-2 col-form-label">総金額</label>
+													<label for="" class="col-sm-2 col-form-label">総金額</label>
 													<div class="col-sm-5">
 														<input class="form-control detail__totalPrice" type="text" value="${roomInfo.adultCost }" placeholder="" readonly/>
 													</div>
@@ -107,14 +107,54 @@ a{text-decoration: none;}
 				</button>
 			</div>
 			<div class="modal-body">
-				<select class="bankSelect form-control mx-sm-10">
-					<option value="">---</option>
-				</select>
-				<p>Modal body text goes here.</p>
+				<div class="form-group row" style="justify-content: flex-end;">
+					<label for="" class="col-sm-2 col-form-label">総金額</label>
+					<div class="col-sm-4">
+						<input class="form-control detail__totalPrice-payment" type="text" placeholder="" readonly/>
+						<input class="startDate" type="hidden">
+						<input class="endDate" type="hidden">
+					</div>
+					<label for="" class="col-sm-2 col-form-label">Bank</label>
+					<div class="col-sm-4">
+						<select class="bankSelect form-control mx-sm-10">
+							<option value="">---</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group row" style="justify-content: flex-end;">
+					<label for="" class="col-sm-2 col-form-label">Adult</label>
+					<div class="col-sm-4">
+						<input class="form-control adult-clone" type="text" placeholder="" readonly/>
+						<input class="startDate" type="hidden">
+						<input class="endDate" type="hidden">
+					</div>
+					<label for="" class="col-sm-2 col-form-label">Child</label>
+					<div class="col-sm-4">
+						<input class="form-control child-clone" type="text" placeholder="" readonly/>
+						<input class="startDate" type="hidden">
+						<input class="endDate" type="hidden">
+					</div>
+				</div>
+				<div class="form-group row" style="justify-content: flex-end;">
+					<label for="" class="col-sm-2 col-form-label">Name</label>
+					<div class="col-sm-4">
+						<input class="form-control name" type="text" placeholder=""/>
+						<input class="startDate" type="hidden">
+						<input class="endDate" type="hidden">
+					</div>
+					<label for="" class="col-sm-2 col-form-label">Phone</label>
+					<div class="col-sm-4">
+						<input class="form-control phone" type="text" placeholder=""/>
+						<input class="startDate" type="hidden">
+						<input class="endDate" type="hidden">
+					</div>
+				</div>
+				<p class="response__data"></p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary">Payment</button>
+				<button type="button" class="btn btn-primary payReserve">Payment</button>
+				<button type="button" class="btn btn-primary checkOrder" style="display: none">checkOrder</button>
 			</div>
 		</div>
 	</div>
@@ -127,9 +167,20 @@ a{text-decoration: none;}
 		
 		let modal = $('.modal');
 		$('.registerReserve').click(function(){
+			$('.payReserve').show();
+			$('.checkOrder').hide();
+			if($('.startDate').val() == ''){
+				alert('Select Date');
+				$('#demo').click();
+				return true;
+			}
 			modal.modal('show');
 			$('.bankSelect').html('<option value="">---</option>');
-			//은행정보
+			$('.detail__totalPrice-payment').val($('.detail__totalPrice').val());
+			$('.adult-clone').val($('.detail__count-adult').val());
+			$('.child-clone').val($('.detail__count-child').val());
+			
+			//bankInfo
 			$.getJSON('/api/payment/list' ,function(arr){
 				console.log(arr);
 				$.each(arr, function(i, bank){
@@ -142,12 +193,59 @@ a{text-decoration: none;}
 				})
 			});
 		});
-		$('.modal-footer .btn-secondary').click(function(){
+		//close modal
+		$('.modal-footer .btn-secondary, .close').click(function(){
 			modal.modal('hide');
 		});
-		$('.close span').click(function(){
-			modal.modal('hide');
-		});
+		
+		//payment
+		$('.payReserve').click(function(){
+			if($('.bankSelect').val() == ''){
+				alert('Select Bank');
+				let selectMenu = document.querySelector('.bankSelect');
+				$('.bankSelect').focus();
+				return true;
+			}
+			if($('.name').val() == ''){
+				$('.name').focus();
+				return true;
+			}
+			if($('.phone').val() == ''){
+				$('.phone').focus();
+				return true;
+			}
+			let reserve = {
+				name : $('.name').val(),
+				adult : $('.detail__count-adult').val(),
+				child : $('.detail__count-child').val(),
+				builCd: ${roomInfo.buildCd},
+				bankName : $('.bankSelect option:selected').text(),
+				bankNo : $('.bankSelect option:selected').val(),
+				bankbranchcde : $('.bankSelect option:selected').val(),
+				startDate : $('.startDate').val(),
+				endDate : $('.endDate').val(),
+				totalCost : $('.detail__totalPrice-payment').val(),
+				phone : $('.phone').val(),
+				roomNo : ${roomInfo.no }
+			}
+			console.log(reserve);
+			$.ajax({
+				url: '/api/reserve/register',
+				method: 'post',
+				data: JSON.stringify(reserve),
+				contentType: 'application/json; charset=utf-8',
+				dataType:'json',
+				success:function(data){
+					console.log(data);
+					let newNo = parseInt(data);
+					$('.checkOrder').show();
+					$('.payReserve').hide();
+					$('.response__data').text(data+'번 글이 등록되었습니다.');
+					
+				}
+			})
+		})
+		
 		
 		checkReserve(amount)
 		
@@ -215,8 +313,8 @@ a{text-decoration: none;}
 			let toDate = moment(endDate)
 			let diff = toDate.diff(fromDate, type)
 			let range = []
-			for (let i = 0; i < diff; i++) {
-			  range.push(moment(moment(startDate).add(i, type)).format('YYYY-MM-DD'))
+			for (let i = 0; i <= diff; i++) {
+			  range.push(moment(moment(startDate).add(i, type)).format('YYYY-MM-DD'));
 			}
 			return range
 		}
@@ -239,7 +337,7 @@ a{text-decoration: none;}
 		       	  $.each(arr, function(i, data){
 		       		disabledArr.push(getRange(data[1].startDate, data[1].endDate, 'days').flat(Infinity));
 		       		//console.log(data[1]);
-		       		//console.log(data[1].startDate+ " " + data[1].endDate);
+		       		console.log(data[1].startDate+ " " + data[1].endDate);
 		       		//console.log(uniteUnique(disabledArr));
 					//console.log(data);
 					let json = new Object();
@@ -264,6 +362,7 @@ a{text-decoration: none;}
 			});
 		}
 		console.log(uniteUnique(disabledArr));
+		let today = new Date();
 		$('#demo').daterangepicker({
 			isInvalidDate: function(arg){
 
@@ -279,14 +378,23 @@ a{text-decoration: none;}
 		         var thisYear = arg._d.getYear()+1900;   // Years are 1900 based
 
 		         var thisCompare = thisYear +"-"+ thisMonth +"-"+ thisDate ;
-		         console.log(thisCompare);
+		         //console.log(thisCompare);
+		         //console.log(uniteUnique(disabledArr));
 				
 		         if($.inArray(thisCompare,uniteUnique(disabledArr))!=-1){
-		             console.log("      ^--------- DATE FOUND HERE");
+		            // console.log("      ^--------- DATE FOUND HERE");
 		             return true;
+		         }
+		         if(disabledArr.length == 0){
+		        	 console.log(disabledArr.length);
+		        	 return true;
 		         }
 		     },
 		     opens: 'left',
+		     minDate: today,
+		     maxSpan: {
+		    	    "days": ${roomInfo.max}
+	    	},
 			"locale": { 
 				"format": "YYYY-MM-DD", 
 				"separator": " ~ ",
@@ -298,13 +406,14 @@ a{text-decoration: none;}
 				"weekLabel": "W", 
 				"daysOfWeek": ["日", "月", "火", "水", "木", "金", "土"], 
 				"monthNames": ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"], 
-			}, 
-			"startDate": new Date(), 
-			"endDate": new Date(), 
+			},
+			
 			"drops": "auto" 
 		}, function (start, end, label) { 
 			
 			console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')'); 
+			$('.startDate').val(start.format('YYYYMMDD'));
+			$('.endDate').val(end.format('YYYYMMDD'));
 		});
 		
 		$("#demo").on("apply.daterangepicker",function(e,picker){
@@ -317,8 +426,8 @@ a{text-decoration: none;}
 		    // Compare the dates again.
 		    var clearInput = false;
 		    let disableD = uniteUnique(disabledArr);
-		    //console.log(disableD)
-		    for(i=0;i<disableD.length;i++){
+		    console.log(disableD)
+		    for(i=0;i<disableD.length+1;i++){
 		        if(startDate<disableD[i] && endDate>disableD[i]){
 		            console.log("중복");
 		            clearInput = true;
@@ -342,9 +451,7 @@ a{text-decoration: none;}
 		    }
 		});
 		
-		
 	});
-		
 	
 	
 	

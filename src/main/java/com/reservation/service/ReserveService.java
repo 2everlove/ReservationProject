@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
@@ -14,6 +15,9 @@ import com.reservation.entity.Reserve;
 import com.reservation.entity.RoomInfo;
 
 public interface ReserveService {
+	
+	@Transactional
+	Long registerReserve(ReserveDTO reserveDTO);//reserve 登録
 	
 	List<Object[]> getDateList(Calendar date);
 	

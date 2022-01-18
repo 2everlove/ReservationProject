@@ -41,7 +41,6 @@ public class ConsultReposiTests {
 			System.out.println(consultation.toString());
 			consultationRepository.save(consultation);
 		});
-		
 	}
 	
 	@Test

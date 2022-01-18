@@ -12,6 +12,7 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.reservation.dto.ReserveDTO;
 import com.reservation.entity.Reserve;
 
 @Repository
@@ -39,4 +40,15 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, QueryDs
 			+ "and r.paymentFlg = 0 and r.cancelFlg = 0 and r.deleteFlg = 0 order by r.roomNo.no"
 			)
 	List<Object[]> getDateList(@Param("dateStart") Date dateStart,@Param("dateEnd") Date dateEnd, @Param("roomno") Long roomno);
+	
+	//중복체크
+	@Query("select count(*) from RoomInfo i " +
+			"right join Reserve r on r.roomNo.no = i "
+			+ "where r.roomNo.no = :roomno and to_date(r.startDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
+			+ "or to_date(r.endDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
+			+ "and r.paymentFlg = 0 and r.cancelFlg = 0 and r.deleteFlg = 0 order by r.roomNo.no"
+			)
+	Long getDateCount(@Param("dateStart") String dateStart, @Param("dateEnd") String dateEnd, @Param("roomno") Long roomno);
+	
+	
 }
