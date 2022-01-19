@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.reservation.dto.NoticeDTO;
 import com.reservation.dto.PageRequestDTO;
+import com.reservation.service.ConsultationService;
 import com.reservation.service.NoticeService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,24 +26,24 @@ import lombok.extern.log4j.Log4j2;
 @Controller
 @RequiredArgsConstructor
 @Log4j2
-public class UserNoticeController {
+public class UserConsultationController {
 
-	private final NoticeService noticeService;
+	private final ConsultationService consultationService;
 	
-	@GetMapping("/notice")
+	@GetMapping("/consultation")
 	public String list(PageRequestDTO pageRequestDTO, Model model) {
 		log.info("list: "+pageRequestDTO);
 		Calendar cal = Calendar.getInstance();
 		model.addAttribute("now", cal.getTime());
-		model.addAttribute("result", noticeService.getList(pageRequestDTO));
-		return "notice";
+		model.addAttribute("result", consultationService.getList(pageRequestDTO));
+		return "consultation";
 	}
 	
-	@GetMapping("/notice/{no}")
+	@GetMapping("/consultation/{no}")
 	public String getOne(@PathVariable("no")Long no ,PageRequestDTO pageRequestDTO, Model model) {
 		log.info("getOne: "+no);
-		model.addAttribute("result", noticeService.get(no));
-		return "detailNotice";
+		model.addAttribute("result", consultationService.get(no));
+		return "detailConsultation";
 	}
 	
 }

@@ -28,15 +28,16 @@ public class ConsultReposiTests {
 
 	@Test
 	public void test() {
-		IntStream.range(1, 100).forEach(i -> {
+		IntStream.range(1, 300).forEach(i -> {
 			Consultation consultation = Consultation.builder()
 					.name("tester"+i)
 					.depth(0)
-					.grgrod(2L)
-					.grno(1L)
+					.grgrod((long) 0)
+					.grno((long) i)
 					.title("testT"+i)
 					.contents("testC")
 					.passwd("1234")
+					.lockFlg("0")
 					.build();
 			System.out.println(consultation.toString());
 			consultationRepository.save(consultation);

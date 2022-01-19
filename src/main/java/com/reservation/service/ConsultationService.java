@@ -13,6 +13,10 @@ public interface ConsultationService {
 	//페이징 처리
 	PageResultDTO<ConsultationDTO, Consultation> getList(PageRequestDTO requestDTO);
 	
+	PageResultDTO<ConsultationDTO, Consultation> getAdminList(PageRequestDTO requestDTO);
+	
+	ConsultationDTO get(Long no);
+	
 	default Consultation dtoToEntity(ConsultationDTO dto) {
 		Consultation entity = Consultation.builder()
 				.no(dto.getNo())
@@ -46,5 +50,5 @@ public interface ConsultationService {
 				.build();
 		return dto;
 	}
-	
+
 }

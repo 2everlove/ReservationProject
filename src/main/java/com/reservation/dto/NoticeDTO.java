@@ -43,6 +43,9 @@ public class NoticeDTO {
 	public int getBuildCd() {
 		return buildCd;
 	}
+	public String getDeleteFlg() {
+		return deleteFlg;
+	}
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class) 
@@ -57,8 +60,6 @@ public class NoticeDTO {
 	public LocalDateTime getUpdatedAt() {
 		return updatedAt;
 	}
-	public String getDeleteFlg() {
-		return deleteFlg;
-	}
+	
     
 }

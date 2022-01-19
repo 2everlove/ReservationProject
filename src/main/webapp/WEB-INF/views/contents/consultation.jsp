@@ -16,7 +16,7 @@ a{text-decoration: none;}
 		<div style="padding-top: 0px;">
 			<section class="projects-section bg-light" style="margin-top: 20px; padding-bottom: 40px;">
 				<div class="container px-4 px-lg-5">
-					<h2 class="title">お知らせ</h2>
+					<h2 class="title">相談</h2>
 					<hr/>
 					<div class="table-responsive-lg">
 						<table class="table table-hover">
@@ -24,7 +24,7 @@ a{text-decoration: none;}
 								<tr>
 									<th scope="col" style="border-top: 0px !important;">#</th>
 									<th scope="col" style="border-top: 0px !important;">Title</th>
-									<th scope="col" style="border-top: 0px !important;">Floor</th>
+									<th scope="col" style="border-top: 0px !important;">Name</th>
 									<th scope="col" style="border-top: 0px !important;">RegDate</th>
 								</tr>
 							</thead>
@@ -36,9 +36,13 @@ a{text-decoration: none;}
 									<fmt:formatDate value="${regDate}" var="regTime" pattern="HH:mm:ss"/>
 									<tr>
 										<th class="result__no" scope="row">${dto.no }</th>
-										<td class="result__title"><a href="/notice/${dto.no }">${dto.title } </a><c:if test="${nowDate == reg}">&nbsp;&nbsp;<i class="fas fa-plus-square"></i></c:if></td>
-										<td class="result__buildCd">${dto.buildCd }</td>
+										<td class="result__title"><a href="/consultation/${dto.no }">${dto.title } </a>
+											<c:if test="${nowDate == reg}">&nbsp;&nbsp;<i class="fas fa-plus-square"></i></c:if>
+											<c:if test="${dto.lockFlg == '1'}">&nbsp;&nbsp;<i class="fas fa-lock"></i></c:if>
+										</td>
+										<td class="result__buildCd">${dto.name }</td>
 										<td class="result__createdAt"><c:out value="${nowDate == reg ? regTime : reg}"></c:out></td>
+										
 									</tr>
 									
 								</c:forEach>
@@ -47,19 +51,19 @@ a{text-decoration: none;}
 						<ul class="pagination pagination-sm h-100 justify-content-center align-items-center">
 							<c:if test="${result.prev}">
 					            <li class="page-item" >
-					                <a class="page-link" href="/notice?page=${result.start -1}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}" tabindex="-1">&laquo;</a>
+					                <a class="page-link" href="/consultation?page=${result.start -1}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}" tabindex="-1">&laquo;</a>
 					            </li>
 							</c:if>
 							<c:forEach var="page" items="${result.pageList}">
 					            <li class="page-item ${result.page == page? 'active':''}">
-					                <a class="page-link" href="/notice?page=${page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">
+					                <a class="page-link" href="/consultation?page=${page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">
 					                    ${page}
 					                </a>
 					            </li>
 				            </c:forEach>
 							<c:if test="${result.next}">
 					            <li class="page-item">
-					                <a class="page-link" href="/notice?page=${result.end + 1}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">&raquo;</a>
+					                <a class="page-link" href="/consultation?page=${result.end + 1}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">&raquo;</a>
 					            </li>
 				            </c:if>
 				        </ul>
@@ -71,7 +75,7 @@ a{text-decoration: none;}
 <script type="text/javascript">
 $(document).ready(function(){
 	$('.result__title').closest('tr').click(function(){
-		location.href = '/notice/'+$(this).find('.result__no').text();
+		location.href = '/consultation/'+$(this).find('.result__no').text();
 	});
 });
 </script>

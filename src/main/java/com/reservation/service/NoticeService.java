@@ -17,11 +17,14 @@ public interface NoticeService {
 	
 	void modify(NoticeDTO noticeDTO);
 	
+	PageResultDTO<NoticeDTO, Notice> getListAdmin(PageRequestDTO requestDTO);
+	
 	default Notice dtoToEntity(NoticeDTO dto) {
 		Notice entity = Notice.builder()
 				.no(dto.getNo())
 				.title(dto.getTitle())
 				.contents(dto.getContents())
+				.buildCd(dto.getBuildCd())
 				.deleteFlg(dto.getDeleteFlg())
 				.build();
 		return entity;
@@ -33,6 +36,7 @@ public interface NoticeService {
 				.title(entity.getTitle())
 				.contents(entity.getContents())
 				.deleteFlg(entity.getDeleteFlg())
+				.buildCd(entity.getBuildCd())
 				.createdAt(entity.getCreatedAt())
 				.updatedAt(entity.getUpdatedAt())
 				.build();

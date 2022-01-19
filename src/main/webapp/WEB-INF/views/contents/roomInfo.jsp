@@ -42,7 +42,7 @@ a{text-decoration: none;}
 			                                    <div class="form-group row" style="justify-content: flex-end;">
 													<label for="" class="col-sm-2 col-form-label">期&nbsp;&nbsp;&nbsp;&nbsp;間</label>
 													<div class="col-sm-5">
-														<input type="text" class="form-control" id="demo" name="demo" value=""/>
+														<input type="text" class="form-control" id="demo" name="demo" value="" readonly style="background-color: #fff !important"/>
 													</div>
 												</div>
 			                                    <div class="form-group row" style="justify-content: flex-end;">
@@ -90,10 +90,6 @@ a{text-decoration: none;}
                 	<div id='calendar'></div>
 				</div>
            	<hr>
-           	${roomInfo }
-           	<fmt:parseDate value="${ roomInfo.createdAt }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
-           	${parsedDateTime }<br>
-			<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${ parsedDateTime }" />
        	</section>
 	</div>
 </div>
@@ -273,7 +269,7 @@ a{text-decoration: none;}
 				$(".detail__count-adult").select();
 			} else if (Number($(".detail__count-adult").val())+Number($(".detail__count-child").val()) > ${roomInfo.max}){
 				$(".detail__count-adult").val(Number($(".detail__count-adult").val()));
-				$(".detail__count-child").val(Number($(".detail__count-child").val())-1);
+				$(".detail__count-child").val(Number(${roomInfo.max}-$(".detail__count-adult").val()));
 				if($(".detail__count-adult").val() == ${roomInfo.max}){
 					$(".detail__count-adult").val("5");
 					$(".detail__count-child").val("0");
@@ -289,7 +285,7 @@ a{text-decoration: none;}
 				$(".detail__count-adult").val("1");
 				$(".detail__count-child").select();
 			} else if (Number($(".detail__count-adult").val())+Number($(".detail__count-child").val()) > ${roomInfo.max}){
-				$(".detail__count-adult").val(Number($(".detail__count-adult").val())-1);
+				$(".detail__count-adult").val(Number(${roomInfo.max} - $(".detail__count-child").val()));
 				$(".detail__count-child").val(Number($(".detail__count-child").val()));
 				if($(".detail__count-child").val() == ${roomInfo.max}-1){
 					$(".detail__count-child").val("4");
@@ -396,7 +392,7 @@ a{text-decoration: none;}
 		    	    "days": ${roomInfo.max}
 	    	},
 			"locale": { 
-				"format": "YYYY-MM-DD", 
+				"format": "YY/MM/DD", 
 				"separator": " ~ ",
 				"applyLabel": "확인", 
 				"cancelLabel": "취소", 

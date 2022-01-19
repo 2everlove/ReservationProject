@@ -10,9 +10,11 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.reservation.dto.ConsultationDTO;
+import com.reservation.dto.NoticeDTO;
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
 import com.reservation.entity.Consultation;
+import com.reservation.entity.Notice;
 import com.reservation.repository.ConsultationRepository;
 import com.reservation.repository.RoomInfoRepository;
 
@@ -42,8 +44,23 @@ public class ConsultationServiceImpl implements ConsultationService {
 	@Override
 	public PageResultDTO<ConsultationDTO, Consultation> getList(PageRequestDTO requestDTO) {
 		Pageable pageable = requestDTO.getPageable(new Sort(Direction.DESC, "no"));
+		Page<Consultation> result = consultationRepository.getAllWithOutDelete(pageable);
+		Function<Consultation, ConsultationDTO> fn = (entity -> entityToDTO(entity));
+		return new PageResultDTO<ConsultationDTO, Consultation>(result, fn);
+	}
+	
+	@Override
+	public PageResultDTO<ConsultationDTO, Consultation> getAdminList(PageRequestDTO requestDTO) {
+		Pageable pageable = requestDTO.getPageable(new Sort(Direction.DESC, "no"));
 		Page<Consultation> result = consultationRepository.findAll(pageable);
 		Function<Consultation, ConsultationDTO> fn = (entity -> entityToDTO(entity));
 		return new PageResultDTO<ConsultationDTO, Consultation>(result, fn);
+	}
+
+	@Override
+	public ConsultationDTO get(Long no) {
+		Consultation tesmpResult = consultationRepository.findOne(no);
+		ConsultationDTO result = entityToDTO(tesmpResult);
+		return result;
 	}
 }

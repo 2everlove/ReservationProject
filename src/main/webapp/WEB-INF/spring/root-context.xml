@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	<tx:annotation-driven />
+	<tx:annotation-driven proxy-target-class="true" />
 	
 	<jpa:repositories base-package="com.reservation.repository" entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager"/>
 	<!-- auditing -->
