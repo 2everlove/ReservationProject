@@ -35,6 +35,18 @@ public class RoomReposiTests {
 	@Test
 	public void test() {
 		IntStream.range(1, 6).forEach(i -> {
+			String color = "";
+			if(i == 1){
+				color = "#ffa502";
+			} else if (i==2) {
+				color = "#2ed573";
+			} else if (i==3) {
+				color = "#1e90ff";
+			} else if (i==4) {
+				color = "#ff6b81";
+			} else if (i==5) {
+				color = "dfe4ea";
+			}
 			RoomInfo roominfo = RoomInfo.builder()
 					.roomNum("70"+i)
 					.roomTitle("Title"+i)
@@ -43,7 +55,7 @@ public class RoomReposiTests {
 					.childCost(10000L)
 					.explanation("good"+(int)(Math.random()*10)+i)
 					.images("/save/"+i+"local")
-					.colorCd("#ffff"+(int)(Math.random()*4)+i)
+					.colorCd(color)
 					.deleteFlg("0")
 					.buildCd(7)
 					.build();

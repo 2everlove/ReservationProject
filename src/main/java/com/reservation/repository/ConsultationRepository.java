@@ -10,10 +10,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.reservation.entity.Consultation;
-import com.reservation.entity.Notice;
 
 @Repository
 public interface ConsultationRepository extends JpaRepository<Consultation, Long>, QueryDslPredicateExecutor<Consultation> {
+	
+	@Modifying
+	@Query("update Consultation c set c.deleteFlg = :deleteFlg where c.no = :no")
+	int modifyDeleteByNo(@Param("no") Long no, @Param("deleteFlg") String deleteFlg);
 	
 	@Query("select c from Consultation c where c.deleteFlg = 0")
 	Page<Consultation> getAllWithOutDelete(Pageable pageable);

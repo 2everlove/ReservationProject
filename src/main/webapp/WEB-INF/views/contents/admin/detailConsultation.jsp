@@ -77,8 +77,6 @@ a{text-decoration: none;}
 					<div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 1rem">
 						<c:if test="${result != null}">
 							<input type="button" value="Delete" class="btn btn-warning result__delete" style="display: none;">
-							<input type="button" value="Reply" class="btn btn-primary result__reply">
-							<input type="button" value="Cancel" class="btn btn-primary result__cancel" style="display: none;">
 							<input type="button" value="Modify" class="btn btn-primary result__modify">
 						</c:if>
 						<c:if test="${result == null}">
@@ -86,38 +84,6 @@ a{text-decoration: none;}
 						</c:if>
 					</div>
 					<hr/>
-					<!--  -->
-					<div class="card reBody" style="display: none;">
-						<div class="card-header">
-							<div class="input-group">
-								<div class="col-sm-3">
-								<label for="staticEmail" class="col-sm col-form-label" style="text-align: center;"></label>
-								</div>
-								<div class="col-sm-4">
-								<div class="form-check" style="display: flex; justify-content: space-between; align-items: center;">
-									<label class="form-check-label" for="defaultCheck1">
-										<input class="form-check-input result__reCheckedPw" name="lockFlg" type="checkbox" value="0" >
-										<input class="form-check-input result__reCheckdeleteFlg" name="deleteFlg" type="hidden" value="0" >
-										<i class="fas fa-lock-open"></i>
-										<i class="fas fa-lock" style="display: none;"></i>
-									</label>
-									<input type="password" name="passwd" placeholder="Password" class="form-check result__rePasswd" style="width: 80%; padding-left: 0.5rem !important; display: none;">
-								</div>
-								</div>
-								<div class="col-sm-5">
-									<input type="input" value="" name="name" placeholder="Name" class="form-control form-control-sm result__reName" style="width: 80%;">
-								</div>
-							</div>
-						</div>
-							
-						<div class="card-body">
-							<input type="text" aria-label="Last name" class="form-control form-control-lg result__reTitle" placeholder="Title" value="">
-						</div>
-						<div class="card-body" style="height:50%; min-height: 100px;">
-							<div id="reSummernote"></div>
-							<input type="hidden" name="contents">
-						</div>
-					</div>
 					<!--  -->
 				</div>
 			</section>
@@ -197,7 +163,7 @@ function checkPwFlg(){
 	}
 }
 <c:if test="${result == null}">
-	
+
 	let actionForm = document.createElement("form");
 	$('.result__register').click(function(){
 		submit('/consultation/register', 'POST', [
@@ -337,12 +303,6 @@ $('.result__delete').click(function(){
 $('.modal-footer .btn-secondary, .close').click(function(){
 	modal.modal('hide');
 });
-//reply
-$('.result__reply').click(function(){
-	$('.result__cancel').show();
-	$('.reBody').show();
-	$('.result__reply').hide();
-})
 </c:if>
 </script>
 </body>

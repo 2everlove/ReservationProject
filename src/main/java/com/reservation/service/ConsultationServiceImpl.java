@@ -2,21 +2,18 @@ package com.reservation.service;
 
 import java.util.function.Function;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.reservation.dto.ConsultationDTO;
-import com.reservation.dto.NoticeDTO;
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
 import com.reservation.entity.Consultation;
-import com.reservation.entity.Notice;
 import com.reservation.repository.ConsultationRepository;
-import com.reservation.repository.RoomInfoRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -28,6 +25,7 @@ public class ConsultationServiceImpl implements ConsultationService {
 	
 	private final ConsultationRepository consultationRepository;
 	
+	@Transactional
 	@Override
 	public Long wrtiteConsultation(ConsultationDTO dto) {
 		log.info("DTO------");
@@ -37,6 +35,8 @@ public class ConsultationServiceImpl implements ConsultationService {
 		
 		log.info(entity);
 		
+		consultationRepository.save(entity);
+		entity.changeGrno(entity.getNo());
 		consultationRepository.save(entity);
 		return entity.getNo();
 	}
@@ -61,6 +61,26 @@ public class ConsultationServiceImpl implements ConsultationService {
 	public ConsultationDTO get(Long no) {
 		Consultation tesmpResult = consultationRepository.findOne(no);
 		ConsultationDTO result = entityToDTO(tesmpResult);
+		return result;
+	}
+	
+	@Transactional
+	@Override
+	public void modify(ConsultationDTO dto) {
+		Consultation entity = consultationRepository.getOne(dto.getNo());
+		
+		entity.changeTitle(dto.getTitle());
+		entity.changeContent(dto.getContents());
+		entity.changeDeleteFlg(dto.getDeleteFlg());
+		entity.changeLockFlg(dto.getLockFlg());
+		entity.changePasswd(dto.getPasswd());
+		
+		consultationRepository.save(entity);
+	}
+
+	@Override
+	public int modifyDeleteByNo(Long no, String deleteFlg) {
+		int result = consultationRepository.modifyDeleteByNo(no, deleteFlg);
 		return result;
 	}
 }

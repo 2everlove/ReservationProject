@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import lombok.Data;
 
@@ -33,7 +32,7 @@ public class PageResultDTO<DTO, EN> {
 		makePageList(result);
 	}
 	
-	private void makePageList(Page pageInfo) {
+	private void makePageList(Page<EN> pageInfo) {
 		this.page = pageInfo.getNumber()+1;
 		this.size = pageInfo.getSize();
 		

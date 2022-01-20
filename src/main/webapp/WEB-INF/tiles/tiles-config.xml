@@ -16,8 +16,14 @@
 		<put-attribute name="body" value="/WEB-INF/views/contents/{1}.jsp" />
 	</definition>
 	
-	<definition name="admin-base" template="/WEB-INF/views/tiles-layout/layout.jsp">
-		<put-attribute name="header" value="/WEB-INF/views/header/header.jsp" />
+	<definition name="admin-base" template="/WEB-INF/views/tiles-layout/admin_layout.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/header/admin_header.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/footer/footer.jsp" />
+	</definition>
+	
+	<definition name="admin" template="/WEB-INF/views/tiles-layout/admin_layout.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/header/admin_header.jsp" />
 		<put-attribute name="body" value="" />
 		<put-attribute name="footer" value="/WEB-INF/views/footer/footer.jsp" />
 	</definition>

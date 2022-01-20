@@ -47,4 +47,27 @@ public class Consultation extends BaseEntity{
 	@Column(columnDefinition = "varchar(1) default '0'")
 	private String deleteFlg;
 	
+	public void changeTitle(String title) {
+		this.title = title;
+	}
+	
+	public void changeContent(String contents) {
+		this.contents = contents;
+	}
+	
+	public void changeDeleteFlg(String deleteFlg) {
+		this.deleteFlg = deleteFlg;
+	}
+	
+	public void changePasswd(String passwd) {
+		this.passwd = passwd;
+	}
+	
+	public void changeLockFlg(String lockFlg) {
+		this.lockFlg = lockFlg;
+	}
+	
+	public void changeGrno(Long grno) {
+		this.grno = grno;
+	}
 }

@@ -17,11 +17,29 @@ window.addEventListener('DOMContentLoaded', event => {
         }
         if (window.scrollY === 0) {
             navbarCollapsible.classList.remove('navbar-shrink')
+            document.body.querySelector(".dropdown-menu").classList.add('bg-dark')
+            document.body.querySelectorAll('.dropdown-item')[0].classList.add("text-white")
+            document.body.querySelectorAll('.dropdown-item')[1].classList.add("text-white")
         } else {
             navbarCollapsible.classList.add('navbar-shrink')
+            document.body.querySelector(".dropdown-menu").classList.remove('bg-dark')
+            document.body.querySelectorAll('.dropdown-item')[0].classList.remove("text-white")
+            document.body.querySelectorAll('.dropdown-item')[1].classList.remove("text-white")
         }
 
     };
+    
+    if (window.matchMedia("(min-width: 992px)").matches) {
+    	  /* 뷰포트 너비가  픽셀 이상 */
+	    	document.body.querySelector(".dropdown-menu").classList.add('bg-dark')
+	        document.body.querySelectorAll('.dropdown-item')[0].classList.add("text-white")
+	        document.body.querySelectorAll('.dropdown-item')[1].classList.add("text-white")
+    	} else {
+    		document.body.querySelector(".dropdown-menu").classList.remove('bg-dark')
+            document.body.querySelectorAll('.dropdown-item')[0].classList.remove("text-white")
+            document.body.querySelectorAll('.dropdown-item')[1].classList.remove("text-white")
+    	  /* 뷰포트 너비가  픽셀 미만 */
+    	}
 
     // Shrink the navbar 
     navbarShrink();

@@ -4,14 +4,12 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import com.google.common.base.Optional;
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
 import com.reservation.dto.RoomInfoDTO;
@@ -47,7 +45,8 @@ public class RoomInfoServiceImpl implements RoomInfoService {
 	@Override
 	public RoomInfoDTO findAllSpecifyRoom(Long no) {
 		RoomInfo tempResult = roomInfoRepository.findOne(no);
-		Function<RoomInfo, RoomInfoDTO> fn = (entity -> entityToDTO(entity));
+		log.info("findAllSpecifyRoom: "+tempResult);
+		//Function<RoomInfo, RoomInfoDTO> fn = (entity -> entityToDTO(entity));
 		return entityToDTO(tempResult);
 	}
 

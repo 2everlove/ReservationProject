@@ -17,6 +17,10 @@ public interface ConsultationService {
 	
 	ConsultationDTO get(Long no);
 	
+	void modify(ConsultationDTO dto);
+	
+	int modifyDeleteByNo(Long no, String deleteFlg);
+	
 	default Consultation dtoToEntity(ConsultationDTO dto) {
 		Consultation entity = Consultation.builder()
 				.no(dto.getNo())
@@ -50,5 +54,7 @@ public interface ConsultationService {
 				.build();
 		return dto;
 	}
+
+	
 
 }

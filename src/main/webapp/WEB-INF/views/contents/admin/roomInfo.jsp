@@ -27,14 +27,17 @@ a{text-decoration: none;}
 						                </h4>
 	                                    <p class="mb-0 text-dark">
 		                                    <form>
-		                                    	<div style="text-align: right; text-align: right;display: flex;justify-content: flex-end;flex-direction: row;flex-wrap: nowrap;align-items: center;">
-													<label for="" class="col-form-label" style="margin: 0 5px 0 5px">大人数</label>
-														<input type="number" class="form-control detail__count-adult" min="1"　max="5" placeholder="1人" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" value="1" style="display: inline-block; width: 80px;">
-													<label for="" class="col-form-label" style="margin: 0 5px 0 5px">子供数</label>
-														<input type="number" class="form-control detail__count-child" value="0"　placeholder="1人" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="display: inline-block; width: 80px;">
-		                                    	</div>
 			                                    <div class="form-group row" style="justify-content: flex-end;">
-													
+													<label for="" class="col-sm-2 col-form-label">大人数</label>
+													<div class="col-sm-5">
+														<input type="number" class="form-control detail__count-adult" min="1"　max="5" placeholder="1人" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" value="1" style="width: 80px;">
+													</div>
+												</div>
+			                                    <div class="form-group row" style="justify-content: flex-end;">
+													<label for="" class="col-sm-2 col-form-label">子供数</label>
+													<div class="col-sm-5">
+														<input type="number" class="form-control detail__count-child" value="0"　placeholder="1人" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width: 80px;">
+													</div>
 												</div>
 			                                    <div class="form-group row" style="justify-content: flex-end;">
 													<label for="" class="col-sm-2 col-form-label">期&nbsp;&nbsp;&nbsp;&nbsp;間</label>

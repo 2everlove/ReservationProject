@@ -18,7 +18,7 @@ import lombok.extern.log4j.Log4j;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
-public class NoticeAjaxController {
+public class RestNotice {
 	private final NoticeService noticeService;
 	
 	@PostMapping(value = "/notice", produces = MediaType.APPLICATION_JSON_VALUE)

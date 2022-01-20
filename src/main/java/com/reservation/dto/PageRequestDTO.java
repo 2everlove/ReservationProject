@@ -3,7 +3,6 @@ package com.reservation.dto;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

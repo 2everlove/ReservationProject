@@ -23,7 +23,7 @@ a{text-decoration: none;}
 		                    <div class="col-xl-4 col-lg-5">
 		                        <div class="featured-text text-center text-lg-left">
 		                            <h4>${roomInfo.roomTitle }</h4>
-		                            <p class="text-black mb-0" style="text-align: right; word-wrap: break-word; width:300px; height:320px; overflow: auto;">
+		                            <p class="text-black mb-0" style="text-align: right; word-wrap: break-word; width:300px; overflow: auto;">
 		                            <br/>
 		                            <br/>
 		                            </p>

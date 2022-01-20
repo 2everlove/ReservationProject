@@ -1,7 +1,5 @@
 package com.reservation.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -34,7 +32,7 @@ public class ReserveServiceImpl implements ReserveService {
 	@Override
 	public List<Object[]> getDateList(Calendar date) {
 		log.info("ReserveService\ngetDateList");
-		Function<Object[], ReserveDTO> fn = (en -> entityToDTO((RoomInfo)en[0], (Reserve)en[1]));
+		//Function<Object[], ReserveDTO> fn = (en -> entityToDTO((RoomInfo)en[0], (Reserve)en[1]));
 		List<Object[]> result = reserveRepository.getDateList(date);
 		System.out.println("ReserveService!getDateList--------------------");
 		System.out.println(result.toString());

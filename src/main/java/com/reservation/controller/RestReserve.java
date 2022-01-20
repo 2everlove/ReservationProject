@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.reservation.dto.ReserveDTO;
@@ -28,7 +27,7 @@ import lombok.extern.log4j.Log4j;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
-public class ReserveAjaxController {
+public class RestReserve {
 	
 	private final ReserveService reserveService;
 	private final RoomInfoService roomInfoService;
