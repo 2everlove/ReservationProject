@@ -24,7 +24,7 @@
 				
 				<ul id="sortable">
 				</ul>
-				
+					
 				</p>
 			</div>
 		</section>
@@ -91,39 +91,39 @@ function readInputFile(e){
 $('#real-input').on('change',readInputFile);
 
 
-	$('.uploadBtn').click(function(){
-		let formData = new FormData();
-		let inputFile = $('input[name="uploadFiles"]');
-		let files = inputFile[0].files;
-		let orderString = $("#sortable").sortable("toArray");
-		for(let i = 0; i < files.length; i++){
-			for(let j = 0; j< orderString.length; j++){
-				//console.log(files[j].name.substring(0, files[j].name.indexOf('.')));
-				//console.log(orderString[i]);
-				//console.log(orderString[i].includes(files[j].name.substring(0, files[j].name.indexOf('.'))));
-				if(orderString[i].includes(files[j].name.substring(0, files[j].name.indexOf('.')))){
-					console.log(files[j]);
-					formData.append("uploadFiles", files[j]);
-				}
+$('.uploadBtn').click(function(){
+	let formData = new FormData();
+	let inputFile = $('input[name="uploadFiles"]');
+	let files = inputFile[0].files;
+	let orderString = $("#sortable").sortable("toArray");
+	for(let i = 0; i < files.length; i++){
+		for(let j = 0; j< orderString.length; j++){
+			//console.log(files[j].name.substring(0, files[j].name.indexOf('.')));
+			//console.log(orderString[i]);
+			//console.log(orderString[i].includes(files[j].name.substring(0, files[j].name.indexOf('.'))));
+			if(orderString[i].includes(files[j].name.substring(0, files[j].name.indexOf('.')))){
+				console.log(files[j]);
+				formData.append("uploadFiles", files[j]);
 			}
 		}
-		
-		console.log(formData.getAll('uploadFiles'));
-		console.log($("#sortable").sortable("serialize"));
-		console.log($("#sortable").sortable("toArray"));
-		
-		$.ajax({
-			url: '/api/uploadAjax',
-			processData: false,
-			contentType: false,
-			data: formData,
-			type: 'post',
-			dataType: 'json',
-			success: function(data){
-				$( "#sortable" ).sortable( "option", "disabled", true );
-				console.log(data);
-			}
-		});
-		
-	})
+	}
+	
+	console.log(formData.getAll('uploadFiles'));
+	console.log($("#sortable").sortable("serialize"));
+	console.log($("#sortable").sortable("toArray"));
+	
+	$.ajax({
+		url: '/api/uploadAjax',
+		processData: false,
+		contentType: false,
+		data: formData,
+		type: 'post',
+		dataType: 'json',
+		success: function(data){
+			$( "#sortable" ).sortable( "option", "disabled", true );
+			console.log(data);
+		}
+	});
+	
+})
 </script>

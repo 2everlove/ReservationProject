@@ -3,6 +3,7 @@ package com.reservation.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,6 +15,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,6 +41,27 @@ import net.coobird.thumbnailator.Thumbnailator;
 public class RestUpload {
 	
 	private String uploadPath = "C://upload";
+	
+	// method 추가
+    @GetMapping("/download")
+    public ResponseEntity<Resource> serveFile(@RequestParam(value="fileName") String srcFileName) {
+    	try {
+    		String fileName = URLDecoder.decode(srcFileName, "UTF-8");
+            Path file = Paths.get(uploadPath).resolve(fileName);
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+            	Resource resourceFile = resource;
+            	return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; fileName=\"" + resourceFile.getFilename() + "\"").body(resourceFile);
+            }
+            else {
+                throw new RuntimeException("Could not read file: " + fileName);
+            }
+        }
+        catch (MalformedURLException | UnsupportedEncodingException e) {
+            throw new RuntimeException("Could not read file: " + srcFileName, e);
+        }
+    }
 	
 	@GetMapping("/display")
 	public ResponseEntity<byte[]> getFile(String fileName){
@@ -68,7 +93,6 @@ public class RestUpload {
 			String originName = uploadFile.getOriginalFilename();
 			String fileName = originName.substring(originName.lastIndexOf("\\") + 1);
 			System.out.println("fileName: "+ fileName);
-			
 			String folderPath = makeFolder();
 			
 			String uuid = sha256ToString(fileName.toString()).substring(0, 32);

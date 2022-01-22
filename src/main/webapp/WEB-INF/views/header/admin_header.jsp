@@ -34,7 +34,7 @@
 							</a>
 							<div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
 								<a class="dropdown-item text-white" href="/admin/booking">予約目録</a>
-								<a class="dropdown-item text-white" href="/admin/room">部屋目録</a>
+								<a class="dropdown-item text-white" href="/admin/roomManage">部屋目録</a>
 							</div>
 						</li>
                         <li class="nav-item"><a class="nav-link" href="/admin/consultation">相談</a></li>

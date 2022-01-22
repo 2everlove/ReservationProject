@@ -13,6 +13,10 @@ public class UploadTest {
 	public void uploadEx() {
 		
 	}
+	@GetMapping("/index")
+	public void index() {
+		
+	}
 	
 	
 }
