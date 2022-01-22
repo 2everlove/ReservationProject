@@ -1,9 +1,14 @@
 package com.reservation.service;
 
+import java.util.Optional;
+
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.reservation.dto.ConsultationDTO;
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
 import com.reservation.entity.Consultation;
+import com.reservation.entity.QConsultation;
 
 public interface ConsultationService {
 	
@@ -54,7 +59,5 @@ public interface ConsultationService {
 				.build();
 		return dto;
 	}
-
-	
 
 }

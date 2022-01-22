@@ -1,5 +1,6 @@
 package com.reservation.service;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.springframework.data.domain.Page;
@@ -9,10 +10,13 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.reservation.dto.ConsultationDTO;
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
 import com.reservation.entity.Consultation;
+import com.reservation.entity.QConsultation;
 import com.reservation.repository.ConsultationRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -30,28 +34,38 @@ public class ConsultationServiceImpl implements ConsultationService {
 	public Long wrtiteConsultation(ConsultationDTO dto) {
 		log.info("DTO------");
 		log.info(dto);
-		
+		if(dto.getGrgrod() > 0) {
+			consultationRepository.changeGrgrod(dto.getGrno(),dto.getGrgrod());
+		}
 		Consultation entity = dtoToEntity(dto);
 		
 		log.info(entity);
 		
 		consultationRepository.save(entity);
-		entity.changeGrno(entity.getNo());
-		consultationRepository.save(entity);
+		if(null == entity.getGrno()) {
+			entity.changeGrno(entity.getNo());
+			consultationRepository.save(entity);
+		}
+		
 		return entity.getNo();
 	}
-
+	
+	//user
 	@Override
 	public PageResultDTO<ConsultationDTO, Consultation> getList(PageRequestDTO requestDTO) {
-		Pageable pageable = requestDTO.getPageable(new Sort(Direction.DESC, "no"));
-		Page<Consultation> result = consultationRepository.getAllWithOutDelete(pageable);
+		requestDTO.setSize(20);
+		Pageable pageable = requestDTO.getPageable(Sort.by("grno").descending().and(Sort.by("grgrod").ascending()).and(Sort.by("depth").ascending()).and(Sort.by("createdAt").descending()));
+		BooleanBuilder booleanBuilder = getSearch(requestDTO);
+		Page<Consultation> result = consultationRepository.findAll(pageable);
 		Function<Consultation, ConsultationDTO> fn = (entity -> entityToDTO(entity));
 		return new PageResultDTO<ConsultationDTO, Consultation>(result, fn);
 	}
 	
+	//admin
 	@Override
 	public PageResultDTO<ConsultationDTO, Consultation> getAdminList(PageRequestDTO requestDTO) {
-		Pageable pageable = requestDTO.getPageable(new Sort(Direction.DESC, "no"));
+		Pageable pageable = requestDTO.getPageable(Sort.by("no").descending());
+		BooleanBuilder booleanBuilder = getSearch(requestDTO);
 		Page<Consultation> result = consultationRepository.findAll(pageable);
 		Function<Consultation, ConsultationDTO> fn = (entity -> entityToDTO(entity));
 		return new PageResultDTO<ConsultationDTO, Consultation>(result, fn);
@@ -59,9 +73,9 @@ public class ConsultationServiceImpl implements ConsultationService {
 
 	@Override
 	public ConsultationDTO get(Long no) {
-		Consultation tesmpResult = consultationRepository.findOne(no);
-		ConsultationDTO result = entityToDTO(tesmpResult);
-		return result;
+		Optional<Consultation> tesmpResult = consultationRepository.findById(no);
+		
+		return tesmpResult.isPresent()?entityToDTO(tesmpResult.get()): null;
 	}
 	
 	@Transactional
@@ -82,5 +96,33 @@ public class ConsultationServiceImpl implements ConsultationService {
 	public int modifyDeleteByNo(Long no, String deleteFlg) {
 		int result = consultationRepository.modifyDeleteByNo(no, deleteFlg);
 		return result;
+	}
+	
+	private BooleanBuilder getSearch(PageRequestDTO requestDTO) {
+		String type = requestDTO.getType();
+		BooleanBuilder booleanBuilder = new BooleanBuilder();
+		QConsultation qConsultation = QConsultation.consultation;
+		String keyword = requestDTO.getKeyword();
+		BooleanExpression expression = qConsultation.no.gt(0L);
+		booleanBuilder.and(expression);
+		if(type == null || type.trim().length() == 0) {
+			return booleanBuilder;
+		}
+		
+		BooleanBuilder condiBuilder = new BooleanBuilder();
+		
+		if(type.contains("t")) {
+			condiBuilder.or(qConsultation.title.contains(keyword));
+		}
+		if(type.contains("c")) {
+			condiBuilder.or(qConsultation.contents.contains(keyword));
+		}
+		if(type.contains("w")) {
+			condiBuilder.or(qConsultation.name.contains(keyword));
+		}
+		
+		booleanBuilder.and(condiBuilder);
+		
+		return booleanBuilder;
 	}
 }

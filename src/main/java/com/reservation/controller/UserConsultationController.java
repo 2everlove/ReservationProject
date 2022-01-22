@@ -37,6 +37,7 @@ public class UserConsultationController {
 	public String getOne(@PathVariable("no")Long no ,PageRequestDTO pageRequestDTO, Model model) {
 		log.info("getOne: "+no);
 		model.addAttribute("result", consultationService.get(no));
+		model.addAttribute("page", pageRequestDTO);
 		return "detailConsultation";
 	}
 	

@@ -79,7 +79,7 @@ public class ReserveReposiTests {
 	
 	@Test
 	public void testPagingQuery() {
-		Pageable pageable = new PageRequest(0, 10, new Sort(Direction.DESC, "no")); //page, size, sort, sort baseProperty
+		Pageable pageable = PageRequest.of(0, 10, Sort.by("no").descending()); //page, size, sort, sort baseProperty
 		QReserve qReserve = QReserve.reserve;
 		String keyword = "1";
 		BooleanBuilder builder = new BooleanBuilder();

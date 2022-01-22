@@ -1,5 +1,6 @@
 package com.revervation.repository;
 
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import org.junit.Test;
@@ -44,7 +45,25 @@ public class ConsultReposiTests {
 		});
 	}
 	
-	
+	@Test
+	public void checkCount() {
+	}
+	@Test
+	public void searchCountorder() {
+		Consultation result = consultationRepository.searchCountorder(305L);
+		System.out.println(result);
+	}
+	/*
+	@Test
+	public void testWithReplyCount() {
+		Pageable pageable = PageRequest.of(0, 10, Sort.by("no").descending());
+		Page<Object[]> result = consultationRepository.getConsultationWithGrgrodCount(pageable);
+		result.get().forEach(row->{
+			Object[] arr = (Object[])row;
+			System.out.println(Arrays.toString(row));
+		});
+	}
+	*/
 	
 	/*
 	 * @Test public void testPagingQuery() { Pageable pageable = new PageRequest(0,

@@ -1,5 +1,6 @@
 package com.reservation.dto;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,7 +22,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @Setter
 @ToString
-public class ConsultationDTO {
+public class ConsultationDTO implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	private Long no;
 	private Long grno;
@@ -30,7 +36,7 @@ public class ConsultationDTO {
 	private String title;
 	private String contents;
 	private String name;
-	private String passwd;
+	private transient String passwd;
 	private String lockFlg;
 	
 	private LocalDateTime createdAt, updatedAt;
@@ -80,5 +86,6 @@ public class ConsultationDTO {
 		return deleteFlg;
 	}
     
+	
     
 }

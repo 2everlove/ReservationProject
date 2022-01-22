@@ -1,6 +1,7 @@
 package com.reservation.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -26,9 +27,11 @@ public class RoomInfoServiceImpl implements RoomInfoService {
 	
 	private final RoomInfoRepository roomInfoRepository;
 
+	
+	
 	@Override
 	public PageResultDTO<RoomInfoDTO, RoomInfo> getList(PageRequestDTO requestDTO) {
-		Pageable pageable = requestDTO.getPageable(new Sort(Direction.ASC, "no"));
+		Pageable pageable = requestDTO.getPageable(Sort.by("no").ascending());
 		Page<RoomInfo> result = roomInfoRepository.findAll(pageable);
 		Function<RoomInfo, RoomInfoDTO> fn = (entity -> entityToDTO(entity));
 		return new PageResultDTO<RoomInfoDTO, RoomInfo>(result, fn);
@@ -44,10 +47,23 @@ public class RoomInfoServiceImpl implements RoomInfoService {
 	
 	@Override
 	public RoomInfoDTO findAllSpecifyRoom(Long no) {
-		RoomInfo tempResult = roomInfoRepository.findOne(no);
+		Optional<RoomInfo> tempResult = roomInfoRepository.findById(no);
 		log.info("findAllSpecifyRoom: "+tempResult);
 		//Function<RoomInfo, RoomInfoDTO> fn = (entity -> entityToDTO(entity));
-		return entityToDTO(tempResult);
+		return entityToDTO(tempResult.get());
+	}
+
+	@Override
+	public List<Integer> getBuildCd() {
+		return roomInfoRepository.getBuildCd();
+	}
+
+	@Override
+	public Long roomRegister(RoomInfoDTO dto) {
+		System.out.println("RoomInfoDTO: "+dto);
+		RoomInfo roomInfo = dtoToEntity(dto);
+		roomInfoRepository.save(roomInfo);
+		return roomInfo.getNo();
 	}
 
 }

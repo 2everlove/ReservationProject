@@ -8,14 +8,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.reservation.entity.Reserve;
 
 @Repository
-public interface ReserveRepository extends JpaRepository<Reserve, Long>, QueryDslPredicateExecutor<Reserve> {
+public interface ReserveRepository extends JpaRepository<Reserve, Long>, QuerydslPredicateExecutor<Reserve> {
 	
 	@Query("select i, r from RoomInfo i " +
 			"left join Reserve r on r.roomNo.no = i " + 

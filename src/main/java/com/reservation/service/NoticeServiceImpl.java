@@ -1,5 +1,6 @@
 package com.reservation.service;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.springframework.data.domain.Page;
@@ -27,7 +28,7 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public PageResultDTO<NoticeDTO, Notice> getList(PageRequestDTO requestDTO) {
-		Pageable pageable = requestDTO.getPageable(new Sort(Direction.DESC, "no"));
+		Pageable pageable = requestDTO.getPageable(Sort.by("no").descending());
 		Page<Notice> result = noticeRepository.getAllWithOutDelete(pageable);
 		Function<Notice, NoticeDTO> fn = (entity -> entityToDTO(entity));
 		return new PageResultDTO<NoticeDTO, Notice>(result, fn);
@@ -35,7 +36,7 @@ public class NoticeServiceImpl implements NoticeService {
 	
 	@Override
 	public PageResultDTO<NoticeDTO, Notice> getListAdmin(PageRequestDTO requestDTO) {
-		Pageable pageable = requestDTO.getPageable(new Sort(Direction.DESC, "no"));
+		Pageable pageable = requestDTO.getPageable(Sort.by("no").descending());
 		Page<Notice> result = noticeRepository.findAll(pageable);
 		Function<Notice, NoticeDTO> fn = (entity -> entityToDTO(entity));
 		return new PageResultDTO<NoticeDTO, Notice>(result, fn);
@@ -51,8 +52,8 @@ public class NoticeServiceImpl implements NoticeService {
 	
 	@Override
 	public NoticeDTO get(Long no) {
-		Notice tesmpResult = noticeRepository.findOne(no);
-		NoticeDTO result = entityToDTO(tesmpResult);
+		Optional<Notice> tesmpResult = noticeRepository.findById(no);
+		NoticeDTO result = entityToDTO(tesmpResult.get());
 		return result;
 	}
 	
@@ -66,13 +67,13 @@ public class NoticeServiceImpl implements NoticeService {
 	@Transactional
 	@Override
 	public void modify(NoticeDTO noticeDTO) {
-		Notice notice = noticeRepository.findOne(noticeDTO.getNo());
+		Optional<Notice> notice = noticeRepository.findById(noticeDTO.getNo());
 		if(notice != null) {
-			notice.changeTitle(noticeDTO.getTitle());
-			notice.changeContent(noticeDTO.getContents());
-			notice.changeDeleteFlg(noticeDTO.getDeleteFlg());
+			notice.get().changeTitle(noticeDTO.getTitle());
+			notice.get().changeContent(noticeDTO.getContents());
+			notice.get().changeDeleteFlg(noticeDTO.getDeleteFlg());
 			
-			noticeRepository.save(notice);
+			noticeRepository.save(notice.get());
 		}
 	}
 	

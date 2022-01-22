@@ -28,6 +28,7 @@ import com.reservation.dto.UploadResultDTO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import net.coobird.thumbnailator.Thumbnailator;
 
 @Log4j
 @RequiredArgsConstructor
@@ -70,7 +71,7 @@ public class RestUpload {
 			
 			String folderPath = makeFolder();
 			
-			String uuid = hexToString(bytesToHex1(sha256(fileName.toString()))).substring(0, 32);
+			String uuid = sha256ToString(fileName.toString()).substring(0, 32);
 			
 			String saveName = uploadPath + File.separator + folderPath + File.separator + uuid +"_"+fileName;
 			
@@ -78,6 +79,12 @@ public class RestUpload {
 			
 			try {
 				uploadFile.transferTo(savePath.toFile());
+				String thumbnailSaveName = uploadPath + File.separator + folderPath + File.separator + "s_"+uuid+"_"+fileName;
+				
+				File thumbnailFile = new File(thumbnailSaveName);
+				
+				Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 300, 300);
+				
 				resultDTOList.add(new UploadResultDTO(fileName, uuid, folderPath));
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -101,24 +108,16 @@ public class RestUpload {
 		return folderPath;
 	}
 	
-	//sha-256
-	public byte[] sha256(String msg) throws NoSuchAlgorithmException {
-	    MessageDigest md = MessageDigest.getInstance("SHA-256");
-	    md.update(msg.getBytes());
-	    
-	    return md.digest();
-	}
-	//byte -> hex
-	public StringBuilder bytesToHex1(byte[] bytes) {
+	//sha-256 -> byte -> string
+	public String sha256ToString(String msg) throws NoSuchAlgorithmException {
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		md.update(msg.getBytes());
+		byte[] bytes = md.digest();
 	    StringBuilder sb = new StringBuilder();
 	    for (byte b: bytes) {
 	    	sb.append(String.format("%02x", b));
 	    }
-	    return sb;
-	}
-	//hex -> string
-	public String hexToString(StringBuilder sb) {
-		for(int i = 1; i <= sb.length()/8; i++) {
+	    for(int i = 1; i <= sb.length()/8; i++) {
 			sb.insert(8*i, "-");
 		}
 		return sb.toString();

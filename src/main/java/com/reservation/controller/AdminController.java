@@ -1,10 +1,15 @@
 package com.reservation.controller;
 
+import java.util.Calendar;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
@@ -29,10 +34,44 @@ public class AdminController {
 	
 	@GetMapping("/admin/booking")
 	public String booking(@ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
-		PageResultDTO<RoomInfoDTO, RoomInfo> list = roomInfoService.getList(requestDTO);
-		model.addAttribute("roomInfoList", list.getDtoList());
-		log.info(list);
 		System.out.println("booking");
+		PageResultDTO<RoomInfoDTO, RoomInfo> list = roomInfoService.getList(requestDTO);
+		log.info(list);
+		model.addAttribute("roomInfoList", list.getDtoList());
 		return "/admin/booking";
+	}
+	
+	@GetMapping("/admin/roomManage")
+	public String roomManageList(@ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
+		Calendar cal = Calendar.getInstance();
+		PageResultDTO<RoomInfoDTO, RoomInfo> list = roomInfoService.getList(requestDTO);
+		log.info(list);
+		model.addAttribute("buildCdList", roomInfoService.getBuildCd());
+		model.addAttribute("result", list);
+		model.addAttribute("now", cal.getTime());
+		return "/admin/roomMange";
+	}
+	
+	@GetMapping("/admin/roomManage/{no}")
+	public String getRoom(@PathVariable("no") Long no, PageRequestDTO requestDTO, Model model) {
+		model.addAttribute("buildCdList", roomInfoService.getBuildCd());
+		model.addAttribute("page", requestDTO);
+		return "/admin/detailRoom";
+	}
+	
+	@GetMapping("/admin/roomManage/register")
+	public String roomManageRegister(PageRequestDTO requestDTO, Model model) {
+		model.addAttribute("buildCdList", roomInfoService.getBuildCd());
+		model.addAttribute("page", requestDTO);
+		return "/admin/detailRoom";
+	}
+	
+	@PostMapping("/admin/roomManage/register")
+	public String roomManageRegisterPost(PageRequestDTO requestDTO, RoomInfoDTO dto, Model model, RedirectAttributes rttr) {
+		
+		int result = 0;
+		model.addAttribute("page", requestDTO);
+		rttr.addFlashAttribute("msg", result);
+		return "/admin/roomManage";
 	}
 }

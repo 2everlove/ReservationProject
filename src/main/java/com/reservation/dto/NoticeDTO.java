@@ -1,5 +1,6 @@
 package com.reservation.dto;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,7 +22,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @Setter
 @ToString
-public class NoticeDTO {
+public class NoticeDTO implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	private Long no;
 	private String title;

@@ -5,20 +5,25 @@ import java.util.stream.IntStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.reservation.dto.ConsultationDTO;
 import com.reservation.dto.NoticeDTO;
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
-import com.reservation.entity.Consultation;
 import com.reservation.entity.Notice;
 import com.reservation.repository.NoticeRepository;
 import com.reservation.service.NoticeService;
 
+import lombok.extern.log4j.Log4j2;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
+@Log4j2
 public class NoticeServiceTests {
 
 	@Autowired
@@ -39,6 +44,13 @@ public class NoticeServiceTests {
 		});
 	}
 	
+	
+	@Test
+	public void testSearchPage() {
+		Pageable pageable = PageRequest.of(0,10,Sort.by("no").descending().and(Sort.by("title").ascending()));
+		Page<?> result = noticeRepository.searchPage("t", "1", pageable);
+		log.info(result);
+	}
 	
 	@Test
 	public void testPagingOriginList() {

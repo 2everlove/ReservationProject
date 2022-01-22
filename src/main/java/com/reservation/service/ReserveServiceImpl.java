@@ -43,7 +43,7 @@ public class ReserveServiceImpl implements ReserveService {
 	@Override
 	public PageResultDTO<ReserveDTO, Object[]> getList(PageRequestDTO requestDTO) {
 		Function<Object[], ReserveDTO> fn = (en -> entityToDTO((RoomInfo)en[0], (Reserve)en[1]));
-		Page<Object[]> result = reserveRepository.getListPage(requestDTO.getPageable(new Sort(Direction.DESC, "no")));
+		Page<Object[]> result = reserveRepository.getListPage(requestDTO.getPageable(Sort.by("no").descending()));
 		return new PageResultDTO<>(result, fn);
 	}
 

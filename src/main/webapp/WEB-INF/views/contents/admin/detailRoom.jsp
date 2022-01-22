@@ -15,32 +15,16 @@ a{text-decoration: none;}
 				<div class="container px-4 px-lg-5">
 					<div class="card">
 						<div class="card-header">
-							<div class="input-group" style="align-items: center;">
-								<c:if test="${result != null }">
-									<label for="staticEmail" class="col-sm-1 col-form-label">No |</label>
-									<label for="staticEmail" class="col-sm-0 col-form-label" style="text-align: center;">${result.no }</label>
-								</c:if>
+							<div class="input-group">
+								<label for="staticEmail" class="col-sm-1 col-form-label">No |</label>
+								<label for="staticEmail" class="col-sm-0 col-form-label" style="text-align: center;">${result.no }</label>
 								<label for="staticEmail" class="col-sm-1 col-form-label" style="text-align: center;"> Title</label>
 								<div class="col-sm-6">
 									<input type="text" aria-label="Last name" class="form-control result__title" value="${result.title }">
 								</div>
 								<fmt:parseDate value="${result.updatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="modDate" type="both"/>
-								<c:if test="${result != null }">
-									<label for="staticEmail" class="col-sm-0 col-form-label">修正日 |</label>
-									<label for="staticEmail" class="col-sm-2 col-form-label result__updatedAt" style="text-align: center;"><fmt:formatDate value="${modDate}" pattern="yyyy-MM-dd HH:mm:ss"/></label>
-								</c:if>
-								<c:if test="${result == null }">
-									<label for="staticEmail" class="col-sm-0 col-form-label"> 層數|</label>
-									<label for="staticEmail" class="col-sm-2 col-form-label result__updatedAt" style="text-align: center;">
-										<select class="form-select col-sm-6 result__buildCd" aria-label="Default select example">
-											<option value='' disabled="disabled">---</option>
-											<c:forEach items="${buildCdList}" var="buildCd">
-												<option value="${buildCd }">${buildCd }層</option>
-											</c:forEach>
-										</select>
-									</label>
-								</c:if>
-								
+								<label for="staticEmail" class="col-sm-0 col-form-label">修正日 |</label>
+								<label for="staticEmail" class="col-sm-2 col-form-label result__updatedAt" style="text-align: center;"><fmt:formatDate value="" pattern="yyyy-MM-dd HH:mm:ss"/></label>
 							</div>
 						</div>
 						
@@ -49,15 +33,8 @@ a{text-decoration: none;}
 						</div>
 					</div>
 					<div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 1rem">
-						<c:if test="${result == null }">
-							<input type="button" value="List" class="btn btn-secondary result__List">
-							<input type="button" value="Register" class="btn btn-primary result__register">
-						</c:if>
-						<c:if test="${result != null }">
-							<input type="button" value="List" class="btn btn-secondary result__List">
-							<input type="button" value="Delete" class="btn btn-warning result__delete" style="display: none;">
-							<input type="button" value="Modify" class="btn btn-primary result__modify">
-						</c:if>
+						<input type="button" value="Delete" class="btn btn-warning result__delete" style="display: none;">
+						<input type="button" value="Modify" class="btn btn-primary result__modify">
 					</div>
 				</div>
 			</section>
@@ -68,65 +45,7 @@ a{text-decoration: none;}
 $(document).ready(function(){
 	
 });//
-$('.result__List').click(function(){
-	location.href = '/notice?page=${page.page}&type=${page.type}&keyword=${page.keyword}';
-});
-<c:if test="${result == null }">
-	$('#summernote').summernote({
-	    tabsize: 2,
-	    minHeight: 450,
-	    toolbar: [
-	      ['style', ['style']],
-	      ['font', ['bold', 'underline', 'clear']],
-	      ['color', ['color']],
-	      ['para', ['ul', 'ol', 'paragraph']],
-	      ['table', ['table']],
-	      ['insert', ['link', 'picture', 'video']],
-	      ['view', ['fullscreen', 'codeview', 'help']]
-	    ]
-	});
-	
-	$('.result__register').click(function(){
-		if($('.result__title').val() == ''){
-			$('.result__title').focus();
-			return false;
-		}
-		if($('#summernote').summernote('code') == '<p><br></p>'){
-			$('#summernote').summernote({focus: true});
-			return false
-		}
-		if($('.result__buildCd').val() == ''){
-			$('.result__buildCd').focus();
-			return false
-		}
-		
-		submit('/notice/register', 'POST', [
-		    { name: 'title', value: $('.result__title').val() },
-		    { name: 'contents', value: $('#summernote').summernote('code') },
-		    { name: 'deleteFlg', value: '0' },
-		    { name: 'buildCd', value: $('.result__buildCd option:selected').val() },
-		    
-		]);
-	});
-	
-	function submit(action, method, values) {
-	    let form = $('<form/>', {
-	        action: action,
-	        method: method
-	    });
-	    $.each(values, function() {
-	        form.append($('<input/>', {
-	            type: 'hidden',
-	            name: this.name,
-	            value: this.value
-	        }));    
-	    });
-	    form.appendTo('body').submit();
-	}
-	
-</c:if>
 
-<c:if test="${result != null }">
 $('.result__modify').click(function(){
 	$('#summernote').summernote({
 	    tabsize: 2,
@@ -198,7 +117,7 @@ $('.result__delete').click(function(){
 	});
 	console.log(notice);
 });
-</c:if>
+
 </script>
 </body>
 

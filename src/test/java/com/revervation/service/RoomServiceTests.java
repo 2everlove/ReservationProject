@@ -1,5 +1,11 @@
 package com.revervation.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +32,25 @@ public class RoomServiceTests {
 	//@Transactional
 	@Test
 	public void wrtieTest() throws Exception {
-		ConsultationDTO consultationDTO = ConsultationDTO.builder()
-				.name("tester")
-				.depth(0)
-				.grgrod(2L)
-				.grno(1L)
-				.title("testT")
-				.contents("testC")
-				.passwd("1234")
+		List<String> imgs = new ArrayList<String>();
+		imgs.add("a");
+		imgs.add("b");
+		imgs.add("c");
+		imgs.add("d");
+		RoomInfoDTO roominfo = RoomInfoDTO.builder()
+				.roomNum("70")
+				.roomTitle("Title")
+				.max(5)
+				.adultCost(20000L)
+				.childCost(10000L)
+				.explanation("good"+(int)(Math.random()*10))
+				.images(imgs)
+				.colorCd("#ff6b81")
+				.deleteFlg("0")
+				.buildCd(7)
 				.build();
-		System.out.println("==============================================================");
-		System.out.println("=============================================================="+consultationDTO);
-		//int saveNo = roomInfoService.wrtiteConsultation(consultationDTO);
-		//System.out.println("=============================================================="+saveNo);
-		//assertEquals(consultation, consultationRepository.findOne(saveNo));
+		System.out.println(roominfo.toString());
+		roomInfoService.roomRegister(roominfo);
 	}
 	
 	@Test

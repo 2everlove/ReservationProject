@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import lombok.Data;
 
@@ -29,12 +30,12 @@ public class PageResultDTO<DTO, EN> {
 	public PageResultDTO(Page<EN> result, Function<EN, DTO> fn){
 		dtoList = result.getContent().stream().map(fn).collect(Collectors.toList());
 		totalPage = result.getTotalPages();
-		makePageList(result);
+		makePageList(result.getPageable());
 	}
 	
-	private void makePageList(Page<EN> pageInfo) {
-		this.page = pageInfo.getNumber()+1;
-		this.size = pageInfo.getSize();
+	private void makePageList(Pageable pageable) {
+		this.page = pageable.getPageNumber()+1;
+		this.size = pageable.getPageSize();
 		
 		int tempEnd = (int)(Math.ceil(page/10.0))*10;
 		start = tempEnd - 9;

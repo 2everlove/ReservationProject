@@ -70,4 +70,8 @@ public class Consultation extends BaseEntity{
 	public void changeGrno(Long grno) {
 		this.grno = grno;
 	}
+	
+	public void changeGrgrord(Long grgrord) {
+		this.grgrod = grgrord;
+	}
 }

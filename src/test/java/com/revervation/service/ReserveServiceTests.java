@@ -45,7 +45,7 @@ public class ReserveServiceTests {
 	@Transactional
 	@Test
 	public void wrtieTest() throws Exception {
-		IntStream.range(1, 50).forEach(i -> {
+		IntStream.range(1, 30).forEach(i -> {
 			Long no = (long)((Math.random()*5)+1);
 			RoomInfo roomInfo = RoomInfo.builder().no(no).build();
 			

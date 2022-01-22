@@ -116,10 +116,11 @@ $('#real-input').on('change',readInputFile);
 			url: '/api/uploadAjax',
 			processData: false,
 			contentType: false,
-			data: $("#sortable").sortable("serialize"),
+			data: formData,
 			type: 'post',
 			dataType: 'json',
 			success: function(data){
+				$( "#sortable" ).sortable( "option", "disabled", true );
 				console.log(data);
 			}
 		});

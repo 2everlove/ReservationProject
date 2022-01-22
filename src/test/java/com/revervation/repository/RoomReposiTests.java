@@ -45,7 +45,7 @@ public class RoomReposiTests {
 			} else if (i==4) {
 				color = "#ff6b81";
 			} else if (i==5) {
-				color = "dfe4ea";
+				color = "#dfe4ea";
 			}
 			RoomInfo roominfo = RoomInfo.builder()
 					.roomNum("70"+i)
@@ -67,7 +67,7 @@ public class RoomReposiTests {
 	
 	@Test
 	public void getListPageTests() {
-		PageRequest pageRequest = new PageRequest(0, 50, new Sort(Direction.DESC, "no"));
+		PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("no").descending());;
 		Page<Object[]> result = roomInfoRepository.getListPage(pageRequest);
 		for(Object[] objects : result.getContent()) {
 			System.out.println(Arrays.toString(objects));
@@ -87,7 +87,7 @@ public class RoomReposiTests {
 	
 	@Test
 	public void testPagingQuery() {
-		Pageable pageable = new PageRequest(0, 10, new Sort(Direction.DESC, "no")); //page, size, sort, sort baseProperty
+		Pageable pageable = PageRequest.of(0, 10, Sort.by("no").descending());; //page, size, sort, sort baseProperty
 		QRoomInfo qRoomInfo = QRoomInfo.roomInfo;
 		String keyword = "t";
 		BooleanBuilder builder = new BooleanBuilder();

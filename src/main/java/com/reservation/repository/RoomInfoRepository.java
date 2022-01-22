@@ -7,14 +7,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.reservation.entity.RoomInfo;
 
 @Repository
-public interface RoomInfoRepository extends JpaRepository<RoomInfo, Long>, QueryDslPredicateExecutor<RoomInfo> {
+public interface RoomInfoRepository extends JpaRepository<RoomInfo, Long>, QuerydslPredicateExecutor<RoomInfo> {
 	/*
 	 * Paged List about rooominfo & reserve joined table
 	 */
@@ -34,5 +34,8 @@ public interface RoomInfoRepository extends JpaRepository<RoomInfo, Long>, Query
 			"and RPAD(to_char(add_months(:date,1),'yyyymm'),8,'00') > RPAD(to_char(to_date(r.endDate,'yyyy/mm/dd'),'yyyymm'),8,'00')"
 			)
 	List<Object[]> getDateList(@Param("date") Calendar date);
+	
+	@Query("select i.buildCd from RoomInfo i group by i.buildCd")
+	List<Integer> getBuildCd();
 	
 }

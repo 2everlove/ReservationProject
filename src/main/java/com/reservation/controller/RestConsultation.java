@@ -30,7 +30,7 @@ public class RestConsultation {
 	}
 	
 	@PostMapping(value = "/consultation/delete")
-	public ResponseEntity<String> deleteNotice(@RequestBody ConsultationDTO consultationDTO){
+	public ResponseEntity<String> deleteConsultation(@RequestBody ConsultationDTO consultationDTO){
 		log.info(consultationDTO);
 		String msg = "fail";
 		int result = consultationService.modifyDeleteByNo(consultationDTO.getNo(), consultationDTO.getDeleteFlg());
@@ -39,5 +39,18 @@ public class RestConsultation {
 			msg = "success";
 		System.out.println(msg);
 		return new ResponseEntity<>(msg, HttpStatus.OK);
+	}
+	
+	@PostMapping("/consultation/chkPasswd")
+	public ResponseEntity<String> chkPasswdConsultation(ConsultationDTO consultationDTO){
+		log.info(consultationDTO);
+		String msg = "";
+		ConsultationDTO result = consultationService.get(consultationDTO.getNo());
+		
+		System.out.println("deleteNotice: "+result+", "+consultationDTO);
+		if(consultationDTO.getPasswd().equals(result.getPasswd()))
+			msg = "success";
+		System.out.println(msg);
+		return new ResponseEntity<>(msg.toString(), HttpStatus.OK);
 	}
 }
