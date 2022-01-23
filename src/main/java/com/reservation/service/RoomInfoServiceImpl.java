@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
@@ -65,5 +65,28 @@ public class RoomInfoServiceImpl implements RoomInfoService {
 		roomInfoRepository.save(roomInfo);
 		return roomInfo.getNo();
 	}
+	
+	@Transactional
+	@Override
+	public void modify(RoomInfoDTO dto) {
+		StringBuilder imgsb = new StringBuilder();
+		dto.getImages().forEach(i -> imgsb.append(i+","));
+		
+		RoomInfo entity = roomInfoRepository.getOne(dto.getNo());
+		
+		entity.changeAdultCost(dto.getAdultCost());
+		entity.changeBuildCd(dto.getBuildCd());
+		entity.changeChildCost(dto.getChildCost());
+		entity.changeColorCd(dto.getColorCd());
+		entity.changeExplanation(dto.getExplanation());
+		entity.changeImages(imgsb.toString());
+		entity.changeMax(dto.getMax());
+		entity.changeRoomTitle(dto.getRoomTitle());
+		entity.changeDeleteFlg(dto.getDeleteFlg());
+		
+		roomInfoRepository.save(entity);
+	}
+	
+	
 
 }

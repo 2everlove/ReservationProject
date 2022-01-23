@@ -12,7 +12,7 @@ a{text-decoration: none;}
 	<!-- <div id="calendarForm"></div> -->
 	<div class="bg-dark " style="height: 94px"></div>
 	<section class="masthead">
-		<div style="padding-top: 80px;">
+		<div style="padding-top: 20px;">
 			<div class="container">
 				<div di>
 					<form class="form-inline">

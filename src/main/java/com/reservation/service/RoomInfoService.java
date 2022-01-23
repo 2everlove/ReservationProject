@@ -20,6 +20,8 @@ public interface RoomInfoService {
 	
 	List<Integer> getBuildCd();
 	
+	void modify(RoomInfoDTO dto);
+	
 	default RoomInfoDTO entityToDTO(RoomInfo entity) {
 		RoomInfoDTO dto = RoomInfoDTO.builder()
 				.no(entity.getNo())
@@ -57,6 +59,8 @@ public interface RoomInfoService {
 				.build();
 		return entity;
 	}
+
+	
 
 	
 }

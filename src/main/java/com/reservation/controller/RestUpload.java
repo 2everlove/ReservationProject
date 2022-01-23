@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
@@ -41,6 +42,25 @@ import net.coobird.thumbnailator.Thumbnailator;
 public class RestUpload {
 	
 	private String uploadPath = "C://upload";
+	
+	@PostMapping("/removeFile")
+	public ResponseEntity<Boolean> removeFile(String fileName){
+		String srcFileName = null;
+		try {
+			List<String> tempfileNmae = Arrays.asList(fileName.split(","));
+			tempfileNmae.forEach(i -> System.out.println(i));
+			srcFileName = URLDecoder.decode(fileName,"UTF-8");
+			File file = new File(uploadPath + File.separator +srcFileName);
+			boolean result = file.delete();
+			File thumbnail = new File(file.getParent(),"s_"+file.getName());
+			result = thumbnail.delete();
+			return new ResponseEntity<Boolean>(result,HttpStatus.OK);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new ResponseEntity<Boolean>(false,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 	
 	// method 추가
     @GetMapping("/download")
@@ -88,7 +108,7 @@ public class RestUpload {
 	public ResponseEntity<List<UploadResultDTO>> uploadFile(MultipartFile[] uploadFiles) throws NoSuchAlgorithmException {
 		
 		List<UploadResultDTO> resultDTOList = new ArrayList<UploadResultDTO>();
-		
+		log.info("uploadFile: "+uploadFiles.length);
 		for(MultipartFile uploadFile : uploadFiles) {
 			String originName = uploadFile.getOriginalFilename();
 			String fileName = originName.substring(originName.lastIndexOf("\\") + 1);

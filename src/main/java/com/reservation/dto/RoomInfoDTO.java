@@ -110,8 +110,8 @@ public class RoomInfoDTO implements Serializable{
 	public void setExplanation(String explanation) {
 		this.explanation = explanation;
 	}
-	public void setImages(String images) {
-		this.images = Arrays.asList(images.split(","));
+	public void setImages(List<String> images) {
+		this.images = images;
 	}
 	public void setColorCd(String colorCd) {
 		this.colorCd = colorCd;
