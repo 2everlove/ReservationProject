@@ -32,6 +32,14 @@ public class RoomInfoServiceImpl implements RoomInfoService {
 	@Override
 	public PageResultDTO<RoomInfoDTO, RoomInfo> getList(PageRequestDTO requestDTO) {
 		Pageable pageable = requestDTO.getPageable(Sort.by("no").ascending());
+		Page<RoomInfo> result = roomInfoRepository.findAllByDeleteFlg(pageable, "0");
+		Function<RoomInfo, RoomInfoDTO> fn = (entity -> entityToDTO(entity));
+		return new PageResultDTO<RoomInfoDTO, RoomInfo>(result, fn);
+	}
+	
+	@Override
+	public PageResultDTO<RoomInfoDTO, RoomInfo> getListForAdmin(PageRequestDTO requestDTO) {
+		Pageable pageable = requestDTO.getPageable(Sort.by("no").ascending());
 		Page<RoomInfo> result = roomInfoRepository.findAll(pageable);
 		Function<RoomInfo, RoomInfoDTO> fn = (entity -> entityToDTO(entity));
 		return new PageResultDTO<RoomInfoDTO, RoomInfo>(result, fn);

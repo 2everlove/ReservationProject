@@ -15,13 +15,32 @@ a{text-decoration: none;}
 	<div style="padding-top: 0px;">
        	<section class="projects-section bg-light" style="margin-top: 20px; padding-bottom: 40px;">
             	<div class="container px-4 px-lg-5">
-            		<h4 class="text-dark">${roomInfo.roomNum } 号</h4>
+            	<div style="display: flex;flex-direction: row;justify-content: center;align-items: center;flex-wrap: wrap;">
+            		
 	                <div class="row gx-0 mb-5 mb-lg-0 justify-content-center">
-	                    <div class="col-lg-6"><img class="img-fluid" src="/resources/assets/img/room/room2.jpg" alt="..." /></div>
+	                    <div class="col-lg-6">
+							<c:url value="/api/display" var="thumbnail">
+								<c:param name="fileName" value="${roomInfo.images[0]}"></c:param>
+							</c:url>
+							<div style=" display: flex;justify-content: space-around;">
+		                    	<img class="img-fluid" src="${thumbnail }" alt="..." width="430" height="280" style="width: 430px; height: 280px;" />
+							</div>
+	                    	<ul style="display: flex;flex-direction: row;flex-wrap: nowrap;align-items: center;margin: 0rem;justify-content: center; padding-left: 0rem">
+		                    	<c:forEach var="img" items="${roomInfo.images }" varStatus="imageNo">
+									<c:url value="/api/display" var="imagesUrl">
+										<c:param name="fileName" value="${img}"></c:param>
+									</c:url>
+									<li file="${img }" item="${imageNo.count-1}" class="img-thumb${imageNo.count-1 } thumbList" style="margin: 5px 5px 0px 0px" onmouseover="changeImage(this)">
+										<img src="${imagesUrl}" height=80 width=80/>
+									</li>
+								</c:forEach>
+	                    	</ul>
+	                    </div>
 	                    <div class="col-lg-6">
 	                        <div class="bg-light text-center h-100 project">
 	                            <div class="d-flex h-100">
 	                                <div class="project-text w-100 my-auto text-center text-lg-left">
+	                                <h4 class="text-dark">${roomInfo.roomNum } 号</h4>
 	                                    <h4 class="text-dark">
 					                   		${roomInfo.roomTitle}
 						                </h4>
@@ -64,6 +83,7 @@ a{text-decoration: none;}
 	                            </div>
 	                        </div>
 	                    </div>
+	                </div>
 	                </div>
 					<div style="padding-top: 20px;"></div>
 					<hr style="border: none; font-size: 0; line-height: 0; margin: 40px 0 40px 0; color: rgba(132, 129, 122,1.0); background:rgba(132, 129, 122,1.0); height: 3px;"/>
@@ -153,6 +173,14 @@ a{text-decoration: none;}
 	</div>
 </div>
 <script type="text/javascript">
+
+function changeImage(e){
+	$('.img-fluid').attr('src', $(e).children().attr('src'));
+}
+
+$('.thumbList').on('mouseout', function(){
+	$('.img-fluid').attr('src', $('.img-thumb0').children().attr('src'));
+})
 
 	$(document).ready(function(){
 	let disabledArr = [];
@@ -261,14 +289,14 @@ a{text-decoration: none;}
 		$(".detail__count-adult").change(function(){
 			if($(".detail__count-adult").val() > ${roomInfo.max}){
 				alert(${roomInfo.max}+"명 이하로 예약할 수 있습니다.");
-				$(".detail__count-adult").val("5");
+				$(".detail__count-adult").val("${roomInfo.max}");
 				$(".detail__count-child").val("0");
 				$(".detail__count-adult").select();
 			} else if (Number($(".detail__count-adult").val())+Number($(".detail__count-child").val()) > ${roomInfo.max}){
 				$(".detail__count-adult").val(Number($(".detail__count-adult").val()));
 				$(".detail__count-child").val(Number(${roomInfo.max}-$(".detail__count-adult").val()));
 				if($(".detail__count-adult").val() == ${roomInfo.max}){
-					$(".detail__count-adult").val("5");
+					$(".detail__count-adult").val("${roomInfo.max}");
 					$(".detail__count-child").val("0");
 				}
 			}
@@ -278,14 +306,14 @@ a{text-decoration: none;}
 		$(".detail__count-child").change(function(){
 			if($(".detail__count-child").val() > ${roomInfo.max}-1){
 				alert("성인이 1명 있어야 합니다.");
-				$(".detail__count-child").val("4");
+				$(".detail__count-child").val("${roomInfo.max-1}");
 				$(".detail__count-adult").val("1");
 				$(".detail__count-child").select();
 			} else if (Number($(".detail__count-adult").val())+Number($(".detail__count-child").val()) > ${roomInfo.max}){
 				$(".detail__count-adult").val(Number(${roomInfo.max} - $(".detail__count-child").val()));
 				$(".detail__count-child").val(Number($(".detail__count-child").val()));
 				if($(".detail__count-child").val() == ${roomInfo.max}-1){
-					$(".detail__count-child").val("4");
+					$(".detail__count-child").val("${roomInfo.max-1}");
 					$(".detail__count-adult").val("1");
 				}
 			}
@@ -389,7 +417,7 @@ a{text-decoration: none;}
 		    	    "days": ${roomInfo.max}
 	    	},
 			"locale": { 
-				"format": "YY/MM/DD", 
+				"format": "MM/DD", 
 				"separator": " ~ ",
 				"applyLabel": "확인", 
 				"cancelLabel": "취소", 

@@ -60,6 +60,8 @@ public interface RoomInfoService {
 		return entity;
 	}
 
+	PageResultDTO<RoomInfoDTO, RoomInfo> getListForAdmin(PageRequestDTO requestDTO);
+
 	
 
 	

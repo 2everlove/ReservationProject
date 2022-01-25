@@ -90,23 +90,55 @@ a{text-decoration: none;}
 		$.getJSON('/api/checkReserve/'+amount ,function(arr){
 			let jsonList = new Array();
 	       	  $.each(arr, function(i, data){
-	       		console.log(data[1])
+	       		//console.log(data[1])
 				let json = new Object();
+	       		json.no = data[1].roomNo.no;
 	       		json.title = data[1].roomNo.roomTitle;
 	       		json.start = moment(data[1].startDate).format('YYYY-MM-DD');
 	       		json.end = moment(moment(data[1].endDate).add(1, 'days')).format('YYYY-MM-DD');
 	       		json.color =data[0].colorCd;
 	     		jsonList.push(json);
+	     		//console.log(jsonList)
 	       	  });
 	       	var calendarEl = document.getElementById('calendar');
 	        var calendar = new FullCalendar.Calendar(calendarEl, {
-	          initialView: 'dayGridMonth',
-	          initialDate: dateString,
-	          dayMaxEvents: true, // allow "more" link when too many events
-	          height: 1100,
-	          contentHeight: 500,
-	          aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
-	          events: jsonList,
+				eventChange: function(info) {
+					
+				},
+				eventClick: function(info) {
+					var eventObj = info.event;
+					
+					if (eventObj.url) {
+						alert(
+						'Clicked ' + eventObj.no + '.\n'
+						);
+					
+						window.open(eventObj.url);
+						
+						info.jsEvent.preventDefault(); // prevents browser from following link in current tab.
+					} else {
+						console.log(eventObj)
+						alert(
+							'Clicked ' + eventObj.extendedProps.no + '.\n'
+							+'Srart ' +eventObj._instance.range.start + '.\n'
+							+'End' + eventObj._instance.range.end
+						);
+					}
+				},
+	        	selectable: true,
+				initialView: 'dayGridMonth',
+				initialDate: dateString,
+				dayMaxEvents: true, // allow "more" link when too many events
+				height: 1100,
+				contentHeight: 500,
+				aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
+				events: jsonList,
+			    dayMaxEvents: true,
+				select: function(info) {
+					console.log("selected:")
+					console.log(info)
+				    alert('selected ' + info.startStr + ' to ' + info.endStr);
+				},
 	       });
 			
 	        calendar.render();

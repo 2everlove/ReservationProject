@@ -21,9 +21,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.reservation.dto.RoomInfoDTO;
 import com.reservation.entity.QRoomInfo;
 import com.reservation.entity.RoomInfo;
 import com.reservation.repository.RoomInfoRepository;
+import com.reservation.service.RoomInfoService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
@@ -31,6 +33,8 @@ public class RoomReposiTests {
 	
 	@Autowired
 	private RoomInfoRepository roomInfoRepository;
+	private RoomInfoService roomInfoService;
+	
 
 	@Test
 	public void test() {
@@ -71,6 +75,15 @@ public class RoomReposiTests {
 		Page<Object[]> result = roomInfoRepository.getListPage(pageRequest);
 		for(Object[] objects : result.getContent()) {
 			System.out.println(Arrays.toString(objects));
+		}
+	}
+	
+	@Test
+	public void getListPageOnMainTests() {
+		PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("no").descending());;
+		Page<RoomInfoDTO> result = roomInfoService.entityToDTO(roomInfoRepository.getListPageOnMain(pageRequest, "20220127", "20220129", 5));
+		for(RoomInfoDTO objects : result) {
+			System.out.println(objects);
 		}
 	}
 	

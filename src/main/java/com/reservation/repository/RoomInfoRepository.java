@@ -25,6 +25,22 @@ public interface RoomInfoRepository extends JpaRepository<RoomInfo, Long>, Query
 			)
 	Page<Object[]> getListPage(Pageable pageable);
 	
+	
+	Page<RoomInfo> findAllByDeleteFlg(Pageable pageable, String deleteFlg);
+	
+	//available
+	@Query("select DISTINCT i.no ,i.roomNum ,i.roomTitle ,i.max ,i.adultCost ,i.childCost ,i.explanation ,i.images ,i.colorCd ,i.deleteFlg ,i.createdAt ,i.updatedAt ,i.buildCd from RoomInfo i " +
+			"left join Reserve r on r.roomNo.no = i "
+			+ "where not to_date(r.startDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
+			+ "or not to_date(r.endDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
+			+ "and r.paymentFlg = 0 and r.cancelFlg = 0 and r.deleteFlg = 0 and i.max <= :max order by i.no asc"
+			)
+	Page<RoomInfo> getListPageOnMain(Pageable pageable,@Param("dateStart") String dateStart, @Param("dateEnd") String dateEnd, @Param("max") int max);
+	
+	
+	
+	
+	
 	/*
 	 * List about rooominfo & reserve joined table on dynamic date
 	 */

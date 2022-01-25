@@ -16,4 +16,6 @@
         <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
         <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
         <script src="/resources/owlcarousel/owl.carousel.min.js"></script>
+        <!-- Swiper JS -->
+    	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     </body>

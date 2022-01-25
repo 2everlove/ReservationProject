@@ -155,9 +155,9 @@ a{text-decoration: none;}
 										</select>
 										</td>
 										<td class="ts-result__deleteFlg"><span class="span__deleteFlg">
-											${dto.deleteFlg }</span><select class="form-select result__deleteFlg" style="display: none; min-width: 60px;">
-												<option value="0" <c:out value="${dto.deleteFlg == 0 ? 'selected':''}"></c:out>>Y</option>
-												<option value="1" <c:out value="${dto.deleteFlg == 1 ? 'selected':''}"></c:out>>N</option> 
+											${dto.deleteFlg }</span><select class="form-select result__deleteFlg" style="display: none; min-width: 65px;">
+												<option value="0" <c:out value="${dto.deleteFlg == 0 ? 'selected':''}"></c:out>>N</option>
+												<option value="1" <c:out value="${dto.deleteFlg == 1 ? 'selected':''}"></c:out>>Y</option> 
 										</select></td>
 										<td class="result__regDate"><c:out value="${nowDate == reg ? regTime : reg}"></c:out></td>
 										<td class="group__btn">
@@ -194,19 +194,19 @@ a{text-decoration: none;}
 						<ul class="pagination pagination-sm h-100 justify-content-center align-items-center">
 							<c:if test="${result.prev}">
 					            <li class="page-item" >
-					                <a class="page-link" href="/consultation?page=${result.start -1}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}" tabindex="-1">&laquo;</a>
+					                <a class="page-link" href="/admin/roomManage?page=${result.start -1}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}" tabindex="-1">&laquo;</a>
 					            </li>
 							</c:if>
 							<c:forEach var="page" items="${result.pageList}">
 					            <li class="page-item ${result.page == page? 'active':''}">
-					                <a class="page-link" href="/consultation?page=${page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">
+					                <a class="page-link" href="/admin/roomManage?page=${page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">
 					                    ${page}
 					                </a>
 					            </li>
 				            </c:forEach>
 							<c:if test="${result.next}">
 					            <li class="page-item">
-					                <a class="page-link" href="/consultation?page=${result.end + 1}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">&raquo;</a>
+					                <a class="page-link" href="/admin/roomManage?page=${result.end + 1}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">&raquo;</a>
 					            </li>
 				            </c:if>
 				        </ul>
@@ -227,97 +227,107 @@ $(document).ready(function(){
 		location.href = $(this).find('.result__no').attr('href')+'?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}';
 	}); */
 	
-	$('.result__register').click(function(){
-		$('.tr-sortable').hide();
-		$('.confirm').hide();
-		$('.cancel').hide();
-		$('.tr-fileUpload').hide();
-		$('.modify').show();
-		$('span').show();
-		$('select').hide();
-		$('input').hide();
-		$('.result__regDate').hide();
-		$('.baseLine').append(template.content);
-		//location.href = '/admin/roomManage/register?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}';
-	});
+	
 	$('.result__no').text()
 	let msg = '${msg}';
 	if(msg !== undefined || msg !== null)
 		console.log(msg);
-	
 });
 
-
-	// template used for improved performance
-	const template = document.createElement('template');
-	template.innerHTML = `
-		<tr data-room="${i.count}">
-			<td style="max-width: 150px !important; width: 0px !important;">
-				<img src="" class="thumbnail" height=50 width=100>
-			</td>
-			<th scope="row" class="td-result__roomNum" style="max-width: 150px !important;">
-				<span class="span__roomNum" style="display: none;"> </span> <span style="display: none;">&nbsp;</span>
-				<input type="text" class="form-control result__roomNum" value="" style="max-width: 150px !important;">
-				<input type="hidden" class="form-control result__roomNo" value="">
-				<span class="dot span__colorCd" style="height: 15px; width: 15px; background-color: #fffff; border-radius: 50%; display: none; border: 0.5px solid;"></span>
-			</th>
-			<td>
-				<input type="color" class="form-control result__color" value="" style="">
-			</td>
-			<td class="td-result__title"><span class="span__roomTitle" style="display: none;"> </span>
-				<input type="text" class="form-control result__title" value="" style="">
-			</td>
-			<td class="td-result__explanation">
-				<span class="span__explanation" style="display: none;"></span>
-				<input type="text" class="form-control result__explanation" value="" style="">
-			</td>
-			<td class="td-result__max">
-				<span class="span__max" style="display: none;"></span>
-				<input type="text" class="form-control result__max" value="" style="max-width: 80px;">
-			</td>
-			<td class="td-result__adultCost">
-				<span class="span__adultCost" style="display: none;"></span>
-				<input type="text" class="form-control result__adultCost" value="" style="">
-			</td>
-			<td class="td-result__childCost">
-				<span class="span__childCost" style="display: none;"></span>
-				<input type="text" class="form-control result__childCost" value="" style="">
-			</td>
-			<td class="td-result__buildCd">
-				<span class="span__buildCd" style="display: none;"></span>
-				<select class="form-select result__buildCd" aria-label="Default select example" style="min-width: 70px;">
-					<option value=''>---</option>
-					<c:forEach items="${buildCdList}" var="buildCd">
-						<option value="${buildCd}">${buildCd }層</option>
-					</c:forEach>
-				</select>
-			</td>
-			<td class="ts-result__deleteFlg">
-				<span class="span__deleteFlg" style="display: none;"></span>
-				<select class="form-select result__deleteFlg" style="min-width: 60px;">
-					<option value="0">Y</option>
-					<option value="1">N</option> 
-				</select>
-			</td>
-			<td class="td-result__regDate" style="display:none;"><span class="result__regDate"></span></td>
-			<td class="group__btn">
-				<button type="button" class="registerBtn btn-primary" data-confirm="new">追加</button>
-			</td>
-		</tr>
-		<tr class="imagesShowing__new" onmouseover="loadSoratables(this)" data-file="" style="">
-			<td class="" colspan="12">
-				<ul class="sortable imageOrder__new"></ul>
-			</td>
-		</tr>
-		<tr class="fileUpload__new" style="align-items: center !important; min-width: 350px;">
-			<td colspan="12" style="padding: 0 ">
-				<input data-file="new" type="file" class="form-control fileUpload" onchange="readInputFile(this)" multiple="multiple" max="4" style=" max-width: 300px; margin: 0; display: inline-block;">
-				<input type="hidden" class="form-control result__sort ordernew" style=" max-width: 200px; margin: 0; display: inline-block;">
-			</td>
-		</tr>
-	`;
+$('.result__register').on('click', function(){
+	$('.baseLine').fadeIn(200);
+	document.querySelector('.baseLine').innerHTML = '';
+	$('.tr-sortable').hide();
+	$('.confirm').hide();
+	$('.cancel').hide();
+	$('.tr-fileUpload').hide();
+	$('.modify').show();
+	$('span').show();
+	$('select').hide();
+	$('input').hide();
+	$('.result__regDate').hide();
+	initHtml();
+	//document.querySelector('.baseLine').appendChild(template.content);
 	
+	//location.href = '/admin/roomManage/register?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}';
+});
 
+//const template = document.createElement('template');
+
+function initHtml(){
+	document.querySelector('.baseLine').innerHTML = `
+		<tr data-room="${i.count}">
+	<td style="max-width: 150px !important; width: 0px !important;">
+		<img src="" class="thumbnail" height=50 width=100>
+	</td>
+	<th scope="row" class="td-result__roomNum" style="max-width: 150px !important;">
+		<span class="span__roomNum" style="display: none;"> </span> <span style="display: none;">&nbsp;</span>
+		<input type="text" class="form-control result__roomNum" value="" style="max-width: 150px !important;">
+		<input type="hidden" class="form-control result__roomNo" value="">
+		<span class="dot span__colorCd" style="height: 15px; width: 15px; background-color: #fffff; border-radius: 50%; display: none; border: 0.5px solid;"></span>
+	</th>
+	<td>
+		<input type="color" class="form-control result__color" value="" style="">
+	</td>
+	<td class="td-result__title"><span class="span__roomTitle" style="display: none;"> </span>
+		<input type="text" class="form-control result__title" value="" style="">
+	</td>
+	<td class="td-result__explanation">
+		<span class="span__explanation" style="display: none;"></span>
+		<input type="text" class="form-control result__explanation" value="" style="">
+	</td>
+	<td class="td-result__max">
+		<span class="span__max" style="display: none;"></span>
+		<input type="text" class="form-control result__max" value="" style="max-width: 80px;">
+	</td>
+	<td class="td-result__adultCost">
+		<span class="span__adultCost" style="display: none;"></span>
+		<input type="text" class="form-control result__adultCost" value="" style="">
+	</td>
+	<td class="td-result__childCost">
+		<span class="span__childCost" style="display: none;"></span>
+		<input type="text" class="form-control result__childCost" value="" style="">
+	</td>
+	<td class="td-result__buildCd">
+		<span class="span__buildCd" style="display: none;"></span>
+		<select class="form-select result__buildCd" aria-label="Default select example" style="min-width: 70px;">
+			<option value=''>---</option>
+			<c:forEach items="${buildCdList}" var="buildCd">
+				<option value="${buildCd}">${buildCd }層</option>
+			</c:forEach>
+		</select>
+	</td>
+	<td class="ts-result__deleteFlg">
+		<span class="span__deleteFlg" style="display: none;"></span>
+		<select class="form-select result__deleteFlg" style="min-width: 65px;">
+			<option value="0">N</option>
+			<option value="1">Y</option> 
+		</select>
+	</td>
+	<td class="td-result__regDate" style="display:none;"><span class="result__regDate"></span></td>
+	<td class="group__btn">
+		<button type="button" class="registerBtn btn-success" data-confirm="new">追加</button>
+		<button type="button" class="registerCancelBtn btn-danger" data-confirm="new">戻る</button>
+	</td>
+</tr>
+<tr class="imagesShowing__new" onmouseover="loadSoratables(this)" data-file="" style="">
+	<td class="" colspan="12">
+		<ul class="sortable imageOrder__new"></ul>
+	</td>
+</tr>
+<tr class="fileUpload__new" style="align-items: center !important; min-width: 350px;">
+	<td colspan="12" style="padding: 0 ">
+		<input data-file="new" type="file" class="form-control fileUpload" onchange="readInputFile(this)" multiple="multiple" max="4" style=" max-width: 300px; margin: 0; display: inline-block;">
+		<input type="hidden" class="form-control result__sort ordernew" style=" max-width: 200px; margin: 0; display: inline-block;">
+	</td>
+</tr>
+`;
+}
+
+$('.baseLine').on('click', '.registerCancelBtn', function(){
+	$(this).closest('tbody').empty();
+	$('.result__regDate').show();
+});
 	
 
 let deleteFiles = [];
@@ -511,6 +521,7 @@ $('.baseLine').on('click', '.registerBtn', function(){
 
 
 $('.cancel').click(function(){
+	document.querySelector('.baseLine').innerHTML = '';
 	let tbody = $(this).closest('tbody');
 	
 	let tr = $(this).closest('tr');
@@ -533,6 +544,8 @@ $('.cancel').click(function(){
 })
 
 $('.modify').click(function(){
+	$('.baseLine').fadeOut(200);
+	document.querySelector('.baseLine').innerHTML = '';
 	$('.tr-sortable').fadeOut(200);
 	$('.tr-fileUpload').fadeOut(200);
 	$('span').show();
@@ -561,6 +574,7 @@ $('.modify').click(function(){
 });
 
 $('.confirm').click(function(){
+	document.querySelector('.baseLine').innerHTML = '';
     reload_order($(this));
    
     let formData = new FormData();

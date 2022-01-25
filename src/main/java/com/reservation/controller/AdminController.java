@@ -49,7 +49,7 @@ public class AdminController {
 	@GetMapping("/admin/roomManage")
 	public String roomManageList(@ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
 		Calendar cal = Calendar.getInstance();
-		PageResultDTO<RoomInfoDTO, RoomInfo> list = roomInfoService.getList(requestDTO);
+		PageResultDTO<RoomInfoDTO, RoomInfo> list = roomInfoService.getListForAdmin(requestDTO);
 		log.info(list);
 		model.addAttribute("buildCdList", roomInfoService.getBuildCd());
 		model.addAttribute("result", list);
