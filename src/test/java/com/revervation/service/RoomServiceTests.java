@@ -9,6 +9,8 @@ import java.util.ListIterator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -66,6 +68,20 @@ public class RoomServiceTests {
 	public void testPagingList() {
 		PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(1).size(10).build();
 		PageResultDTO<RoomInfoDTO, RoomInfo> resultDTO = roomInfoService.getList(pageRequestDTO);
+		System.out.println("PREV: "+resultDTO.isPrev());
+		System.out.println("NEXT: "+resultDTO.isNext());
+		System.out.println("TOTAL: "+resultDTO.getTotalPage());
+		for(RoomInfoDTO dto : resultDTO.getDtoList()) {
+			System.out.println(dto);
+		}
+		System.out.println("=============");
+		resultDTO.getPageList().forEach(i -> System.out.println(i));
+	}
+	
+	@Test
+	public void getListPageOnMain() {
+		PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(1).size(10).build();
+		PageResultDTO<RoomInfoDTO, RoomInfo> resultDTO = roomInfoService.getListPageOnMain(pageRequestDTO, "20220127", "20220129", 5);
 		System.out.println("PREV: "+resultDTO.isPrev());
 		System.out.println("NEXT: "+resultDTO.isNext());
 		System.out.println("TOTAL: "+resultDTO.getTotalPage());

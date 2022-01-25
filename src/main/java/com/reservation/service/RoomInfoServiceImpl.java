@@ -65,13 +65,16 @@ public class RoomInfoServiceImpl implements RoomInfoService {
 	public List<Integer> getBuildCd() {
 		return roomInfoRepository.getBuildCd();
 	}
-
+	
+	@Transactional
 	@Override
-	public Long roomRegister(RoomInfoDTO dto) {
+	public RoomInfoDTO roomRegister(RoomInfoDTO dto) {
 		System.out.println("RoomInfoDTO: "+dto);
 		RoomInfo roomInfo = dtoToEntity(dto);
 		roomInfoRepository.save(roomInfo);
-		return roomInfo.getNo();
+		Optional<RoomInfo> resultEntity = roomInfoRepository.findById(roomInfo.getNo());
+		RoomInfoDTO result = entityToDTO(resultEntity.get());
+		return result;
 	}
 	
 	@Transactional
@@ -93,6 +96,14 @@ public class RoomInfoServiceImpl implements RoomInfoService {
 		entity.changeDeleteFlg(dto.getDeleteFlg());
 		
 		roomInfoRepository.save(entity);
+	}
+
+	@Override
+	public PageResultDTO<RoomInfoDTO, RoomInfo> getListPageOnMain(PageRequestDTO requestDTO, String dateStart, String dateEnd, int max) {
+		Page<RoomInfo> result = roomInfoRepository.getListPageOnMain(requestDTO.getPageable(Sort.by("no").ascending()), dateStart, dateEnd, max);
+		Function<RoomInfo, RoomInfoDTO> fn = (entity -> entityToDTO(entity));
+		log.info("getListPageOnMain: "+result.getContent());
+		return new PageResultDTO<RoomInfoDTO, RoomInfo>(result, fn);
 	}
 	
 	

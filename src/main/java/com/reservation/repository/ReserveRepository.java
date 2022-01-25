@@ -42,8 +42,8 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 	
 	//중복체크
 	@Query("select count(*) from RoomInfo i " +
-			"right join Reserve r on r.roomNo.no = i "
-			+ "where r.roomNo.no = :roomno and to_date(r.startDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
+			"left outer join Reserve r on r.roomNo.no = i and r.roomNo.no = :roomno "
+			+ "where to_date(r.startDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
 			+ "or to_date(r.endDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
 			+ "and r.paymentFlg = 0 and r.cancelFlg = 0 and r.deleteFlg = 0 order by r.roomNo.no"
 			)

@@ -52,7 +52,7 @@ a{text-decoration: none;}
 											<c:if test="${dto.lockFlg == '1'}">&nbsp;&nbsp;<i class="fas fa-lock"></i></c:if>
 										</td>
 										
-										<td class="result__buildCd">${dto.name } /${dto.grgrod }</td>
+										<td class="result__buildCd">${dto.name }</td>
 										<td class="result__createdAt"><c:out value="${nowDate == reg ? regTime : reg}"></c:out></td>
 										
 									</tr>

@@ -3,6 +3,10 @@ package com.reservation.service;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
+
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
 import com.reservation.dto.RoomInfoDTO;
@@ -10,7 +14,7 @@ import com.reservation.entity.RoomInfo;
 
 public interface RoomInfoService {
 	
-	Long roomRegister(RoomInfoDTO dto);
+	RoomInfoDTO roomRegister(RoomInfoDTO dto);
 	
 	PageResultDTO<RoomInfoDTO,RoomInfo> getList(PageRequestDTO requestDTO);
 	
@@ -21,6 +25,8 @@ public interface RoomInfoService {
 	List<Integer> getBuildCd();
 	
 	void modify(RoomInfoDTO dto);
+	
+	PageResultDTO<RoomInfoDTO, RoomInfo> getListPageOnMain(PageRequestDTO requestDTO,String dateStart,String dateEnd,int max);
 	
 	default RoomInfoDTO entityToDTO(RoomInfo entity) {
 		RoomInfoDTO dto = RoomInfoDTO.builder()

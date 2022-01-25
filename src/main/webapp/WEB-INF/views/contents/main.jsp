@@ -193,7 +193,7 @@
         		$(this).addClass('activePeople');
         		$('.adult').val('1');
         		$('.child').val('0');
-        		$('.showingPeople').text('Adult '+$('.adult').val() +'人');
+        		$('.showingPeople').text('Adult '+$('.adult').val() +'名');
         		$('.peoplePopup').fadeOut('300');
         		$('.btn-Search').fadeIn('300');
         	} else if($(this).data('people') === 'couple'){
@@ -202,12 +202,13 @@
         		$('.adult').val('2');
         		$('.child').val('0');
         		
-        		$('.showingPeople').text('Adult '+$('.adult').val() +'人');
+        		$('.showingPeople').text('Adult '+$('.adult').val() +'名');
         		$('.peoplePopup').fadeOut('300');
         		$('.btn-Search').fadeIn('300');
         	} else if($(this).data('people') === 'family'){
         		$('.adult').val('2');
         		$('.child').val('2');
+        		$('.showingPeople').text('Adult '+$('.adult').val() +' 名 , Child '+$('.child').val()+' 名');
         		$(this).addClass('activePeople');
         		$('.numberOfPeople').css('display','table-cell');
         	}
@@ -266,20 +267,40 @@
         		}
         	}
         	if($('.adult').val() > 0 && $('.child').val() > 0){
-	        	$('.showingPeople').text('Adult '+$('.adult').val() +' 人 , Child '+$('.child').val()+' 人');
+	        	$('.showingPeople').text('Adult '+$('.adult').val() +' 名 , Child '+$('.child').val()+' 名');
         	} else if($('.adult').val() > 0 && $('.child').val() == 0){
-	        	$('.showingPeople').text('Adult '+$('.adult').val() +' 人 ');
+	        	$('.showingPeople').text('Adult '+$('.adult').val() +' 名 ');
         	}
         });
         
+        $('.btn-Search').on('click', function(){
+        	search();
+        });
         
 	});//
     
-	function checkDate(){
-		
+	function search(){
+		submit('/booking/search', 'GET', [
+		    { name: 'startDate', value: $('.startDate').val() },
+		    { name: 'endDate', value: $('.endDate').val() },
+		    { name: 'max', value: parseInt($('.adult').val())+parseInt($('.child').val()) },
+		]);
 	}
     
-    
+	function submit(action, method, values) {
+	    let form = $('<form/>', {
+	        action: action,
+	        method: method
+	    });
+	    $.each(values, function() {
+	        form.append($('<input/>', {
+	            type: 'hidden',
+	            name: this.name,
+	            value: this.value
+	        }));
+	    });
+	    form.appendTo('body').submit();
+	}
     
     
 </script>
@@ -308,7 +329,7 @@
         	<div style="position: relative; margin: 0 auto;">
         	<div>
         	<div class="demo start" style="width: 25%;background-color: #fff !important; border-color: #dddfe2; border: 1px solid; height: 66px; border-radius: 8px; font-size: 16px; cursor: pointer; display: inline-block; vertical-align: top;box-shadow: none;">
-        		<div style="padding: 0 10px; position: absolute; top: 5%;">
+        		<div style="padding: 0 10px; position: absolute; top: 15%;">
         			<i class="far fa-calendar-alt" style="padding: 12px 14px; font-size: 20px; color: #333; vertical-align:middle; display: inline-block;"></i>
 	        		<div style="width: calc(100% - 60px); vertical-align: middle; display: inline-block; width: auto; ">
 	        			<div class="startDateText" style="font-weight: 400; text-overflow: ellipsis;"></div>
@@ -318,7 +339,7 @@
         		</div>
         	</div>
         	<div class="demo end" style="width: 25%;background-color: #fff !important; border-color: #e7e7e7; border: 1px solid; height: 66px; border-radius: 8px; font-size: 16px; cursor: pointer; display: inline-block; vertical-align: top;box-shadow: none;">
-        		<div style="padding: 0 10px; position: absolute; top: 5%;">
+        		<div style="padding: 0 10px; position: absolute; top: 15%;">
         			<i class="far fa-calendar-alt" style="padding: 12px 14px; font-size: 20px; color: #333; vertical-align:middle; display: inline-block;"></i>
 	        		<div style="width: calc(100% - 60px); vertical-align: middle; display: inline-block; width: auto; ">
 	        			<div class="endDateText" style="font-weight: 400; text-overflow: ellipsis;"></div>
@@ -328,7 +349,7 @@
         		</div>
         	</div>
         	<div class="people" style="width: calc(50% - 122px);background-color: #fff !important; border-color: #e7e7e7; border: 1px solid; height: 66px; border-radius: 8px; font-size: 16px; display: inline-block; margin-left: 20px; cursor: pointer;">
-        		<div style="width: 40%;padding: 0 10px;position: absolute;top: 14%;-webkit-transform: translateY(-50%);transform: translateY(-50%);">
+        		<div style="width: 40%;padding: 0 10px;position: absolute;top: 14%;-webkit-transform: translateY(-10%);transform: translateY(-10%);">
         			<i class="fas fa-users" style="padding-right: 16px;display: inline-block;vertical-align: middle;text-align: left;"></i>
         			<div style="width: calc(100% -180px);vertical-align: middle;display: inline-block;box-sizing: border-box;">
         				<div style="width: auto;padding: 5px 0;font-size: 16px;">
@@ -336,7 +357,7 @@
         						<span class="showingPeople" style="box-sizing: border-box;font-weight: 400;white-space: nowrap;">Adult 1人</span>
         					</div>
         					<div style="font-size: 14px;color: #999;line-height: 1.25;text-overflow: ellipsis;">
-        						Room 1
+        						Room 1 号室
         					</div>
         					<div style="right: 50px;position: absolute;transform: translateY(-50%);top: 50%;">
         						<i class="fas fa-chevron-down" style="color: #ff7f50; overflow: hidden;"></i>
@@ -355,7 +376,7 @@
    										Solo
    									</div>
    									<div style="text-align: right; border-top-color: #dddfe2; font-size: 11px; width: 65%; margin: 0 auto; display: table-cell; vertical-align: middle;">
-   										Room 1 / Adult 1人
+   										Room 1 号室 / Adult 1名
    									</div>
    								</div>
    								<div class="peopleGroup" data-people="couple" style="color: #555; height: 66px; display: table; width: 100%; padding: 0 20px; font-size: 14px; cursor: pointer;">
@@ -363,7 +384,7 @@
    										Couple / 2名
    									</div>
    									<div style="text-align: right; border-top-color: #dddfe2; font-size: 11px; width: 65%; margin: 0 auto; display: table-cell; vertical-align: middle; border-top: 1px solid;">
-   										Room 1 / Adult 2人
+   										Room 1 号室 / Adult 2名
    									</div>
    								</div>
    								<div class="peopleGroup" data-people="family" style="color: #555; height: 66px; display: table; width: 100%; padding: 0 20px; font-size: 14px; cursor: pointer;">
@@ -395,17 +416,17 @@
    					</div>
    				</div>
    			</div>
-        	<div class="btn-Search" style="margin: -32px auto auto; box-sizing: border-box; position: absolute; left: 50% ;top: 80%; display: none;transform: translateX(-50%);">
+        	<div class="btn-Search" style="margin: -32px auto auto; box-sizing: border-box; position: absolute; left: 50% ;top: 480%; display: none;transform: translateX(-50%);">
         		<div style="">
         		</div>
 	        	<button type="button" class="" style="position: relative;border: none;user-select: none;padding: 12px;border-radius: 8px;background-color: #ff7f50; color: rgb(255, 255, 255);width: 490px;height: 64px;box-shadow: rgb(0 0 0 / 20%) 0px 1px 3px 1px;transition: all 0.15s ease-in-out 0s;cursor: pointer;text-align: center;">Search</button>
         	</div>
 	        	
         	</div>
-	        	<input type="text" class="form-control startDate" value="" readonly style="width: 50%;background-color: #fff !important"/>
-	        	<input type="text" class="form-control endDate" value="" readonly style="width: 50%;background-color: #fff !important"/>
-	        	<input type="text" class="form-control adult" value="2" readonly style="width: 50%;background-color: #fff !important"/>
-	        	<input type="text" class="form-control child" value="2" readonly style="width: 50%;background-color: #fff !important"/>
+	        	<input type="hidden" class="form-control startDate" value="" readonly style="width: 50%;background-color: #fff !important"/>
+	        	<input type="hidden" class="form-control endDate" value="" readonly style="width: 50%;background-color: #fff !important"/>
+	        	<input type="hidden" class="form-control adult" value="2" readonly style="width: 50%;background-color: #fff !important"/>
+	        	<input type="hidden" class="form-control child" value="2" readonly style="width: 50%;background-color: #fff !important"/>
 		</div>
         </div>
         </header>

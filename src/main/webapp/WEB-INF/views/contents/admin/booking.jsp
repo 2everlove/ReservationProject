@@ -125,7 +125,6 @@ a{text-decoration: none;}
 						);
 					}
 				},
-	        	selectable: true,
 				initialView: 'dayGridMonth',
 				initialDate: dateString,
 				dayMaxEvents: true, // allow "more" link when too many events
@@ -134,11 +133,6 @@ a{text-decoration: none;}
 				aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
 				events: jsonList,
 			    dayMaxEvents: true,
-				select: function(info) {
-					console.log("selected:")
-					console.log(info)
-				    alert('selected ' + info.startStr + ' to ' + info.endStr);
-				},
 	       });
 			
 	        calendar.render();

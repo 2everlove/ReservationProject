@@ -33,11 +33,11 @@ public class RestReserve {
 	private final RoomInfoService roomInfoService;
 	
 	//search whole room
-		@GetMapping(value = "/checkReserve", produces = MediaType.APPLICATION_JSON_VALUE)
-		public ResponseEntity<List<RoomInfoDTO>> AjaxCheckReserveDate(){
-			log.info("AjaxCheckReserveDate " + "search whole room");
-			return new ResponseEntity<List<RoomInfoDTO>>(roomInfoService.findAll(),HttpStatus.OK);
-		}
+	@GetMapping(value = "/checkReserve", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<RoomInfoDTO>> AjaxCheckReserveDate(){
+		log.info("AjaxCheckReserveDate " + "search whole room");
+		return new ResponseEntity<List<RoomInfoDTO>>(roomInfoService.findAll(),HttpStatus.OK);
+	}
 	
 	//search whole booking
 	@GetMapping(value = "/checkReserve/{amount}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -82,6 +82,5 @@ public class RestReserve {
 		log.info(reserveDTO);
 		Long no = reserveService.registerReserve(reserveDTO);
 		return new ResponseEntity<Long>(no, HttpStatus.OK);
-		
 	}
 }

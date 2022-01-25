@@ -329,7 +329,7 @@ $('.baseLine').on('click', '.registerCancelBtn', function(){
 	$('.result__regDate').show();
 });
 	
-
+let = tempDelete = '';
 let deleteFiles = [];
 
 function reload_order(e) {
@@ -462,7 +462,6 @@ $('.baseLine').on('click', '.registerBtn', function(){
 			}
 			console.log(roomInfo);
 			
-			
 			$.ajax({
 				url: '/api/roomManage/register',
 				method: 'post',
@@ -539,6 +538,7 @@ $('.cancel').click(function(){
 	let imageTrObject = $(imageTr);
 	$('.result__regDate').show();
 	
+	tbody.find('.sortable').append(tempDelete);
 	imageTrObject.fadeOut(200);
 	fileObject.fadeOut(200);
 })
@@ -636,9 +636,9 @@ $('.confirm').click(function(){
 					}, "json");
 				} else {
 					alert('이미지를 전부 지울 수 없습니다.');
+					tbody.find('.sortable').append(tempDelete);
 					return false;
 				}
-				
 			} 
 			
 			if(tbody.find('.result__roomNo').val() === ''){
@@ -815,7 +815,9 @@ function readInputFile(e){
 
 $('body').on('click','a.delete_image',function(e){
 	e.preventDefault();
-	$(this).parent().remove('');       
+	tempDelete = $(this).parent().detach();
+	$(this).parent().remove('');
+	console.log(tempDelete);
 	let file = $(this).parent().attr('file');
 	deleteFiles.push(file);
 	//console.log(deleteFiles);

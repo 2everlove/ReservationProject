@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.junit.Test;
@@ -81,7 +83,8 @@ public class RoomReposiTests {
 	@Test
 	public void getListPageOnMainTests() {
 		PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("no").descending());;
-		Page<RoomInfoDTO> result = roomInfoService.entityToDTO(roomInfoRepository.getListPageOnMain(pageRequest, "20220127", "20220129", 5));
+		Function<RoomInfo, RoomInfoDTO> fn = (entity -> roomInfoService.entityToDTO(entity));
+		List<RoomInfoDTO> result = roomInfoRepository.getListPageOnMain(pageRequest, "20220127", "20220129", 5).stream().map(fn).collect(Collectors.toList());
 		for(RoomInfoDTO objects : result) {
 			System.out.println(objects);
 		}

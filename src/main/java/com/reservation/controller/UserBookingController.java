@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
@@ -42,6 +43,22 @@ public class UserBookingController {
 		model.addAttribute("roomInfoList", list.getDtoList());
 		log.info(list);
 		System.out.println("booking");
+	}
+	
+	//방 검색
+	@GetMapping("/booking/search")
+	public String bookingSearchedRoomList(ReserveDTO reserveDTO, Integer max, @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
+		System.out.println("startDate: "+reserveDTO.getStartDate());
+		System.out.println("endDate: "+reserveDTO.getEndDate());
+		System.out.println("people: "+max);
+		PageResultDTO<RoomInfoDTO, RoomInfo> list = roomInfoService.getListPageOnMain(requestDTO, reserveDTO.getStartDate(), reserveDTO.getEndDate(), max);
+		model.addAttribute("roomInfoList", list.getDtoList());
+		if(list.getDtoList().isEmpty()) {
+			model.addAttribute("showingKey", "0");
+		}
+		log.info(list);
+		System.out.println("booking");
+		return "booking";
 	}
 	
 	//방에 따른 예약정보

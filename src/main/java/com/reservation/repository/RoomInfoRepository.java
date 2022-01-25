@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +12,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.reservation.dto.PageRequestDTO;
 import com.reservation.entity.RoomInfo;
 
 @Repository
@@ -29,11 +31,10 @@ public interface RoomInfoRepository extends JpaRepository<RoomInfo, Long>, Query
 	Page<RoomInfo> findAllByDeleteFlg(Pageable pageable, String deleteFlg);
 	
 	//available
-	@Query("select DISTINCT i.no ,i.roomNum ,i.roomTitle ,i.max ,i.adultCost ,i.childCost ,i.explanation ,i.images ,i.colorCd ,i.deleteFlg ,i.createdAt ,i.updatedAt ,i.buildCd from RoomInfo i " +
-			"left join Reserve r on r.roomNo.no = i "
-			+ "where not to_date(r.startDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
-			+ "or not to_date(r.endDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
-			+ "and r.paymentFlg = 0 and r.cancelFlg = 0 and r.deleteFlg = 0 and i.max <= :max order by i.no asc"
+	@Query("select distinct i from RoomInfo i  where i.no not in (select i.no from RoomInfo i left join Reserve r on r.roomNo.no = i "
+			+ "where to_date(r.startDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
+			+ "or to_date(r.endDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
+			+ "and r.paymentFlg = 0 and r.cancelFlg = 0 and r.deleteFlg = 0) and i.max >= :max order by i.no asc"
 			)
 	Page<RoomInfo> getListPageOnMain(Pageable pageable,@Param("dateStart") String dateStart, @Param("dateEnd") String dateEnd, @Param("max") int max);
 	

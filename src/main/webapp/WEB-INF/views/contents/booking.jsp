@@ -7,137 +7,110 @@
 
 <style>
 a{text-decoration: none;}
+@media (max-width: 576px) {
+    .card-columns {
+        column-count: 1 !important;
+    }
+}
+@media (min-width: 576px) {
+    .card-columns {
+        column-count: 1 !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .card-columns {
+        column-count: 1 !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .card-columns {
+        column-count: 1 !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .card-columns {
+        column-count: 2 !important;
+    }
+}
 </style>
 <body>
 	<!-- <div id="calendarForm"></div> -->
 	<div class="bg-dark " style="height: 94px"></div>
 	<div class="masthead">
 		<div style="padding-top: 0px;">
+			<div class="container px-4 px-lg-5">
+		<c:if test="${showingKey == '0' }">
+            <div class="row gx-4 gx-lg-5 justify-content-center" style="margin-top: 60px;">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Post preview-->
+                    <div class="post-preview">
+						<h2 class="post-title">찾으시는 객실이 없습니다.</h2>
+						<h3 class="post-subtitle"></h3>
+                        <p class="post-meta">
+                            Oops. there is full
+                            <a href="#!"></a>
+                        </p>
+                    </div>
+                    <div class="d-flex justify-content-end mb-4" onclick="javascript:void(0);"><a class="btn btn-primary text-uppercase" href="#!">이전페이지 →</a></div>
+                </div>
+            </div>
+		</c:if>
+	           	<div class="card-columns" style="column-count: 2; padding-top: 2%;">        
             <c:forEach items="${roomInfoList}" var="roomInfo" varStatus="status">
-	        	<section class="projects-section bg-light" style="margin-top: 5px;">
-		            <div class="container px-4 px-lg-5">
-		            	<div style="">
-		                <!-- Featured Project Row-->
-		               
-		                <div class="row gx-0 mb-4 mb-lg-5 align-items-center" OnClick="location.href ='booking/${roomInfo.no}'" style="cursor:pointer; display: flex; justify-content: flex-end; margin-bottom: 0rem !important; padding: 1rem 0 1rem 0;" onmouseout="this.style.background='#F8F9F7';" onmouseover="this.style.background= 'rgba(170, 166, 157,0.3)';">
-		                	<c:url value="/api/display" var="firstImage">
-								<c:param name="fileName" value="${roomInfo.images[0]}"></c:param>
-							</c:url>
-		                    <div class="col-xl-3 col-lg-7">
-		                    	<h2 style="padding-top: 10px;">${roomInfo.roomNum }号</h2>
-		                    	<img class="img-fluid mb-3 mb-lg-0" src="${firstImage }" alt="..." style=""/>
-		                    </div>
-		                    <div class="col-xl-4 col-lg-5">
-		                        <div class="featured-text text-center text-lg-left">
-		                         	
-		                            <h4>${roomInfo.roomTitle }</h4>
-		                            <p class="text-black mb-0" style="text-align: right; word-wrap: break-word; width:300px; overflow: auto;">
-		                            <br/>
-		                            <br/>
-		                            </p>
-		                            <p class="text-black mb-0" style="text-align: right; margin-right: 30px;">
-		                            	<b>￥</b><span style="color: #e12d2d;"><fmt:formatNumber type="number" value="${roomInfo.adultCost }"/></span>
-		                            	<br/>
-		                            	<br/>
-			                            <button type="button" class="btn btn-primary btn-lg">Reserve</button>
-		                            </p>
-		                            <p></p>
-		                            <br/>
-		                            <div class="table-responsive-lg">
-										<table class="table table-hover">
-											<thead>
-												<tr>
-													<th scope="col">Info</th>
-													<th scope="col">Adult</th>
-													<th scope="col">Child</th>
-													<th scope="col">最大人数</th>
-												</tr>
-											</thead>
-											<tbody>
-											<tr>
-												<th scope="row">${roomInfo.buildCd}層　${roomInfo.roomNum }号</th>
-												<td><b>￥</b><b><fmt:formatNumber type="number" value="${roomInfo.adultCost }"/></b></td>
-												<td><b>￥</b><b><fmt:formatNumber type="number" value="${roomInfo.childCost }"/></b></td>
-												<td><b>${roomInfo.max}</b> 人</td>
-											</tr>
-											</tbody>
-										</table>
-									</div>
-		                        </div>
-		                    </div>
-		                </div>
-		                
-		                
-	                <!-- 
-	                <div class="row gx-0 mb-5 mb-lg-0 justify-content-center">
-	                    <div class="col-lg-6"><img class="img-fluid" src="/resources/assets/img/room/room2.jpg" alt="..." /></div>
-	                    <div class="col-lg-6">
-	                        <div class="bg-black text-center h-100 project">
-	                            <div class="d-flex h-100">
-	                                <div class="project-text w-100 my-auto text-center text-lg-left">
-	                                    <h4 class="text-white">Misty</h4>
-	                                    <p class="mb-0 text-white-50">An example of where you can put an image of a project, or anything else, along with a description.</p>
-	                                    <hr class="d-none d-lg-block mb-0 ms-0" />
-	                                </div>
-	                            </div>
-	                        </div>
-	                    </div>
-	                </div>
-	                Project Two Row
-	                <div class="row gx-0 justify-content-center">
-	                    <div class="col-lg-6"><img class="img-fluid" src="/resources/assets/img/room/room3.jpg" alt="..." /></div>
-	                    <div class="col-lg-6 order-lg-first">
-	                        <div class="bg-black text-center h-100 project">
-	                            <div class="d-flex h-100">
-	                                <div class="project-text w-100 my-auto text-center text-lg-right">
-	                                    <h4 class="text-white">Mountains</h4>
-	                                    <p class="mb-0 text-white-50">Another example of a project with its respective description. These sections work well responsively as well, try this theme on a small screen!</p>
-	                                    <hr class="d-none d-lg-block mb-0 me-0" />
-	                                </div>
-	                            </div>
-	                        </div>
-	                    </div>
-	                </div> -->
-	            </div>
-	            </div>
-	        	</section>			
-                <hr style="border: none; font-size: 0; line-height: 0; margin: 10px 0 10px 0; color: rgba(132, 129, 122,1.0); background:rgba(132, 129, 122,1.0); height: 3px;"/>
-           	</c:forEach>
-				<!-- <div class="table-responsive-lg">
-					<table class="table table-hover">
-					  <thead>
-					    <tr>
-					      <th scope="col">#</th>
-					      <th scope="col">First</th>
-					      <th scope="col">Last</th>
-					      <th scope="col">Handle</th>
-					    </tr>
-					  </thead>
-					  <tbody>
-					    <tr>
-					      <th scope="row">1</th>
-					      <td>Mark</td>
-					      <td>Otto</td>
-					      <td>@mdo</td>
-					    </tr>
-					    <tr>
-					      <th scope="row">2</th>
-					      <td>Jacob</td>
-					      <td>Thornton</td>
-					      <td>@fat</td>
-					    </tr>
-					    <tr>
-					      <th scope="row">3</th>
-					      <td colspan="2">Larry the Bird</td>
-					      <td>@twitter</td>
-					    </tr>
-					  </tbody>
-					</table>
-				</div> -->
+	            <c:url value="/api/display" var="firstImage">
+					<c:param name="fileName" value="${roomInfo.images[0]}"></c:param>
+				</c:url>
+			        <div class="card" style="cursor: pointer; width: 500px;" OnClick="location.href ='/booking/${roomInfo.no}'" onmouseout="this.style.background='#F8F9F7';" onmouseover="this.style.background= 'rgba(170, 166, 157,0.3)';">
+			            <div class="row no-gutters" style="align-items: center; justify-content: flex-end; width: 100%; margin: 0; --bs-gutter-x: 0;">
+			            	<div style="background-color: ${roomInfo.colorCd}; position: absolute;width: 6%;left: 0; top: 8%;height: 5px; z-index: 1;"></div>
+			            	<div style="background-color: ${roomInfo.colorCd}; position: absolute;width: 5%;left: 0; top: 11.5%;height: 5px; z-index: 1;"></div>
+			            	<div style="background-color: ${roomInfo.colorCd}; position: absolute;width: 4%;left: 0; top: 15%;height: 5px; z-index: 1;"></div>
+			                <div class="col-sm-4">
+			                    <img class="card-img" src="${firstImage }" alt="Suresh Dasari Card">
+			                </div>
+			                <div class="col-sm-7">
+			                    <div class="card-body" style="text-align: right; padding-right: 60px;">
+			                        <h5 class="card-title">${roomInfo.roomTitle }</h5>
+			                        <p class="card-text"><b>￥</b><span style="color: #e12d2d;"><fmt:formatNumber type="number" value="${roomInfo.adultCost }"/></span></p>
+			                        <a href="/booking/${roomInfo.no}" class="btn btn-primary">Reserve</a>
+			                    </div>
+			                </div>
+			            </div>
+						<div class="table-responsive-lg">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th scope="col">Info</th>
+										<th scope="col">Adult</th>
+										<th scope="col">Child</th>
+										<th scope="col">最大人数</th>
+									</tr>
+								</thead>
+								<tbody>
+								<tr>
+									<th scope="row">${roomInfo.buildCd}層　${roomInfo.roomNum }号室</th>
+									<td><b>￥</b><b><fmt:formatNumber type="number" value="${roomInfo.adultCost }"/></b></td>
+									<td><b>￥</b><b><fmt:formatNumber type="number" value="${roomInfo.childCost }"/></b></td>
+									<td><b>${roomInfo.max}</b> 名</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+			        </div>
+				</c:forEach>
+           	</div>
 		</div>
 	</div>
-<script type="text/javascript">
 	
+<script type="text/javascript">
+<c:if test="${showingKey == '0' }">
+	$('.d-flex').click(function(){
+		location.href = "/";
+	})
+</c:if>
 </script>
 </body>
 

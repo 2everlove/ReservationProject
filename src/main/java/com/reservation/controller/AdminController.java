@@ -87,4 +87,12 @@ public class AdminController {
 		roomInfoService.modify(dto);
 		return new ResponseEntity<RoomInfoDTO>(roomInfoService.findAllSpecifyRoom(dto.getNo()), HttpStatus.OK);
 	}
+	
+	@ResponseBody
+	@PostMapping("/api/roomManage/register")
+	public ResponseEntity<RoomInfoDTO> roomManageRegisterPost(@RequestBody RoomInfoDTO dto) {
+		log.info("roomManageRegisterPost: "+dto);
+		
+		return new ResponseEntity<RoomInfoDTO>(roomInfoService.roomRegister(dto), HttpStatus.OK);
+	}
 }
