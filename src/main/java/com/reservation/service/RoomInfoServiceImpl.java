@@ -97,13 +97,24 @@ public class RoomInfoServiceImpl implements RoomInfoService {
 		
 		roomInfoRepository.save(entity);
 	}
-
+	
+	//중복날짜 없는 dto 가져오기
 	@Override
 	public PageResultDTO<RoomInfoDTO, RoomInfo> getListPageOnMain(PageRequestDTO requestDTO, String dateStart, String dateEnd, int max) {
 		Page<RoomInfo> result = roomInfoRepository.getListPageOnMain(requestDTO.getPageable(Sort.by("no").ascending()), dateStart, dateEnd, max);
 		Function<RoomInfo, RoomInfoDTO> fn = (entity -> entityToDTO(entity));
 		log.info("getListPageOnMain: "+result.getContent());
 		return new PageResultDTO<RoomInfoDTO, RoomInfo>(result, fn);
+	}
+	
+	//해당 날짜 dto 가져오기
+	@Override
+	public List<RoomInfoDTO> getListOnSelectedCalendar(String dateStart, String dateEnd) {
+		List<RoomInfo> entityResult = roomInfoRepository.getListOnSelectedCalendar(dateStart, dateEnd);
+		Function<RoomInfo, RoomInfoDTO> fn = (entity -> entityToDTO(entity));
+		List<RoomInfoDTO> result = entityResult.stream().map(fn).collect(Collectors.toList());
+		log.info("getListPageOnMain: "+result);
+		return result;
 	}
 	
 	

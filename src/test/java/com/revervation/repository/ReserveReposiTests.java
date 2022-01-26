@@ -67,6 +67,9 @@ public class ReserveReposiTests {
 					.bankName("bank")
 					.bankbranchcde("bank"+String.valueOf((int)(Math.random()*10)))
 					.bankNo(String.valueOf((int)(Math.random()*10)))
+					.paymentFlg("0")
+					.cancelFlg("0")
+					.deleteFlg("0")
 					.build();
 			System.out.println(roomInfo.toString());
 			System.out.println(reserve.toString());

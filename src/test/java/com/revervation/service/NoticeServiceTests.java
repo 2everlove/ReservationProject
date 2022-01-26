@@ -33,7 +33,7 @@ public class NoticeServiceTests {
 	
 	@Test
 	public void register() {
-		IntStream.range(1, 50).forEach( i -> {
+		IntStream.range(1, 150).forEach( i -> {
 			NoticeDTO notice = NoticeDTO.builder()
 					.title("test"+i)
 					.contents("content"+i)

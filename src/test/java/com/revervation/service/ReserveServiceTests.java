@@ -45,7 +45,7 @@ public class ReserveServiceTests {
 	@Transactional
 	@Test
 	public void wrtieTest() throws Exception {
-		IntStream.range(1, 30).forEach(i -> {
+		IntStream.range(1, 40).forEach(i -> {
 			Long no = (long)((Math.random()*5)+1);
 			RoomInfo roomInfo = RoomInfo.builder().no(no).build();
 			
@@ -70,8 +70,11 @@ public class ReserveServiceTests {
 					.options("1,2,3,4,5")
 					.totalCost(50000)
 					.bankName(Bank.fromValue((int)(Math.random()*12)+1).getBankName())
-					.bankbranchcde("bank"+String.valueOf((int)(Math.random()*12)+1))
+					.bankbranchcde(String.valueOf((int)(Math.random()*3)+1))
 					.bankNo(String.valueOf((Bank.fromValue((int)(Math.random()*12)+1).getBankCd())))
+					.deleteFlg("0")
+					.paymentFlg("0")
+					.cancelFlg("0")
 					.build();
 			System.out.println(roomInfo.toString());
 			System.out.println(reserve.toString());

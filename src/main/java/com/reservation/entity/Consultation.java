@@ -38,13 +38,18 @@ public class Consultation extends BaseEntity{
 	private Long grno;
 	private Long grgrod;
 	private int depth;
+	@Column(length = 100, nullable = false)
 	private String title;
+	@Column(nullable = false)
 	private String contents;
+	@Column(length = 20, nullable = false)
 	private String name;
+	@Column(length = 20)
 	private String passwd;
+	@Column(length = 1, nullable = false)
 	private String lockFlg;
 	
-	@Column(columnDefinition = "varchar(1) default '0'")
+	@Column(length = 1, nullable = false, columnDefinition = "varchar(1) default '0'")
 	private String deleteFlg;
 	
 	public void changeTitle(String title) {

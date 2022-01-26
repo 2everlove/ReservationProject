@@ -30,13 +30,14 @@ public class sliderimages extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SLIDERIMAGES_SEQ_GENERATOR")
 	private Long no;
-	
+	@Column(length = 100, nullable = false)
 	private String filename;
+	@Column(length = 10, nullable = false)
 	private String sortNo;
 	
-	@Column(columnDefinition = "varchar(1) default '0'")
+	@Column(length = 1, nullable = false,columnDefinition = "varchar(1) default '0'")
 	private String Activity;
-	@Column(columnDefinition = "varchar(1) default '0'")
+	@Column(length = 1, nullable = false,columnDefinition = "varchar(1) default '0'")
 	private String deleteFlg;
 	
 }

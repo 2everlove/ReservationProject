@@ -31,11 +31,14 @@ public class Notice extends BaseEntity{
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTICE_SEQ_GENERATOR")
 	private Long no;
 	
+	@Column(columnDefinition="VARCHAR(500)", nullable = false)
 	private String title;
+	@Column(columnDefinition="VARCHAR(4000)", nullable = false)
 	private String contents;
+	@Column(nullable = false)
 	private int buildCd;
 	
-	@Column(columnDefinition = "varchar(1) default '0'")
+	@Column(length = 1, nullable = false, columnDefinition = "varchar(1) default '0'")
 	private String deleteFlg;
 
 	public void changeTitle(String title) {

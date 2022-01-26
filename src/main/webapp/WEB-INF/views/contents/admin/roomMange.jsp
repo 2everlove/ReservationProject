@@ -307,6 +307,9 @@ function initHtml(){
 	<td class="td-result__regDate" style="display:none;"><span class="result__regDate"></span></td>
 	<td class="group__btn">
 		<button type="button" class="registerBtn btn-success" data-confirm="new">追加</button>
+		<button type="button" class="modify btn-primary" style="display: none;">修正</button>
+		<button type="button" class="confirm btn-success" style="display: none;">確認</button>
+		<button type="button" class="cancel btn-danger" style="display: none;">戻る</button>
 		<button type="button" class="registerCancelBtn btn-danger" data-confirm="new">戻る</button>
 	</td>
 </tr>
@@ -349,8 +352,8 @@ function reload_order(e) {
 function add_order(e) {
 	console.log(e);
     e.children().each(function(n) {
-    	//console.log(n);
-    	//console.log($(this));
+    	console.log(n);
+    	console.log($(this));
     	console.log($(this).attr('item'));
     	if($(this).attr('item') === undefined)
         	$(this).attr('item',n);
@@ -481,6 +484,7 @@ $('.baseLine').on('click', '.registerBtn', function(){
 					tbody.find('.span__roomTitle').text(data.roomTitle);
 					
 					
+					
 					let tr = $(this).closest('tr');
 					tbody.find('.confirm').hide();
 					tbody.find('.modify').show();
@@ -496,18 +500,23 @@ $('.baseLine').on('click', '.registerBtn', function(){
 					let imageTrObject = $(imageTr);
 					$('.result__regDate').show();
 					
+					$('.baseLine').removeClass('baseLine');
+					tbody.find('.registerCancelBtn').detach();
+					tbody.find('.registerBtn').detach();
+					let templateClone = tbody.clone();
+					tbody.empty();
+					tbody.addClass('baseLine');
+					console.log(templateClone)
+					imageTrObject.hide();
+					$('table').append(templateClone)
+					$('.baseLine').empty();
 					tbody.find('.tr-sortable').hide();
 					tbody.find(fileObject).hide();
 				}
 			});
 			
 			
-			$('.baseLine').removeClass('baseLine');
-			let templateClone = tbody.clone();
-			tbody.empty();
-			tbody.addClass('baseLine');
-			console.log(templateClone)
-			$('table').append(templateClone)
+			
 			
 			/* let afterTbody = document.createElement('template');
 			template.innerHTML = `
@@ -571,6 +580,7 @@ $('.modify').click(function(){
 	$('.result__regDate').hide();
 	imageTrObject.fadeIn(200);
 	fileObject.fadeIn(200);
+	$('.fileUpload').show();
 });
 
 $('.confirm').click(function(){
@@ -629,7 +639,7 @@ $('.confirm').click(function(){
 			console.log("deleteFiles: "+deleteFiles);
 			
 			if(deleteFiles.length > 0){
-				if(tbody.find('.ui-sortable-handle').length !== 0){
+				if(tbody.find('.ui-sortable li').length !== 0){
 					$.post('//api/removeFile', {fileName: deleteFiles.join(',')}, function(result){
 						console.log(result);
 						deleteFiles.length = 0;
@@ -743,18 +753,12 @@ $('.confirm').click(function(){
 					tbody.find(fileObject).fadeOut(200);
 				}
 			});
-			
-			
 		}
     })
     
     
 	
 });
-
-function validation(){
-	
-}
 
 
 function reorder() { 
@@ -774,7 +778,7 @@ function readInputFile(e){
     
     let files = e.files;
     let fileArr = Array.prototype.slice.call(files);
-    let index = 0;
+    var index = 0;
     
     fileArr.forEach(function(f){
     	//console.log(f);
@@ -794,16 +798,12 @@ function readInputFile(e){
                     "<a href = '#' class = 'delete_image' title = 'Cancel'><img class = 'delete-btn' src = 'https://w7.pngwing.com/pngs/776/921/png-transparent-x-mark-check-mark-scalable-graphics-computer-file-red-cross-mark-red-x-illustration-miscellaneous-angle-hand.png' /></a>" +
                 "</li>";
             	sortObject.append(html);
-                index++;
+            	index++;
                 
             };
-            //console.log(files.length)
-            //console.log(index)
-            if(files.length === (index+1)){
-            	setTimeout(function(){
-                    add_order($('.imageOrder__'+$(e).data('file')));
-                }, 500);
-            }
+           	setTimeout(function(){
+                   add_order($(e).closest('tbody').find('.sortable'));
+               }, 1000);
             reader.readAsDataURL(f);
             
         }

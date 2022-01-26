@@ -17,9 +17,8 @@ import com.reservation.entity.RoomInfo;
 
 @Repository
 public interface RoomInfoRepository extends JpaRepository<RoomInfo, Long>, QuerydslPredicateExecutor<RoomInfo> {
-	/*
-	 * Paged List about rooominfo & reserve joined table
-	 */
+	
+	//Paged List about rooominfo & reserve joined table
 	@Query("select i, r.startDate, r.endDate from RoomInfo i " +
 			"left join Reserve r on r.roomNo.no = i " + 
 			"where RPAD(to_char(add_months(sysdate,-1),'yyyymm'),8,'00') < RPAD(to_char(to_date(r.startDate,'yyyy/mm/dd'),'yyyymm'),8,'00') " + 
@@ -38,13 +37,16 @@ public interface RoomInfoRepository extends JpaRepository<RoomInfo, Long>, Query
 			)
 	Page<RoomInfo> getListPageOnMain(Pageable pageable,@Param("dateStart") String dateStart, @Param("dateEnd") String dateEnd, @Param("max") int max);
 	
+	//when selected date, get roominfo
+	@Query("select distinct i from RoomInfo i  where i.no in (select i.no from RoomInfo i left join Reserve r on r.roomNo.no = i "
+			+ "where to_date(r.startDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
+			+ "or to_date(r.endDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
+			+ "and r.paymentFlg = 0 and r.cancelFlg = 0 and r.deleteFlg = 0) order by i.no asc"
+			)
+	List<RoomInfo> getListOnSelectedCalendar(@Param("dateStart") String dateStart, @Param("dateEnd") String dateEnd);
 	
 	
-	
-	
-	/*
-	 * List about rooominfo & reserve joined table on dynamic date
-	 */
+	// List about rooominfo & reserve joined table on dynamic date
 	@Query("select i, r from RoomInfo i " +
 			"left join Reserve r on r.roomNo.no = i " +
 			"where RPAD(to_char(add_months(:date,-1),'yyyymm'),8,'00') < RPAD(to_char(to_date(r.startDate,'yyyy/mm/dd'),'yyyymm'),8,'00') " + 
@@ -54,5 +56,9 @@ public interface RoomInfoRepository extends JpaRepository<RoomInfo, Long>, Query
 	
 	@Query("select i.buildCd from RoomInfo i group by i.buildCd")
 	List<Integer> getBuildCd();
+	
+	//랜덤방 가져오기
+	//@Query("select i.no from RoomInfo where i.deleteFlg = '0' and ")
+	//Long getRandomRoom(Long rand);
 	
 }

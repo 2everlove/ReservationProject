@@ -10,10 +10,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
@@ -154,11 +156,16 @@ public class RestUpload {
 	
 	//sha-256 -> byte -> string
 	public String sha256ToString(String msg) throws NoSuchAlgorithmException {
+		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+		byte[] bytes1 = new byte[16];
+		random.nextBytes(bytes1);
+		String salt = new String(Base64.getEncoder().encode(bytes1));
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		md.update(salt.getBytes());
 		md.update(msg.getBytes());
-		byte[] bytes = md.digest();
+		byte[] bytes2 = md.digest();
 	    StringBuilder sb = new StringBuilder();
-	    for (byte b: bytes) {
+	    for (byte b: bytes2) {
 	    	sb.append(String.format("%02x", b));
 	    }
 	    for(int i = 1; i <= sb.length()/8; i++) {

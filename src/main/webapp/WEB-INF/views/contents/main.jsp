@@ -349,17 +349,17 @@
         		</div>
         	</div>
         	<div class="people" style="width: calc(50% - 122px);background-color: #fff !important; border-color: #e7e7e7; border: 1px solid; height: 66px; border-radius: 8px; font-size: 16px; display: inline-block; margin-left: 20px; cursor: pointer;">
-        		<div style="width: 40%;padding: 0 10px;position: absolute;top: 14%;-webkit-transform: translateY(-10%);transform: translateY(-10%);">
+        		<div style="width: 36%;padding: 0 20px;position: absolute;top: 14%;-webkit-transform: translateY(-13%);transform: translateY(-13%);">
         			<i class="fas fa-users" style="padding-right: 16px;display: inline-block;vertical-align: middle;text-align: left;"></i>
         			<div style="width: calc(100% -180px);vertical-align: middle;display: inline-block;box-sizing: border-box;">
-        				<div style="width: auto;padding: 5px 0;font-size: 16px;">
+        				<div style="width: auto;padding: 10px 0;font-size: 16px;">
         					<div style="font-weight: 400;padding-right: 44px;white-space: nowrap;overflow: hidden;">
         						<span class="showingPeople" style="box-sizing: border-box;font-weight: 400;white-space: nowrap;">Adult 1人</span>
         					</div>
         					<div style="font-size: 14px;color: #999;line-height: 1.25;text-overflow: ellipsis;">
         						Room 1 号室
         					</div>
-        					<div style="right: 50px;position: absolute;transform: translateY(-50%);top: 50%;">
+        					<div style="right: 50px;position: absolute;transform: translateX(-150%); top: 35%;">
         						<i class="fas fa-chevron-down" style="color: #ff7f50; overflow: hidden;"></i>
         					</div>
         				</div>

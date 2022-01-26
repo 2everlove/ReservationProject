@@ -39,7 +39,7 @@ a{text-decoration: none;}
 									<fmt:formatDate value="${now}" pattern="yyyy/MM/dd" var="nowDate" />
 									<fmt:formatDate value="${regDate}" var="reg" pattern="yyyy/MM/dd"/>
 									<fmt:formatDate value="${regDate}" var="regTime" pattern="HH:mm:ss"/>
-									<tr data-flg="${dto.lockFlg }" data-no="${dto.no }">
+									<tr>
 										<th class="result__no" scope="row">
 											<c:if test="${dto.depth != 0 }">
 												<c:forEach begin="0" end="${dto.depth - 1}"><span style="margin-left: 20px;"></span></c:forEach>
@@ -84,44 +84,9 @@ a{text-decoration: none;}
 			</section>
 		</div>
 	</div>
-<div class="modal" tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Modal title</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<div class="form-group row" style="justify-content: flex-end;">
-					<label for="" class="col-sm-2 col-form-label">Passwd</label>
-					<div class="col-sm">
-						<form>
-							<input class="form-control reply__register-pw" autocomplete="off" type="password" placeholder="" />
-						</form>
-					</div>
-				</div>
-				<p class="response__data"></p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary checkPwBtn">check</button>
-			</div>
-		</div>
-	</div>
-</div>
 <script type="text/javascript">
-let modal = $('.modal');
-let no = "";
 $(document).ready(function(){
 	$('.result__title').closest('tr').click(function(){
-		if($(this).data('flg') === 1){
-			modal.modal('show');
-			$('.reply__register-pw').focus();
-			no=$(this).data('no');
-			return false
-		}
 		location.href = '/consultation/'+$(this).find('.result__no').text()+'?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}';
 	});
 	$('.result__register').click(function(){
@@ -132,36 +97,6 @@ $(document).ready(function(){
 	let msg = '${msg}';
 	console.log(msg);
 });
-
-//close modal
-$('.modal-footer .btn-secondary, .close').click(function(){
-	modal.modal('hide');
-});
-
-$('.checkPwBtn').click(function(){
-	checkPassword();
-});
-
-function checkPassword(){
-	let formData = new FormData();
-	formData.append('no',no)
-	formData.append('passwd', $('.reply__register-pw').val());
-	$.ajax({
-		url: '/api/consultation/chkPasswd',
-		method: 'post',
-		dataType : 'text',
-		data: formData,
-		processData: false, //프로세스 데이터 설정 : false 값을 해야 form data로 인식합니다
-        contentType: false, //헤더의 Content-Type을 설정 : false 값을 해야 form data로 인식합니다
-		success: function(data){
-			console.log(data)
-			lockDisplay = data;
-			if(data != ''){
-				location.href = '/consultation/'+no+'?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}';
-			}
-		}
-	});
-}
 </script>
 </body>
 

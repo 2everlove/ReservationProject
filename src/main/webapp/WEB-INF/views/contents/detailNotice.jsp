@@ -172,7 +172,7 @@ $('.result__modify').click(function(){
 				$('.card-body').css('padding', '1rem 1rem');
 				$('.result__updatedAt').text(data.updatedAt);
 			}
-		})
+		});
 	}
 });//
 
@@ -192,7 +192,7 @@ $('.result__delete').click(function(){
 			if(data == 'success'){
 				$('section').empty();
 				alert(notice.no +'번 글이 삭제되었습니다.');
-				location.href="/notice";
+				location.href="/notice?page=${page.page}&type=${page.type}&keyword=${page.keyword}";
 			}
 		}
 	});

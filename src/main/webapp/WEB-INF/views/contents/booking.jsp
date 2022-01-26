@@ -65,9 +65,9 @@ a{text-decoration: none;}
 				</c:url>
 			        <div class="card" style="cursor: pointer; width: 500px;" OnClick="location.href ='/booking/${roomInfo.no}'" onmouseout="this.style.background='#F8F9F7';" onmouseover="this.style.background= 'rgba(170, 166, 157,0.3)';">
 			            <div class="row no-gutters" style="align-items: center; justify-content: flex-end; width: 100%; margin: 0; --bs-gutter-x: 0;">
-			            	<div style="background-color: ${roomInfo.colorCd}; position: absolute;width: 6%;left: 0; top: 8%;height: 5px; z-index: 1;"></div>
-			            	<div style="background-color: ${roomInfo.colorCd}; position: absolute;width: 5%;left: 0; top: 11.5%;height: 5px; z-index: 1;"></div>
-			            	<div style="background-color: ${roomInfo.colorCd}; position: absolute;width: 4%;left: 0; top: 15%;height: 5px; z-index: 1;"></div>
+			            	<div style="position: absolute;left: 0%;transform: rotate(180deg);top: 10%;width: 0;height: 0;border-bottom: 25px solid ${roomInfo.colorCd};border-left: 25px solid transparent;-webkit-transform-origin-y: top;"></div>
+			            	<%-- <div style="background-color: ${roomInfo.colorCd}; position: absolute;width: 5%;left: 0; top: 11.5%;height: 5px; z-index: 1;"></div>
+			            	<div style="background-color: ${roomInfo.colorCd}; position: absolute;width: 4%;left: 0; top: 15%;height: 5px; z-index: 1;"></div> --%>
 			                <div class="col-sm-4">
 			                    <img class="card-img" src="${firstImage }" alt="Suresh Dasari Card">
 			                </div>

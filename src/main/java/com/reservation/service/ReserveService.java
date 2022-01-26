@@ -97,4 +97,20 @@ public interface ReserveService {
 				.build();
 		return entity;
 	}
+
+	List<ReserveDTO> getReserveAndRoomSpecificDate(Date dateStart, Date dateEnd, Long roomno);
+
+	ReserveDTO getReserve(ReserveDTO dto);
+
+
+	List<Object[]> getDateListWithOutReserveNo(Date dateStart, Date dateEnd, Long roomno, Long reserveno);
+
+	Long modifyReserve(ReserveDTO reserveDTO);
+
+	int modifyCancelReserve(ReserveDTO dto);
+
+	int modifyDeleteReserve(ReserveDTO dto);
+
+	int modifyPaymentReserve(ReserveDTO dto);
+
 }

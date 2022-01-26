@@ -91,4 +91,12 @@ public class RoomServiceTests {
 		System.out.println("=============");
 		resultDTO.getPageList().forEach(i -> System.out.println(i));
 	}
+	
+	@Test
+	public void getListOnSelectedCalendar() {
+		List<RoomInfoDTO> resultDTO = roomInfoService.getListOnSelectedCalendar("20220127", "20220129");
+		for(RoomInfoDTO dto : resultDTO) {
+			System.out.println(dto);
+		}
+	}
 }

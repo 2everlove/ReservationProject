@@ -19,8 +19,6 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @ToString
-@DynamicInsert
-@DynamicUpdate
 @SequenceGenerator(
 		name = "ROOMINFO_SEQ_GENERATOR",
 		sequenceName = "ROOMINFO_SEQ",
@@ -30,18 +28,26 @@ public class RoomInfo extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ROOMINFO_SEQ_GENERATOR")
 	private Long no;
-	
+	@Column(nullable = false, columnDefinition="VARCHAR(3)")
 	private String roomNum;
+	@Column(nullable = false, columnDefinition="VARCHAR(100)")
 	private String roomTitle;
+	@Column(length = 1, nullable = false)
 	private int max;
+	@Column(length = 2, nullable = false)
 	private Long adultCost;
+	@Column(length = 2, nullable = false)
 	private Long childCost;
+	@Column(columnDefinition="VARCHAR(4000)", nullable = false)
 	private String explanation;
+	@Column(columnDefinition="VARCHAR(2000)")
 	private String images;
+	@Column(nullable = false, columnDefinition="VARCHAR(7)")
 	private String colorCd;
+	@Column(nullable = false)
 	private int buildCd;
 	
-	@Column(columnDefinition = "varchar(1) default '0'")
+	@Column(nullable = false, columnDefinition = "varchar(1) default '0'")
 	private String deleteFlg;
 	
 	public void changeRoomTitle(String roomTitle) {

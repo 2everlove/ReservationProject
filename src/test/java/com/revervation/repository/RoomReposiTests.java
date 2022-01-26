@@ -51,7 +51,7 @@ public class RoomReposiTests {
 			} else if (i==4) {
 				color = "#ff6b81";
 			} else if (i==5) {
-				color = "#dfe4ea";
+				color = "#D980FA";
 			}
 			RoomInfo roominfo = RoomInfo.builder()
 					.roomNum("70"+i)
@@ -99,6 +99,11 @@ public class RoomReposiTests {
 		for(Object[] objects : result) {
 			System.out.println(Arrays.toString(objects));
 		}
+	}
+	
+	@Test
+	public void getRandomRoom() {
+		//System.out.println(roomInfoRepository.getRandomRoom());
 	}
 	
 	@Test

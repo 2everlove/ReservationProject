@@ -68,6 +68,8 @@ public interface RoomInfoService {
 
 	PageResultDTO<RoomInfoDTO, RoomInfo> getListForAdmin(PageRequestDTO requestDTO);
 
+	List<RoomInfoDTO> getListOnSelectedCalendar(String dateStart, String dateEnd);
+
 	
 
 	

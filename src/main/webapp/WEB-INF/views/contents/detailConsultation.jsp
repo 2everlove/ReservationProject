@@ -157,7 +157,9 @@ a{text-decoration: none;}
 
 <script type="text/javascript">
 $(document).ready(function(){
-	
+	$('.modal').modal({backdrop: 'static', keyboard: false})
+	$("#reply__register-pw").keyup(function(e){if(e.keyCode == 13)  checkPassword(); });
+
 	let checkContents = '<c:out value="${result == null ? 'emp': 'full'}"></c:out>';
 	if('emp'==checkContents){
 		$('#summernote').summernote({
@@ -299,6 +301,7 @@ $('.result__modify').click(function(){
 	if(lockDisplay != 'success'){
 		if('<c:out value="${result.passwd != null && result.passwd != ''? 'lock':'unlock'}"></c:out>' == 'lock' ){
 			modal.modal('show');
+			$('.reply__register-pw').focus();
 			return false;
 		}
 	}
@@ -344,17 +347,23 @@ $('.result__modify').click(function(){
 		document.querySelector('.result__confirm').classList.remove('result__modify');
 		$('.card 1rem 0rem 1remdding', '1rem 1rem 0rem 1rem');
 	} else {
-		let consultation = {
-				no: '${result.no}',
-				title: $('.result__title').val(),
-			    contents: $('#summernote').summernote('code'),
-			    name: '${result.name}',
-			    lockFlg: $('.result__checkedPw').val(),
-			    deleteFlg: $('.result__checkdeleteFlg').val(),
-			    passwd: $('.result__passwd').val(),
-			    grno: '${result.no}',
-			    depth: '0'
+		if(1 == $('.result__checkedPw').val()){
+			if($('.result__passwd').val() === ''){
+				$('.result__passwd').focus()
+				return false;
 			}
+		}
+		let consultation = {
+			no: '${result.no}',
+			title: $('.result__title').val(),
+		    contents: $('#summernote').summernote('code'),
+		    name: '${result.name}',
+		    lockFlg: $('.result__checkedPw').val(),
+		    deleteFlg: $('.result__checkdeleteFlg').val(),
+		    passwd: $('.result__passwd').val(),
+		    grno: '${result.no}',
+		    depth: '0'
+		}
 		console.log(consultation);
 		$.ajax({
 			url: '/api/consultation',
@@ -410,7 +419,26 @@ $('.result__delete').click(function(){
 		modal.modal('show');
 	}
 	else {
+		let consultation = {
+			no: "${result.no}",
+			deleteFlg: "1"
+		}
 		
+		$.ajax({
+			url: '/api/consultation/delete',
+			method: 'post',
+			data: JSON.stringify(consultation),
+			contentType: 'application/json; charset=utf-8',
+			dataType: 'text',
+			success: function(data){
+				if(data == 'success'){
+					$('section').empty();
+					alert(consultation.no +'번 글이 삭제되었습니다.');
+					location.href="/consultation?page=${page.page}&type=${page.type}&keyword=${page.keyword}";
+				}
+			}
+		});
+		console.log(notice);
 	}
 });
 //close modal
@@ -561,6 +589,10 @@ function onAjaxCompleted(){
 }
 
 $('.checkPwBtn').click(function(){
+	checkPassword();
+});
+
+function checkPassword(){
 	let formData = new FormData();
 	formData.append('no','${result.no}')
 	formData.append('passwd', $('.reply__register-pw').val());
@@ -579,7 +611,7 @@ $('.checkPwBtn').click(function(){
 			}
 		}
 	});
-});
+}
 });
 </c:if>
 </script>
