@@ -6,6 +6,9 @@
 <html lang="en">
 <script type="text/javascript">
     $(document).ready(function(){
+    	
+    	
+    	
     	let owl = $('.owl-carousel');
     	owl.owlCarousel({
     		animateOut: 'slideOutDown',
@@ -87,9 +90,18 @@
 	      $('#carouselExampleDark').mouse_wheel(); */
 
     	let today = new Date();
+	      
+	    $('.startDateText').text(moment(today).format('YYYY年　MM月　DD日'));
+		$('.endDateText').text(moment(today).format('YYYY年　MM月　DD日'));
+		$('.startDate').val(moment(today).format('YYYYMMDD'));
+		$('.endDate').val(moment(today).format('YYYYMMDD'));
 		const WEEKDAY = ["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"];
+		let weekStart = WEEKDAY[today.getDay()];
+		$('.dateStartText').text(weekStart);
+		$('.dateEndText').text(weekStart);
         $('.start').daterangepicker({
     	     opens: 'left',
+    	     startDate: today,
     	     minDate: today,
     	     maxSpan: {
     	    	    "days": '10'
@@ -123,8 +135,6 @@
     		$('.adult').val('2');
     		$('.child').val('2');
     		
-    		$('.startDate').val(start.format('YYYYMMDD'));
-    		$('.endDate').val(end.format('YYYYMMDD'));
     		$('.startDate').val(start.format('YYYYMMDD'));
     		$('.endDate').val(end.format('YYYYMMDD'));
     		$('.peoplePopup').fadeIn('300');
@@ -262,14 +272,20 @@
         		event.closest('.reservePeople').find('.numberOf').text();
         		if(event.closest('.reservePeople').find('.numberOf').hasClass('adultPopup')){
        				$('.adult').val(parseInt($('.adult').val())+1);
+       				$('.adultPopup').text($('.adult').val());
         		}else{
        				$('.child').val(parseInt($('.child').val())+1);
+       				$('.childPopup').text($('.child').val());
         		}
         	}
         	if($('.adult').val() > 0 && $('.child').val() > 0){
 	        	$('.showingPeople').text('Adult '+$('.adult').val() +' 名 , Child '+$('.child').val()+' 名');
+       				$('.adultPopup').text($('.adult').val());
+       				$('.childPopup').text($('.child').val());
         	} else if($('.adult').val() > 0 && $('.child').val() == 0){
 	        	$('.showingPeople').text('Adult '+$('.adult').val() +' 名 ');
+       				$('.adultPopup').text($('.adult').val());
+       				$('.childPopup').text($('.child').val());
         	}
         });
         

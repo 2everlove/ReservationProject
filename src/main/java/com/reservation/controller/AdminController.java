@@ -16,10 +16,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.reservation.dto.ConsultationDTO;
+import com.reservation.dto.NoticeDTO;
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
 import com.reservation.dto.RoomInfoDTO;
+import com.reservation.entity.Consultation;
 import com.reservation.entity.RoomInfo;
+import com.reservation.service.ConsultationService;
+import com.reservation.service.NoticeService;
 import com.reservation.service.RoomInfoService;
 
 import lombok.extern.log4j.Log4j2;
@@ -31,6 +35,10 @@ public class AdminController {
 
 	@Autowired
 	RoomInfoService roomInfoService;
+	@Autowired
+	ConsultationService consultationService;
+	@Autowired
+	NoticeService noticeService;
 	
 	@GetMapping("/admin")
 	public String admin() {
@@ -42,10 +50,41 @@ public class AdminController {
 		System.out.println("booking");
 		PageResultDTO<RoomInfoDTO, RoomInfo> list = roomInfoService.getList(requestDTO);
 		log.info(list);
+		model.addAttribute("buildCdList", roomInfoService.getBuildCd());
 		model.addAttribute("roomInfoList", list.getDtoList());
 		return "/admin/booking";
 	}
 	
+	
+	///
+	@GetMapping("/admin/consultation")
+	public String consultationList(@ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
+		Calendar cal = Calendar.getInstance();
+		PageResultDTO<ConsultationDTO, Consultation> list = consultationService.getAdminList(requestDTO);
+		log.info(list);
+		model.addAttribute("now", cal.getTime());
+		model.addAttribute("result", consultationService.getList(requestDTO));
+		model.addAttribute("now", cal.getTime());
+		return "/admin/consultation";
+	}
+	
+	@GetMapping("/admin/consultation/{no}")
+	public String getConsultationOne(@PathVariable("no")Long no ,PageRequestDTO pageRequestDTO, Model model) {
+		log.info("getOne: "+no);
+		ConsultationDTO dto =  consultationService.get(no);
+		model.addAttribute("result", dto);
+		model.addAttribute("page", pageRequestDTO);
+		return "/admin/detailConsultation"; 
+	}
+	
+	@PostMapping("/admin/consultation/register")
+	public String registerConsultationAdminPost(ConsultationDTO dto, PageRequestDTO pageRequestDTO, RedirectAttributes rttr) {
+		System.out.println("/admin/consultation/register: "+dto);
+		rttr.addFlashAttribute("msg", consultationService.wrtiteConsultation(dto));
+		return "redirect:/admin/consultation";
+	}
+	
+	///
 	@GetMapping("/admin/roomManage")
 	public String roomManageList(@ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
 		Calendar cal = Calendar.getInstance();
@@ -56,6 +95,7 @@ public class AdminController {
 		model.addAttribute("now", cal.getTime());
 		return "/admin/roomMange";
 	}
+	
 	
 	@GetMapping("/admin/roomManage/{no}")
 	public String getRoom(@PathVariable("no") Long no, PageRequestDTO requestDTO, Model model) {
@@ -89,10 +129,30 @@ public class AdminController {
 	}
 	
 	@ResponseBody
+	@GetMapping("/api/getListBuildCd")
+	public ResponseEntity<RoomInfoDTO> getListBuildCd(@RequestBody RoomInfoDTO dto) {
+		log.info("roomManageModifyPost: "+dto);
+		roomInfoService.modify(dto);
+		return new ResponseEntity<RoomInfoDTO>(roomInfoService.findAllSpecifyRoom(dto.getNo()), HttpStatus.OK);
+	}
+	
+	@ResponseBody
 	@PostMapping("/api/roomManage/register")
 	public ResponseEntity<RoomInfoDTO> roomManageRegisterPost(@RequestBody RoomInfoDTO dto) {
 		log.info("roomManageRegisterPost: "+dto);
 		
 		return new ResponseEntity<RoomInfoDTO>(roomInfoService.roomRegister(dto), HttpStatus.OK);
 	}
+	
+	///
+	@GetMapping("/admin/notice")
+	public String list(PageRequestDTO pageRequestDTO, Model model) {
+		log.info("list: "+pageRequestDTO);
+		Calendar cal = Calendar.getInstance();
+		model.addAttribute("now", cal.getTime());
+		model.addAttribute("result", noticeService.getListAdmin(pageRequestDTO));
+		return "/admin/notice";
+	}
+	
+	
 }

@@ -28,6 +28,8 @@ public interface RoomInfoService {
 	
 	PageResultDTO<RoomInfoDTO, RoomInfo> getListPageOnMain(PageRequestDTO requestDTO,String dateStart,String dateEnd,int max);
 	
+	List<RoomInfoDTO> findRoominfoByBuildCd(int buildCd);
+	
 	default RoomInfoDTO entityToDTO(RoomInfo entity) {
 		RoomInfoDTO dto = RoomInfoDTO.builder()
 				.no(entity.getNo())

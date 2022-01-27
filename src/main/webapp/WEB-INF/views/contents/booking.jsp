@@ -60,12 +60,14 @@ a{text-decoration: none;}
 		</c:if>
 	           	<div class="card-columns" style="column-count: 2; padding-top: 2%;">        
             <c:forEach items="${roomInfoList}" var="roomInfo" varStatus="status">
+            
 	            <c:url value="/api/display" var="firstImage">
 					<c:param name="fileName" value="${roomInfo.images[0]}"></c:param>
 				</c:url>
-			        <div class="card" style="cursor: pointer; width: 500px;" OnClick="location.href ='/booking/${roomInfo.no}'" onmouseout="this.style.background='#F8F9F7';" onmouseover="this.style.background= 'rgba(170, 166, 157,0.3)';">
+			        <div class="card" style="cursor: pointer; width: 500px;" 
+			        OnClick="location.href ='/booking/${roomInfo.no}<c:if test="${dateObject.startDate != null && dateObject.startDate != ''}">?startDate=${dateObject.startDate}&endDate=${dateObject.endDate}</c:if>'" onmouseout="this.style.background='#F8F9F7';" onmouseover="this.style.background= 'rgba(170, 166, 157,0.3)';">
 			            <div class="row no-gutters" style="align-items: center; justify-content: flex-end; width: 100%; margin: 0; --bs-gutter-x: 0;">
-			            	<div style="position: absolute;left: 0%;transform: rotate(180deg);top: 10%;width: 0;height: 0;border-bottom: 25px solid ${roomInfo.colorCd};border-left: 25px solid transparent;-webkit-transform-origin-y: top;"></div>
+			            	<div style="position: absolute;left: -0.2%;transform: rotate(180deg);top: 9%;width: 0;height: 0;border-bottom: 25px solid ${roomInfo.colorCd};border-left: 25px solid transparent;-webkit-transform-origin-y: top;"></div>
 			            	<%-- <div style="background-color: ${roomInfo.colorCd}; position: absolute;width: 5%;left: 0; top: 11.5%;height: 5px; z-index: 1;"></div>
 			            	<div style="background-color: ${roomInfo.colorCd}; position: absolute;width: 4%;left: 0; top: 15%;height: 5px; z-index: 1;"></div> --%>
 			                <div class="col-sm-4">
@@ -75,7 +77,7 @@ a{text-decoration: none;}
 			                    <div class="card-body" style="text-align: right; padding-right: 60px;">
 			                        <h5 class="card-title">${roomInfo.roomTitle }</h5>
 			                        <p class="card-text"><b>￥</b><span style="color: #e12d2d;"><fmt:formatNumber type="number" value="${roomInfo.adultCost }"/></span></p>
-			                        <a href="/booking/${roomInfo.no}" class="btn btn-primary">Reserve</a>
+			                        <a onclick="javascript:void(0);" class="btn btn-primary">Reserve</a>
 			                    </div>
 			                </div>
 			            </div>
@@ -111,6 +113,22 @@ a{text-decoration: none;}
 		location.href = "/";
 	})
 </c:if>
+
+$(document).ready(function(){
+	let msg = '${msg}';
+	console.log(msg);
+	if(msg !== ''){
+		$('.colorMark').css('background-color', '#0be881');
+		$('.toast').toast('show');
+		$('.toast-body').text(msg+" 番の文が登録されました。");
+	}
+	if(localStorage.msg !== '' && localStorage.msg !== undefined){
+		$('.colorMark').css('background-color', '#EA2027');
+		$('.toast').toast('show');
+		$('.toast-body').text(localStorage.msg+" 番の文が削除されました。");
+		localStorage.removeItem('msg')
+	}
+});
 </script>
 </body>
 

@@ -30,6 +30,16 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 	@Query("update Reserve r set r.cancelFlg = :deleteFlg where r.no = :no")
 	int modifyDeleteByNo(@Param("no") Long no, @Param("deleteFlg") String deleteFlg);
 	
+	//이름,폰으로 예약 검색 with page
+	@Query("select i, r from RoomInfo i "
+			+ "left join Reserve r on r.roomNo.no = i "
+			+ "where r.name = :name and r.phone = :phone")
+	Page<Object[]> findReserveByNameAndPhone(@Param("name") String name, @Param("phone") String phone, Pageable pageable);
+	
+	//이름,폰으로 예약 검색
+	@Query("select i,r from RoomInfo i left join Reserve r on r.roomNo.no = i where r.name = :name and r.phone = :phone and r.no = :reserveNo")
+	List<Object[]> findReserveByNameAndPhone(@Param("name") String name, @Param("phone") String phone, @Param("reserveNo") Long reserveNo);
+	
 	@Query("select i, r from RoomInfo i " +
 			"left join Reserve r on r.roomNo.no = i " + 
 			"where RPAD(to_char(add_months(sysdate,-1),'yyyymm'),8,'00') <= RPAD(to_char(to_date(r.startDate,'yyyy/mm/dd'),'yyyymm'),8,'00') " + 
@@ -46,6 +56,24 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 			+ "and r.cancelFlg = 0 and r.deleteFlg = 0 order by r.roomNo.no"
 			)
 	List<Object[]> getDateList(@Param("date") Calendar date);
+	
+	//get a month according to buildCd & roomNum data for fullcalendar on admin page
+	@Query("select i, r from RoomInfo i " +
+			"left join Reserve r on r.roomNo.no = i " +
+			"where RPAD(to_char(add_months(:date,-1),'yyyymm'),8,'00') <= RPAD(to_char(to_date(r.startDate,'yyyy/mm/dd'),'yyyymm'),8,'00') " + 
+			"and RPAD(to_char(add_months(:date,1),'yyyymm'),8,'00') >= RPAD(to_char(to_date(r.endDate,'yyyy/mm/dd'),'yyyymm'),8,'00') "
+			+ "and r.cancelFlg = 0 and r.deleteFlg = 0 and r.buildCd = :buildCd order by r.roomNo.no"
+			)
+	List<Object[]> getDateListAccToBuildCd(@Param("date") Calendar date, @Param("buildCd") int buildCd);
+	
+	//get a month according to buildCd & roomNum data for fullcalendar on admin page
+	@Query("select i, r from RoomInfo i " +
+			"left join Reserve r on r.roomNo.no = i " +
+			"where RPAD(to_char(add_months(:date,-1),'yyyymm'),8,'00') <= RPAD(to_char(to_date(r.startDate,'yyyy/mm/dd'),'yyyymm'),8,'00') " + 
+			"and RPAD(to_char(add_months(:date,1),'yyyymm'),8,'00') >= RPAD(to_char(to_date(r.endDate,'yyyy/mm/dd'),'yyyymm'),8,'00') "
+			+ "and r.cancelFlg = 0 and r.deleteFlg = 0 and r.buildCd = :buildCd and r.roomNo.no = :roomNo order by r.roomNo.no"
+			)
+	List<Object[]> getDateListAccToBuildCdAndRoomNum(@Param("date") Calendar date, @Param("buildCd") int buildCd, @Param("roomNo") Long roomNo);
 	
 	//한달 전 후 방 정보
 	@Query("select i, r from RoomInfo i " +
@@ -88,6 +116,8 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 			+ "or to_date(r.endDate,'YYYYMMDD') between :dateStart and :dateEnd "			+ "and r.cancelFlg = 0 and r.deleteFlg = 0 order by r.roomNo.no"
 			)
 	List<Object[]> getReserveAndRoomSpecificDate(@Param("dateStart") Date dateStart,@Param("dateEnd") Date dateEnd, @Param("roomno") Long roomno);
+
+	
 	
 	
 	

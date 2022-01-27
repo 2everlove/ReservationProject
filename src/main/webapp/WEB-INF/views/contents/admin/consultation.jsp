@@ -47,9 +47,10 @@ a{text-decoration: none;}
 											</c:if>
 												${dto.no }
 										</th>
-										<td class="result__title"><a href="/consultation/${dto.no }">${dto.title } </a>
+										<td class="result__title"><a href="/admin/consultation/${dto.no }?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">${dto.title } </a>
 											<c:if test="${nowDate == reg}">&nbsp;&nbsp;<i class="fas fa-plus-square"></i></c:if>
-											<c:if test="${dto.lockFlg == '1'}">&nbsp;&nbsp;<i class="fas fa-lock"></i></c:if>
+											<c:if test="${dto.lockFlg == '1'}">&nbsp;&nbsp;<i class="fas fa-lock" style="color: #FFC312;"></i></c:if>
+											<c:if test="${dto.deleteFlg == '1'}">&nbsp;&nbsp;<i class="fas fa-trash" style="color: #44bd32;"></i></c:if>
 										</td>
 										
 										<td class="result__buildCd">${dto.name }</td>
@@ -63,19 +64,19 @@ a{text-decoration: none;}
 						<ul class="pagination pagination-sm h-100 justify-content-center align-items-center">
 							<c:if test="${result.prev}">
 					            <li class="page-item" >
-					                <a class="page-link" href="/consultation?page=${result.start -1}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}" tabindex="-1">&laquo;</a>
+					                <a class="page-link" href="/admin/consultation?page=${result.start -1}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}" tabindex="-1">&laquo;</a>
 					            </li>
 							</c:if>
 							<c:forEach var="page" items="${result.pageList}">
 					            <li class="page-item ${result.page == page? 'active':''}">
-					                <a class="page-link" href="/consultation?page=${page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">
+					                <a class="page-link" href="/admin/consultation?page=${page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">
 					                    ${page}
 					                </a>
 					            </li>
 				            </c:forEach>
 							<c:if test="${result.next}">
 					            <li class="page-item">
-					                <a class="page-link" href="/consultation?page=${result.end + 1}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">&raquo;</a>
+					                <a class="page-link" href="/admin/consultation?page=${result.end + 1}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">&raquo;</a>
 					            </li>
 				            </c:if>
 				        </ul>
@@ -116,21 +117,26 @@ let modal = $('.modal');
 let no = "";
 $(document).ready(function(){
 	$('.result__title').closest('tr').click(function(){
-		if($(this).data('flg') === 1){
-			modal.modal('show');
-			$('.reply__register-pw').focus();
-			no=$(this).data('no');
-			return false
-		}
-		location.href = '/consultation/'+$(this).find('.result__no').text()+'?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}';
+		location.href = '/admin/consultation/'+$(this).find('.result__no').text()+'?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}';
 	});
 	$('.result__register').click(function(){
 		location.href = '/consultation/register?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}';
-	})
+	});
 	let = '&nsbp;';
 	$('.result__no').text()
 	let msg = '${msg}';
 	console.log(msg);
+	if(msg !== ''){
+		$('.colorMark').css('background-color', '#ffa502');
+		$('.toast').toast('show');
+		$('.toast-body').text(msg+"번 댓글이 등록되었습니다");
+	}
+	if(localStorage.msg !== '' && localStorage.msg !== undefined){
+		$('.colorMark').css('background-color', '#EA2027');
+		$('.toast').toast('show');
+		$('.toast-body').text(localStorage.msg+" 番の文が削除されました。");
+		localStorage.removeItem('msg')
+	}
 });
 
 //close modal

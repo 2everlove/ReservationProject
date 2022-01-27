@@ -22,7 +22,7 @@ a{text-decoration: none;}
 								</c:if>
 								<label for="staticEmail" class="col-sm-1 col-form-label" style="text-align: center;"> Title</label>
 								<div class="col-sm-6">
-									<input type="text" aria-label="Last name" class="form-control result__title" value="${result.title }">
+									<input type="text" aria-label="Last name" class="form-control result__title" value="${result.title }" style="background-color: #fff; border: none;" readonly>
 								</div>
 								<fmt:parseDate value="${result.updatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="modDate" type="both"/>
 								<c:if test="${result != null }">
@@ -56,7 +56,7 @@ a{text-decoration: none;}
 						<c:if test="${result != null }">
 							<input type="button" value="List" class="btn btn-secondary result__List">
 							<input type="button" value="Delete" class="btn btn-warning result__delete" style="display: none;">
-							<input type="button" value="Modify" class="btn btn-primary result__modify">
+							<input type="button" value="Modify" class="btn btn-primary result__modify" style="display: none;">
 						</c:if>
 					</div>
 				</div>

@@ -156,6 +156,100 @@
 
         });
     </script>
+    <script type="text/javascript">
+    console.log(data);
+	$('.search-modal-dialog').css('max-width','900px');
+	document.querySelector('.search-modal-body').innerHTML = `
+		<div class="form-group row" style="justify-content: flex-end;">
+		<label for="" class="col-sm-1 col-form-label">総金額</label>
+		<div class="col-sm-2">
+			<input class="form-control detail__totalPrice" type="text" placeholder="" readonly style="background-color: #fff;"/>
+		</div>
+		<label for="" class="col-sm-1 col-form-label">Bank</label>
+		<div class="col-sm-2">
+			<select class="bankSelect form-control mx-sm-10">
+				<option value="">---</option>
+			</select>
+		</div>
+		<label for="" class="col-sm-1 col-form-label">Adult</label>
+		<div class="col-sm-2">
+			<input class="form-control detail__count-adult" type="number" placeholder=""/>
+		</div>
+		<label for="" class="col-sm-1 col-form-label">Child</label>
+		<div class="col-sm-2">
+			<input class="form-control detail__count-child" type="number" placeholder=""/>
+		</div>
+	</div>
+	<div class="form-group row" style="justify-content: flex-end;">
+		<label for="" class="col-sm-1 col-form-label">입실일</label>
+		<div class="col-sm-3">
+			<input class="form-control start" type="text" placeholder="" readonly style="background-color: #fff;"/>
+		</div>
+		<label for="" class="col-sm-1 col-form-label">퇴실일</label>
+		<div class="col-sm-3">
+			<input class="form-control end" type="text" placeholder="" readonly style="background-color: #fff;"/>
+		</div>
+		<label for="" class="col-sm-1 col-form-label">phone</label>
+		<div class="col-sm-3">
+			<input class="form-control phone" type="text" placeholder="" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{3,4}" maxlength="13"/>
+			<input class="form-control phone__clone" type="hidden" placeholder="" style="display: none;"/>
+		</div>
+	</div>
+	`;
+	console.log($('.search-modal').find('.detail__totalPrice'))
+	console.log(data[0][0])
+	setTimeout(function(){
+		//bankInfo
+		$.getJSON('/api/payment/list' ,function(arr){
+			$('.bankSelect').html('<option value="">---</option>');
+			//console.log(arr);
+			$.each(arr, function(i, bank){
+				//console.log(bank);
+				let optionGroup = document.createElement('option');
+				//console.log(bank.bankName + bank.bankCd)
+				optionGroup.innerText = bank.bankName;
+				optionGroup.value=bank.bankCd;
+				if(bank.bankCd == data[0][0].bankNo){
+					optionGroup.setAttribute ("selected", true);
+				}
+				
+				$('.bankSelect').append(optionGroup);
+			})
+		});//
+		$('.search-modal').find('.detail__totalPrice').val(data[0][0].totalCost);
+		$('.search-modal').find('.detail__count-adult').val(data[0][0].adult);
+		$('.search-modal').find('.detail__count-child').val(data[0][0].child);
+		$('.search-modal').find('.start').val(moment(data[0][0].endDate).format('YYYY年MM月DD日'));
+		$('.search-modal').find('.end').val(moment(data[0][0].endDate).format('YYYY年MM月DD日'));
+		$('.search-modal').find('.modal-header').html(`<h5 class="modal-title search-detail__romNum"></h5>
+		<label for="" class="col-sm-1 col-form-label "></label>
+		<div class="col-sm-2">
+			<input class="form-control customer" type="text" placeholder=""/>
+			<input class="reserveNo" type="hidden">
+			<input class="startDate" type="hidden">
+			<input class="endDate" type="hidden">
+		</div>
+		<label for="" class="col-sm-2 col-form-label">顧客様</label>
+		<label for="" class="col-sm-1 col-form-label">regDate</label>
+		<div class="col-sm-4">
+			<input class="form-control regDate" type="text" placeholder="" readonly="readonly" style="background-color: #fff; border:none;"/>
+		</div>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>`);
+		$('.search-modal').find('.search-detail__romNum').text(data[0][1].roomNum +"号室");
+		$('.search-modal').find('.customer').val(data[0][0].name);
+		$('.search-modal').find('.phone').val( data[0][0].phone.replace(/[^0-9]/g, "").replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3") );
+		$('.search-modal').find('.regDate').val(moment(data[0][0].createdAt).format('YYYY年MM月DD日'));
+		
+		$('.search-modal').find('input').attr('disabled', true);
+		$('.search-modal').find('select').attr('disabled', true);
+		$('.search-modal').find('input').css('background-color','#fff');
+		$('.search-modal').find('input').css('border','none');
+		$('.search-modal').find('select').css('background-color','#fff');
+		$('.search-modal').find('select').css('border','none');
+	}, 50);
+    </script>
 </head>
 <body>
     <div class = "container-fluid">

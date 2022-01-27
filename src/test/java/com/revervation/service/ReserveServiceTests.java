@@ -118,6 +118,23 @@ public class ReserveServiceTests {
 	}
 	
 	@Test
+	public void findReserveByNameAndPhoneOnpage() {
+		PageRequestDTO pageRequestDTO = new PageRequestDTO();
+		PageResultDTO<ReserveDTO, Reserve> result = reserveService.findReserveByNameAndPhone(pageRequestDTO, "鈴木", "01023582410");
+		for(ReserveDTO reserveDTO : result.getDtoList()) {
+			System.out.println(reserveDTO);
+		}
+	}
+	
+	@Test
+	public void findReserveByNameAndPhoneWithoutPage() {
+		List<Object[]> result = reserveService.findReserveByNameAndPhone("鈴木", "01023582410");
+		for(Object reserveDTO : result) {
+			System.out.println(Arrays.asList( reserveDTO).toString());
+		}
+	}
+	
+	@Test
 	public void testPagingList() {
 		PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(1).size(10).build();
 		PageResultDTO<ReserveDTO, Object[]> resultDTO = reserveService.getList(pageRequestDTO);

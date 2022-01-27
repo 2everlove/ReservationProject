@@ -29,6 +29,8 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Long
 	Page<Consultation> getAllWithOutDelete(Predicate predicate, Pageable pageable);
 	
 	
+	Page<Consultation> findConsultationByDeleteFlg(Pageable pageable, String deleteFlg);
+	
 	/*
 	@Query(value = "SELECT c, count(c) "
 			+ "FROM Consultation c "

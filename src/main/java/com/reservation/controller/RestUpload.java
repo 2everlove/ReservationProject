@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -85,7 +86,7 @@ public class RestUpload {
         }
     }
 	
-	@GetMapping("/display")
+	/*@GetMapping("/display")
 	public ResponseEntity<byte[]> getFile(String fileName){
 		ResponseEntity<byte[]> result = null;
 		try {
@@ -101,6 +102,32 @@ public class RestUpload {
 			e.printStackTrace();
 			log.info(e.getMessage());
 			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return result;
+	}*/
+    
+	@GetMapping("/display")
+	public ResponseEntity<Resource> getFile(String fileName){
+		ResponseEntity<Resource> result = null;
+		try {
+			String srcFileName = URLDecoder.decode(fileName, "UTF-8");
+			log.info("fileName: "+srcFileName);
+			Resource file = new FileSystemResource(uploadPath +File.separator+srcFileName);
+			//File file = new File(uploadPath +File.separator+srcFileName);
+			log.info("file: " + file);
+			
+			if(!file.exists())
+				return new ResponseEntity<Resource>(HttpStatus.NOT_FOUND);
+			
+			HttpHeaders header = new HttpHeaders();
+			Path filePath = Paths.get(uploadPath+File.separator+srcFileName);
+			
+			header.add("Content-Type", Files.probeContentType(filePath));
+			result = new ResponseEntity<Resource>(file,header,HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.info(e.getMessage());
+			return new ResponseEntity<Resource>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return result;
 	}

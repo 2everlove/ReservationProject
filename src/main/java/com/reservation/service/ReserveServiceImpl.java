@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.repository.query.Param;
@@ -159,6 +160,30 @@ public class ReserveServiceImpl implements ReserveService {
 	public int modifyDeleteReserve(ReserveDTO dto) {
 		int result = reserveRepository.modifyDeleteByNo(dto.getNo(), dto.getDeleteFlg());
 		return result;
+	}
+
+	@Override
+	public List<Object[]> getDateListAccToBuildCdAndRoomNum(Calendar date, int buildCd, Long roomNo) {
+		return reserveRepository.getDateListAccToBuildCdAndRoomNum(date, buildCd, roomNo);
+	}
+
+	@Override
+	public List<Object[]> getDateListAccToBuildCd(Calendar date, int buildCd) {
+		return reserveRepository.getDateListAccToBuildCd(date, buildCd);
+	}
+
+	@Override
+	public PageResultDTO<Object[], Object[]> findReserveByNameAndPhone(PageRequestDTO requestDTO, String name, String phone) {
+		Pageable pageable = requestDTO.getPageable(Sort.by("no").descending());
+		Page<Object[]> result = reserveRepository.findReserveByNameAndPhone(name, phone, pageable);
+		Function<Object[], Object[]> fn = (en -> entityToDtoObject((RoomInfo)en[0], (Reserve)en[1]));
+		return new PageResultDTO<Object[], Object[]>(result, fn);
+	}
+
+	@Override
+	public List<Object[]> findReserveByNameAndPhone(String name, String phone, Long reserveNo) {
+		Function<Object[], Object[]> fn = (en -> entityToDtoObject((RoomInfo)en[0], (Reserve)en[1]));
+		return reserveRepository.findReserveByNameAndPhone(name, phone, reserveNo).stream().map(fn).collect(Collectors.toList());
 	}
 	
 	

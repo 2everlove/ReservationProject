@@ -116,6 +116,12 @@ public class RoomInfoServiceImpl implements RoomInfoService {
 		log.info("getListPageOnMain: "+result);
 		return result;
 	}
+
+	@Override
+	public List<RoomInfoDTO> findRoominfoByBuildCd(int buildCd) {
+		Function<RoomInfo, RoomInfoDTO> fn = (entity -> entityToDTO(entity));
+		return roomInfoRepository.findRoominfoByBuildCd(buildCd).stream().map(fn).collect(Collectors.toList());
+	}
 	
 	
 

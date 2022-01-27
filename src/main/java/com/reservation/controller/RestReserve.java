@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.reservation.dto.PageRequestDTO;
+import com.reservation.dto.PageResultDTO;
 import com.reservation.dto.ReserveDTO;
 import com.reservation.dto.RoomInfoDTO;
+import com.reservation.entity.Reserve;
 import com.reservation.service.ReserveService;
 import com.reservation.service.RoomInfoService;
 import com.reservation.utils.Bank;
@@ -39,6 +42,27 @@ public class RestReserve {
 		return new ResponseEntity<List<RoomInfoDTO>>(roomInfoService.findAll(),HttpStatus.OK);
 	}
 	
+	//search specific room
+	@GetMapping(value = "/checkReserveRooms/{buildCd}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<RoomInfoDTO>> AjaxCheckReserveRooms(@PathVariable("buildCd") int buildCd){
+		log.info("AjaxCheckReserveDate " + "search whole room");
+		return new ResponseEntity<List<RoomInfoDTO>>(roomInfoService.findRoominfoByBuildCd(buildCd),HttpStatus.OK);
+	}
+	
+	//search reserve acc name, phone
+	@PostMapping(value = "/getReserve/search", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<PageResultDTO<Object[], Object[]>> AjaxGetReserveByNameAndPhone(@RequestBody ReserveDTO dto, PageRequestDTO requestDTO){
+		log.info("AjaxGetReserveByNameAndPhone: " + dto);
+		return new ResponseEntity<PageResultDTO<Object[], Object[]>>(reserveService.findReserveByNameAndPhone(requestDTO, dto.getName(), dto.getPhone()) ,HttpStatus.OK);
+	}
+	
+	//search specific reserve acc name, phone
+	@PostMapping(value = "/getReserve/search/{reserveNo}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Object[]>> AjaxGetReserveByNameAndPhone(@RequestBody ReserveDTO dto, @PathVariable("reserveNo") Long reserveNo){
+		log.info("AjaxGetReserveByNameAndPhone: " + dto);
+		return new ResponseEntity<List<Object[]>>(reserveService.findReserveByNameAndPhone(dto.getName(), dto.getPhone(), reserveNo) ,HttpStatus.OK);
+	}
+	
 	//search whole room
 	@PostMapping(value = "/getReserve", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ReserveDTO> AjaxGetReserveByNo(@RequestBody ReserveDTO dto){
@@ -58,8 +82,32 @@ public class RestReserve {
 		return new ResponseEntity<List<Object[]>>(reserveService.getDateList(date),HttpStatus.OK);
 	}
 	
+	//search whole booking according to buildCd & roomNum
+	@GetMapping(value = "/checkReserve/{amount}/{buildCd}/{roomNo}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Object[]>> AjaxCheckReserveDateWithBcAndRoomNum(@PathVariable("amount") int amount,@PathVariable("buildCd") int buildCd, @PathVariable("roomNo") Long roomNo){
+		Calendar date = Calendar.getInstance();
+		date.add(date.MONTH, amount);
+		log.info("AjaxCheckReserveDate");
+		System.out.println(date.MONTH);
+		System.out.println(date.getTime());
+		System.out.println(amount);
+		return new ResponseEntity<List<Object[]>>(reserveService.getDateListAccToBuildCdAndRoomNum(date, buildCd, roomNo),HttpStatus.OK);
+	}
+	
+	//search whole booking according to buildCd
+	@GetMapping(value = "/checkReserve/{amount}/{buildCd}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Object[]>> AjaxCheckReserveDateWithBc(@PathVariable("amount") int amount,@PathVariable("buildCd") int buildCd){
+		Calendar date = Calendar.getInstance();
+		date.add(date.MONTH, amount);
+		log.info("AjaxCheckReserveDate");
+		System.out.println(date.MONTH);
+		System.out.println(date.getTime());
+		System.out.println(amount);
+		return new ResponseEntity<List<Object[]>>(reserveService.getDateListAccToBuildCd(date, buildCd),HttpStatus.OK);
+	}
+	
 	//search whole booking on specify room
-	@GetMapping(value = "/checkReserve/{amount}/{roomNo}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/checkReserveSpecify/{amount}/{roomNo}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Object[]>> AjaxCheckReserveDate(@PathVariable("amount") int amount, @PathVariable("roomNo") Long roomNo){
 		Calendar cal = Calendar.getInstance();
 		cal.add(cal.MONTH, -1);
@@ -71,7 +119,7 @@ public class RestReserve {
 	}
 	
 	//search whole booking on specify room without reserveNo
-	@GetMapping(value = "/checkReserve/{amount}/{roomNo}/{reserveNo}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/checkReserveSpecify/{amount}/{roomNo}/{reserveNo}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Object[]>> AjaxCheckReserveDate(@PathVariable("amount") int amount, @PathVariable("roomNo") Long roomNo,@PathVariable("reserveNo") Long reservno){
 		Calendar cal = Calendar.getInstance();
 		cal.add(cal.MONTH, -1);

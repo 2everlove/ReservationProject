@@ -38,10 +38,18 @@ public class UserBookingController {
 	
 	//방 목록
 	@GetMapping("/booking")
-	public void bookingRoomList(@ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
+	public void bookingRoomList(@ModelAttribute("requestDTO") PageRequestDTO requestDTO, ReserveDTO reserveDTO, Model model) {
 		PageResultDTO<RoomInfoDTO, RoomInfo> list = roomInfoService.getList(requestDTO);
 		model.addAttribute("roomInfoList", list.getDtoList());
+		model.addAttribute("dateObject", reserveDTO);
 		log.info(list);
+		System.out.println("booking");
+	}
+	
+	//방 목록
+	@GetMapping("/booking/reserveSearch")
+	public void bookingReseveSearch(@ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model, ReserveDTO reserve) {
+		model.addAttribute("result", reserveService.findReserveByNameAndPhone(requestDTO, reserve.getName(), reserve.getPhone()));
 		System.out.println("booking");
 	}
 	
@@ -53,6 +61,7 @@ public class UserBookingController {
 		System.out.println("people: "+max);
 		PageResultDTO<RoomInfoDTO, RoomInfo> list = roomInfoService.getListPageOnMain(requestDTO, reserveDTO.getStartDate(), reserveDTO.getEndDate(), max);
 		model.addAttribute("roomInfoList", list.getDtoList());
+		model.addAttribute("dateObject", reserveDTO);
 		if(list.getDtoList().isEmpty()) {
 			model.addAttribute("showingKey", "0");
 		}
@@ -63,7 +72,7 @@ public class UserBookingController {
 	
 	//방에 따른 예약정보
 	@GetMapping("/booking/{roomNum}")
-	public String bookingRoom(@PathVariable("roomNum") Long roomno, Model model) {
+	public String bookingRoom(ReserveDTO reserveDTO, @PathVariable("roomNum") Long roomno, Model model) {
 		Calendar cal = Calendar.getInstance();
 		cal.add(cal.MONTH, -1);
 		Date dateStart = cal.getTime();
@@ -71,6 +80,11 @@ public class UserBookingController {
 		Date dateEnd = cal.getTime();
 		List<ReserveDTO> result = reserveService.getDateList(dateStart, dateEnd, roomno);
 		RoomInfoDTO roomInfo = roomInfoService.findAllSpecifyRoom(roomno);
+		if(roomInfo.getDeleteFlg().equals("1")) {
+			model.addAttribute("msg", roomno);
+			return "/booking";
+		}
+		model.addAttribute("dateObject", reserveDTO);
 		model.addAttribute("result", result);
 		model.addAttribute("roomInfo", roomInfo);
 		model.addAttribute("roomNum", roomno);

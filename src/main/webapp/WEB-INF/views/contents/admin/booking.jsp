@@ -17,10 +17,19 @@ a{text-decoration: none;}
 				<div di>
 					<form class="form-inline">
 						<div class="form-group">
-					    	<label>部屋番号</label>
-					    	<select class="roomSelect form-control mx-sm-3">
+					    	<select class="buildCdList form-control mx-sm-3">
+								<option value="">---</option>
+								<c:forEach items="${buildCdList}" var="buildCd">
+									<option value="${buildCd}">${buildCd}</option>
+								</c:forEach>
+							</select>
+					    	<label>階</label>
+						</div>
+						<div class="form-group">
+					    	<select class="roomNoList form-control mx-sm-3">
 								<option value="">---</option>
 							</select>
+					    	<label>号室</label>
 						</div>
 					</form>
 				</div>
@@ -110,7 +119,7 @@ a{text-decoration: none;}
 		</div>
 	</div>
 </div>
-<div aria-live="polite" aria-atomic="true" style="position: fixed; bottom: 3%;width: 100%;height: 10%; z-index: 1;">
+<div aria-live="polite" aria-atomic="true" style="position: fixed; bottom: 3%;width: 100%;height: 10%; z-index: 1070;">
   <div class="toast" style="position: absolute; top: 0; right: 0; z-index: 1;">
     <div class="toast-header">
       <div class="rounded mr-2 colorMark" style="width: 20px; height: 20px; border-radius: 3px;"></div>
@@ -182,15 +191,28 @@ $(document).ready(function(){
 		
   	});
 	
-	$.getJSON('/api/checkReserve' ,function(arr){
-		console.log(arr);
-		$.each(arr, function(i, room){
-			let optionGroup = document.createElement('option');
-			console.log(room.roomNum + room.roomTitle)
-			optionGroup.innerText = room.roomNum;
-			$('.roomSelect').append(optionGroup);
-		})
+	$('.buildCdList').change(function(){
+		$('.roomNoList').empty();
+		let optionGroup = document.createElement('option');
+		optionGroup.innerText = "---";
+		optionGroup.value = '';
+		$('.roomNoList').append(optionGroup);
+		$.getJSON('/api/checkReserveRooms/'+$('.buildCdList option:selected').val() ,function(arr){
+			$.each(arr, function(i, room){
+				let optionGroup = document.createElement('option');
+				console.log(i)
+				console.log(room.roomNum + room.roomTitle)
+				optionGroup.innerText = room.roomNum;
+				optionGroup.value = room.no;
+				$('.roomNoList').append(optionGroup);
+				checkReserve(amount);
+			});
+		});
 	});
+	
+	$('.roomNoList').change(function(){
+		checkReserve(amount);
+	})
 	
 	$('.start').daterangepicker({
 		isInvalidDate: function(arg){
@@ -335,11 +357,11 @@ $(document).ready(function(){
 	    if(clearInput){
 
 	        // To clear selected range (on the calendar).
+	        // To clear input field and keep calendar opened.
 	        var today = new Date();
 	        $(this).data('daterangepicker').setStartDate(today);
 	        $(this).data('daterangepicker').setEndDate(today);
 
-	        // To clear input field and keep calendar opened.
 	        $(this).val("").focus();
 	        //console.log("Cleared the input field...");
 
@@ -423,16 +445,26 @@ $(document).ready(function(){
 		var day = ('0' + today.getDate()).slice(-2);
 	
 		var dateString = year + '-' + ('0'+month).slice(-2)  + '-' + day;
-	
+		
+		buildCd = $('.buildCdList option:selected').val();
+		roomNo = $('.roomNoList option:selected').val();
+		let url = "";
+		if(roomNo !== ''){
+			url = '/'+buildCd+'/'+roomNo;
+		}else if(buildCd !== ''){
+			url = '/'+buildCd;
+		}
+		
+		console.log(url)
 		//console.log(dateString);
-		$.getJSON('/api/checkReserve/'+amount ,function(arr){
+		$.getJSON('/api/checkReserve/'+amount+url ,function(arr){
 			let jsonList = new Array();
 	       	  $.each(arr, function(i, data){
 	       		//console.log(data[1])
 				let json = new Object();
 	       		json.roomNo = data[1].roomNo.no;
 	       		json.reserveNo = data[1].no;
-	       		json.title = (data[1].paymentFlg==0?"❌ ":"✔ ") + data[1].roomNo.roomNum + "号室 / " +data[1].name +"📞"+data[1].phone ;
+	       		json.title = (data[1].paymentFlg==0?"❌ ":"✔ ") + data[1].roomNo.roomNum + "号室 / " +data[1].name +"📞"+data[1].phone.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3") ;
 	       		json.roomNum = data[1].roomNo.roomNum;
 	       		json.bankNo = data[1].bankNo;
 	       		json.adultCost = data[1].roomNo.adultCost;
@@ -478,7 +510,8 @@ $(document).ready(function(){
 							$('.start').val(moment(data.startDate).format('YYYY年MM月DD日'))
 							$('.end').val(moment(data.endDate).format('YYYY年MM月DD日'))
 							$('.customer').val(data.name)
-							$('.phone').val(data.phone)
+							$('.phone').val(data.phone.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3"))
+							$('.phone__clone').val(data.phone)
 							$('.reserveNo').val(data.no)
 							$('.regDate').val(moment(data.createdAt).format('YY年MM月DD日 HH:mm:ss'));
 							if(today>moment(data.startDate,'YYYYMMDD')){
@@ -493,7 +526,7 @@ $(document).ready(function(){
 							
 							modal.modal('show');
 							
-							$.getJSON('/api/checkReserve/'+amount+'/'+eventObj.extendedProps.roomNo+'/'+eventObj.extendedProps.reserveNo ,function(arr){
+							$.getJSON('/api/checkReserveSpecify/'+amount+'/'+eventObj.extendedProps.roomNo+'/'+eventObj.extendedProps.reserveNo ,function(arr){
 								let jsonList = new Array();
 						       	  $.each(arr, function(i, data){
 						       		disabledArr.push(getRange(data[1].startDate, data[1].endDate, 'days').flat(Infinity));
@@ -596,7 +629,14 @@ $(document).ready(function(){
 				modal.find('select').css('border','none');
 				console.log(data);
 				let newNo = parseInt(data);
+				
+				$('.permitPwBtn').hide();
+				$('.cancelPwBtn').hide();
+				$('.checkPwBtn').hide();
+				$('.modifyPwBtn').show();
+				
 				modal.modal('hide');
+				$('.toast').toast('show')
 				$('.toast-body').text(eventObj.extendedProps.roomNo+"号室 "+eventObj.extendedProps.reserveNo+"번 예약이 수정되었습니다.");
 				checkReserve(amount);
 			}
@@ -624,7 +664,13 @@ $(document).ready(function(){
 				modal.find('select').css('background-color','#fff');
 				modal.find('select').css('border','none');
 				modal.modal('hide');
-				$('.toast').toast('show')
+				
+				$('.permitPwBtn').hide();
+				$('.cancelPwBtn').hide();
+				$('.checkPwBtn').hide();
+				$('.modifyPwBtn').show();
+				
+				$('.toast').toast('show');
 				$('.toast-body').text(eventObj.extendedProps.roomNo+"号室 "+eventObj.extendedProps.reserveNo+"번 예약이 확정되었습니다.");
 				checkReserve(amount);
 			}
@@ -650,6 +696,12 @@ $(document).ready(function(){
 				modal.find('select').css('background-color','#fff');
 				modal.find('select').css('border','none');
 				modal.modal('hide');
+				
+				$('.permitPwBtn').hide();
+				$('.cancelPwBtn').hide();
+				$('.checkPwBtn').hide();
+				$('.modifyPwBtn').show();
+				
 				$('.toast').toast('show')
 				$('.toast-body').text(eventObj.extendedProps.roomNo+"号室 "+eventObj.extendedProps.reserveNo+"번 예약이 취소되었습니다.");
 				checkReserve(amount);

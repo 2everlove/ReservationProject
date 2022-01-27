@@ -39,23 +39,32 @@ a{text-decoration: none;}
 									<fmt:formatDate value="${now}" pattern="yyyy/MM/dd" var="nowDate" />
 									<fmt:formatDate value="${regDate}" var="reg" pattern="yyyy/MM/dd"/>
 									<fmt:formatDate value="${regDate}" var="regTime" pattern="HH:mm:ss"/>
-									<tr data-flg="${dto.lockFlg }" data-no="${dto.no }">
-										<th class="result__no" scope="row">
-											<c:if test="${dto.depth != 0 }">
-												<c:forEach begin="0" end="${dto.depth - 1}"><span style="margin-left: 20px;"></span></c:forEach>
-												<i class="fas fa-reply-all" style="transform: rotate(180deg);"></i>
-											</c:if>
-												${dto.no }
-										</th>
-										<td class="result__title"><a href="/consultation/${dto.no }">${dto.title } </a>
-											<c:if test="${nowDate == reg}">&nbsp;&nbsp;<i class="fas fa-plus-square"></i></c:if>
-											<c:if test="${dto.lockFlg == '1'}">&nbsp;&nbsp;<i class="fas fa-lock"></i></c:if>
-										</td>
+									<c:choose>
+										<c:when test="${dto.deleteFlg != '1'}">
+											<tr data-flg="${dto.lockFlg }" data-no="${dto.no }">
+												<th class="result__no" scope="row">
+												<c:if test="${dto.depth != 0 }">
+													<c:forEach begin="0" end="${dto.depth - 1}"><span style="margin-left: 20px;"></span></c:forEach>
+													<i class="fas fa-reply-all" style="transform: rotate(180deg);"></i>
+												</c:if>
+													${dto.no }
+												</th>
+												<td class="result__title"><a href="/consultation/${dto.no }">${dto.title } </a>
+													<c:if test="${nowDate == reg}">&nbsp;&nbsp;<i class="fas fa-plus-square"></i></c:if>
+													<c:if test="${dto.lockFlg == '1'}">&nbsp;&nbsp;<i class="fas fa-lock" style="color: #FFC312;"></i></c:if>
+												</td>
+												
+												<td class="result__buildCd">${dto.name }</td>
+												<td class="result__createdAt"><c:out value="${nowDate == reg ? regTime : reg}"></c:out></td>
+											</tr>
+										</c:when>
+										<c:otherwise>
+											<tr>
+												<td colspan="4" class="result__unShowing" style="text-align: center;background-color: lightgrey;">削除された掲示板です</td>
+											</tr>
+										</c:otherwise>
+									</c:choose>
 										
-										<td class="result__buildCd">${dto.name }</td>
-										<td class="result__createdAt"><c:out value="${nowDate == reg ? regTime : reg}"></c:out></td>
-										
-									</tr>
 									
 								</c:forEach>
 							</tbody>
@@ -84,11 +93,11 @@ a{text-decoration: none;}
 			</section>
 		</div>
 	</div>
-<div class="modal" tabindex="-1">
+<div class="modal consultation-modal" tabindex="-1">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">Modal title</h5>
+				<h5 class="modal-title">Check PassWord</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -111,8 +120,9 @@ a{text-decoration: none;}
 		</div>
 	</div>
 </div>
+
 <script type="text/javascript">
-let modal = $('.modal');
+let modal = $('.consultation-modal');
 let no = "";
 $(document).ready(function(){
 	$('.result__title').closest('tr').click(function(){
@@ -131,6 +141,17 @@ $(document).ready(function(){
 	$('.result__no').text()
 	let msg = '${msg}';
 	console.log(msg);
+	if(msg !== ''){
+		$('.colorMark').css('background-color', '#0be881');
+		$('.toast').toast('show');
+		$('.toast-body').text(msg+" 番の文が登録されました。");
+	}
+	if(localStorage.msg !== '' && localStorage.msg !== undefined){
+		$('.colorMark').css('background-color', '#EA2027');
+		$('.toast').toast('show');
+		$('.toast-body').text(localStorage.msg+" 番の文が削除されました。");
+		localStorage.removeItem('msg')
+	}
 });
 
 //close modal

@@ -37,9 +37,15 @@ public class UserConsultationController {
 	@GetMapping("/consultation/{no}")
 	public String getOne(@PathVariable("no")Long no ,PageRequestDTO pageRequestDTO, Model model) {
 		log.info("getOne: "+no);
-		model.addAttribute("result", consultationService.get(no));
+		ConsultationDTO dto =  consultationService.get(no);
+		if(dto.getDeleteFlg().equals("0")) {
+			model.addAttribute("result", dto);
+		} else {
+			model.addAttribute("result", "delete");
+		}
+			
 		model.addAttribute("page", pageRequestDTO);
-		return "detailConsultation";
+		return "detailConsultation"; 
 	}
 	
 	
@@ -50,8 +56,9 @@ public class UserConsultationController {
 	}
 	
 	@PostMapping("/consultation/register")
-	public String registerPost(ConsultationDTO dto, PageRequestDTO pageRequestDTO, RedirectAttributes rttr) {
+	public String registerPost(ConsultationDTO dto, PageRequestDTO pageRequestDTO, RedirectAttributes rttr, Model model) {
 		System.out.println("/consultation/register: "+dto);
+		model.addAttribute("page", pageRequestDTO);
 		rttr.addFlashAttribute("msg", consultationService.wrtiteConsultation(dto));
 		return "redirect:/consultation";
 	}

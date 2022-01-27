@@ -16,9 +16,11 @@ a{text-decoration: none;}
 				<h2 class="col-sm-10 title-detail">相談-詳細</h2>
 				<h2 class="col-sm-10 title-modify" style="display: none;">相談-修正</h2>
 				<hr/>
+					<c:if test="${result != 'delete' }">
 						<div class="card">
 							<div class="card-header">
 								<div class="input-group">
+								
 									<div class="col-sm-3">
 									<label for="staticEmail" class="col-sm col-form-label" style="text-align: center;">${result.no }</label>
 									</div>
@@ -32,8 +34,8 @@ a{text-decoration: none;}
 												<input class="form-check-input result__checkedPw" name="lockFlg" type="checkbox" value="0" >
 												<input class="form-check-input result__checkdeleteFlg" name="deleteFlg" type="hidden" value="0" >
 												<input class="form-check-input result__originGrgrod" name="grgrod" type="hidden" value="0" >
-												<i class="fas fa-lock-open"></i>
-												<i class="fas fa-lock" style="display: none;"></i>
+												<i class="fas fa-lock-open" style="color: #FFC312;"></i>
+												<i class="fas fa-lock" style="color: #FFC312; display: none;"></i>
 											</label>
 											<input type="password" name="passwd" placeholder="Password" class="form-check result__passwd" style="width: 80%; padding-left: 0.5rem !important; display: none;">
 										</div>
@@ -63,8 +65,8 @@ a{text-decoration: none;}
 											<input class="form-check-input result__checkdeleteFlg" name="deleteFlg" type="hidden" value="0" >
 											<input class="form-check-input result__depth" name="depth" type="hidden" value="${result.depth }" >
 											<input class="form-check-input result__originGrgrod" name="grgrod" type="hidden" value="${result.grgrod }" >
-											<i class="fas fa-lock-open"></i>
-											<i class="fas fa-lock" style="display: none;"></i>
+											<i class="fas fa-lock-open" style="color: #FFC312;"></i>
+											<i class="fas fa-lock" style="color: #FFC312;display: none;"></i>
 										</label>
 										<input type="password" name="passwd" value="${result.passwd }" placeholder="Password" class="form-check result__passwd" style="width: 30%; padding-left: 0.5rem !important; display: none;">
 									</div>
@@ -102,8 +104,8 @@ a{text-decoration: none;}
 									<label class="form-check-label" for="defaultCheck1">
 										<input class="form-check-input result__reCheckedPw" name="lockFlg" type="checkbox" value="0" >
 										<input class="form-check-input result__reCheckdeleteFlg" name="deleteFlg" type="hidden" value="0" >
-										<i class="fas fa-lock-open re__unlock"></i>
-										<i class="fas fa-lock re__lock" style="display: none;"></i>
+										<i class="fas fa-lock-open re__unlock" style="color: #FFC312;"></i>
+										<i class="fas fa-lock re__lock" style="color: #FFC312; display: none;"></i>
 									</label>
 									<input type="password" name="passwd" placeholder="Password" class="form-check result__rePasswd" style="width: 80%; padding-left: 0.5rem !important; display: none;">
 								</div>
@@ -122,16 +124,17 @@ a{text-decoration: none;}
 							<input type="hidden" name="contents">
 						</div>
 					</div>
+					</c:if>
 					<!--  -->
 				</div>
 			</section>
 		</div>
 	</div>
-<div class="modal" tabindex="-1">
+<div class="modal detailConsultation-modal" tabindex="-1">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">Modal title</h5>
+				<h5 class="modal-title">${result.no }</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -157,7 +160,9 @@ a{text-decoration: none;}
 
 <script type="text/javascript">
 $(document).ready(function(){
-	$('.modal').modal({backdrop: 'static', keyboard: false})
+	<c:if test="${result == 'delete'}">
+		//location.href = '/consultation?page=${page.page}&type=${page.type}&keyword=${page.keyword}';
+	</c:if>
 	$("#reply__register-pw").keyup(function(e){if(e.keyCode == 13)  checkPassword(); });
 
 	let checkContents = '<c:out value="${result == null ? 'emp': 'full'}"></c:out>';
@@ -290,8 +295,8 @@ $('.result__List').click(function(){
 	}
 </c:if>
 
-<c:if test="${result != null}">
-let modal = $('.modal');
+<c:if test="${result != null || result == 'delete'}">
+let modal = $('.detailConsultation-modal);
 let lockDisplay = '';
 $(document).ready(function(){
 	
@@ -299,11 +304,11 @@ $(document).ready(function(){
 
 $('.result__modify').click(function(){
 	if(lockDisplay != 'success'){
-		if('<c:out value="${result.passwd != null && result.passwd != ''? 'lock':'unlock'}"></c:out>' == 'lock' ){
+		/* if('<c:out value="${result.passwd != null && result.passwd != ''? 'lock':'unlock'}"></c:out>' == 'lock' ){
 			modal.modal('show');
 			$('.reply__register-pw').focus();
 			return false;
-		}
+		} */
 	}
 	$('.result__cancel').show();
 	$('.result__reply').hide();
@@ -415,6 +420,7 @@ $('.result__modify').click(function(){
 });//
 
 $('.result__delete').click(function(){
+	
 	if('<c:out value="${result.passwd != null && result.passwd != ''? 'lock':'unlock'}"></c:out>' == 'lock'){
 		modal.modal('show');
 	}
@@ -433,7 +439,8 @@ $('.result__delete').click(function(){
 			success: function(data){
 				if(data == 'success'){
 					$('section').empty();
-					alert(consultation.no +'번 글이 삭제되었습니다.');
+					alert(consultation.no +'番の文が削除されました。');
+					localStorage.msg = '${result.no}'
 					location.href="/consultation?page=${page.page}&type=${page.type}&keyword=${page.keyword}";
 				}
 			}
@@ -469,6 +476,10 @@ $('.result__reply').click(function(){
 		document.querySelector('.result__cancel').classList.add('result__reCancel');
 		document.querySelector('.result__reCancel').classList.remove('result__cancel');
 	}
+	
+	document.querySelector('.result__register').classList.remove('btn-primary');
+	document.querySelector('.result__register').classList.add('btn-success');
+	
 	$('.result__modify').hide();
 	$('.result__register').show();
 	$('.result__reCancel').show();

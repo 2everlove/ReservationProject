@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <link rel="stylesheet" href="/resources/css/calendar.css">
@@ -16,7 +15,7 @@ a{text-decoration: none;}
             	<div class="container px-4 px-lg-4">
             	<div style="display: flex;flex-direction: row;justify-content: center;align-items: center;flex-wrap: wrap;">
             		
-	                <div class="row gx-0 mb-5 mb-lg-0 justify-content-center">
+	                <div class="row gx-0 mb-5 mb-lg-0 justify-content-center" style="width: 70%">
 	                    <div class="col-lg-7">
 							<c:url value="/api/display" var="thumbnail">
 								<c:param name="fileName" value="${roomInfo.images[0]}"></c:param>
@@ -39,7 +38,7 @@ a{text-decoration: none;}
 	                        <div class="bg-light text-center h-100 project">
 	                            <div class="d-flex h-100">
 	                                <div class="project-text w-100 my-auto text-center text-lg-left">
-	                                <h4 class="text-dark">${roomInfo.roomNum } 号</h4>
+	                                <h4 class="text-dark">${roomInfo.roomNum } 号室</h4>
 	                                    <h4 class="text-dark">
 					                   		${roomInfo.roomTitle}
 						                </h4>
@@ -55,14 +54,14 @@ a{text-decoration: none;}
 													
 												</div>
 			                                    <div class="form-group row" style="justify-content: flex-end;">
-													<label for="" class="col-sm-2 col-form-label">期&nbsp;&nbsp;&nbsp;&nbsp;間</label>
-													<div class="col-sm-5">
+													<label for="" class="col-sm-3 col-form-label">期&nbsp;&nbsp;&nbsp;&nbsp;間</label>
+													<div class="col-sm-6">
 														<input type="text" class="form-control" id="demo" name="demo" value="" readonly style="background-color: #fff !important"/>
 													</div>
 												</div>
 			                                    <div class="form-group row" style="justify-content: flex-end;">
-													<label for="" class="col-sm-2 col-form-label">総金額</label>
-													<div class="col-sm-5">
+													<label for="" class="col-sm-3 col-form-label">総金額</label>
+													<div class="col-sm-6">
 														<input class="form-control detail__totalPrice" type="text" value="${roomInfo.adultCost }" placeholder="" readonly/>
 													</div>
 												</div>
@@ -109,11 +108,11 @@ a{text-decoration: none;}
        	</section>
 	</div>
 </div>
-<div class="modal" tabindex="-1">
+<div class="modal roomInfo-modal" tabindex="-1">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">Modal title</h5>
+				<h5 class="modal-title">결재</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -137,28 +136,21 @@ a{text-decoration: none;}
 					<label for="" class="col-sm-2 col-form-label">Adult</label>
 					<div class="col-sm-4">
 						<input class="form-control adult-clone" type="text" placeholder="" readonly/>
-						<input class="startDate" type="hidden">
-						<input class="endDate" type="hidden">
 					</div>
 					<label for="" class="col-sm-2 col-form-label">Child</label>
 					<div class="col-sm-4">
 						<input class="form-control child-clone" type="text" placeholder="" readonly/>
-						<input class="startDate" type="hidden">
-						<input class="endDate" type="hidden">
 					</div>
 				</div>
 				<div class="form-group row" style="justify-content: flex-end;">
 					<label for="" class="col-sm-2 col-form-label">Name</label>
 					<div class="col-sm-4">
 						<input class="form-control name" type="text" placeholder=""/>
-						<input class="startDate" type="hidden">
-						<input class="endDate" type="hidden">
 					</div>
 					<label for="" class="col-sm-2 col-form-label">Phone</label>
 					<div class="col-sm-4">
-						<input class="form-control phone" type="text" placeholder=""/>
-						<input class="startDate" type="hidden">
-						<input class="endDate" type="hidden">
+						<input class="form-control phone" type="text" placeholder="" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{3,4}" maxlength="13"/>
+						<input class="form-control phone__clone" type="hidden" placeholder="" style="display: none;"/>
 					</div>
 				</div>
 				<p class="response__data"></p>
@@ -171,6 +163,7 @@ a{text-decoration: none;}
 		</div>
 	</div>
 </div>
+
 <script type="text/javascript">
 
 function changeImage(e){
@@ -188,7 +181,7 @@ $(document).ready(function(){
 let disabledArr = [];
 	let amount = 0;
 	
-	let modal = $('.modal');
+	let modal = $('.roomInfo-modal');
 	$('.registerReserve').click(function(){
 		$('.payReserve').show();
 		$('.checkOrder').hide();
@@ -233,7 +226,7 @@ let disabledArr = [];
 			$('.name').focus();
 			return true;
 		}
-		if($('.phone').val() == ''){
+		if($('.phone__clone').val() == ''){
 			$('.phone').focus();
 			return true;
 		}
@@ -248,9 +241,11 @@ let disabledArr = [];
 			startDate : $('.startDate').val(),
 			endDate : $('.endDate').val(),
 			totalCost : $('.detail__totalPrice-payment').val(),
-			phone : $('.phone').val(),
+			phone : $('.phone__clone').val(),
 			paymentFlg: ($('.bankSelect option:selected').val() === '18'? 1:0),
-			roomNo : ${roomInfo.no }
+			roomNo : ${roomInfo.no },
+			cancelFlg : '0',
+			deleteFlg : '0',
 		}
 		console.log(reserve);
 		$.ajax({
@@ -354,7 +349,7 @@ let disabledArr = [];
 		
 		var dateString = year + '-' + ('0'+month).slice(-2)  + '-' + day;
 		console.log(dateString);
-		$.getJSON('/api/checkReserve/'+amount+"/${roomNum}" ,function(arr){
+		$.getJSON('/api/checkReserveSpecify/'+amount+"/${roomNum}" ,function(arr){
 			console.log(arr);
 			let jsonList = new Array();
 	       	  $.each(arr, function(i, data){
@@ -384,6 +379,13 @@ let disabledArr = [];
 	        
 		});
 	}
+	<c:if test="${dateObject.startDate != null && dateObject.startDate != ''}">
+	 	let startDate1=moment('${dateObject.startDate}','YYYYMMDD');
+	 	let endDate1=moment('${dateObject.endDate}','YYYYMMDD');
+	 	$('.startDate').val('${dateObject.startDate}');
+		$('.endDate').val('${dateObject.endDate}');
+	 </c:if>
+	
 	console.log(uniteUnique(disabledArr));
 	let today = new Date();
 	$('#demo').daterangepicker({
@@ -413,6 +415,10 @@ let disabledArr = [];
 	        	 return false;
 	         }
 	     },
+	     <c:if test="${dateObject.startDate != null && dateObject.startDate != ''}">
+		 	startDate:startDate1,
+		 	endDate:endDate1,
+		 </c:if>
 	     opens: 'left',
 	     minDate: today,
 	     maxSpan: {
@@ -435,8 +441,16 @@ let disabledArr = [];
 	}, function (start, end, label) { 
 		
 		console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')'); 
-		$('.startDate').val(start.format('YYYYMMDD'));
-		$('.endDate').val(end.format('YYYYMMDD'));
+		<c:if test="${dateObject.startDate != null && dateObject.startDate != ''}">
+			$('.startDate').val(moment('${dateObject.startDate}','YYYYMMDD'));
+			$('.endDate').val(moment('${dateObject.endDate}','YYYYMMDD'));
+	 	</c:if>
+		<c:if test="${dateObject.startDate == null || dateObject.startDate == ''}">
+			$('.startDate').val(start.format('YYYYMMDD'));
+			$('.endDate').val(end.format('YYYYMMDD'));
+	 	</c:if>
+	 	
+		
 	});
 	
 	$("#demo").on("apply.daterangepicker",function(e,picker){
@@ -476,7 +490,17 @@ let disabledArr = [];
 	
 	$('.checkOrder').on('click', function(){
 		
-	})
+	});
+	
+	$('.phone').keyup(function(){
+		//console.log($(this).val().length);
+		$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3") );
+	});
+	$(".phone").change(function(){
+		let str = $(this).val();
+		let tmp = str.replace(/\-/g,'');
+		$(".phone__clone").val(tmp);
+	});
 	
 });//
 	

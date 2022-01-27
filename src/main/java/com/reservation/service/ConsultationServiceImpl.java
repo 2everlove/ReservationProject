@@ -54,7 +54,7 @@ public class ConsultationServiceImpl implements ConsultationService {
 	public PageResultDTO<ConsultationDTO, Consultation> getList(PageRequestDTO requestDTO) {
 		requestDTO.setSize(20);
 		Pageable pageable = requestDTO.getPageable(Sort.by("grno").descending().and(Sort.by("grgrod").ascending()).and(Sort.by("depth").ascending()).and(Sort.by("createdAt").descending()));
-		BooleanBuilder booleanBuilder = getSearch(requestDTO);
+		//BooleanBuilder booleanBuilder = getSearch(requestDTO);
 		Page<Consultation> result = consultationRepository.findAll(pageable);
 		Function<Consultation, ConsultationDTO> fn = (entity -> entityToDTO(entity));
 		return new PageResultDTO<ConsultationDTO, Consultation>(result, fn);
@@ -63,8 +63,7 @@ public class ConsultationServiceImpl implements ConsultationService {
 	//admin
 	@Override
 	public PageResultDTO<ConsultationDTO, Consultation> getAdminList(PageRequestDTO requestDTO) {
-		Pageable pageable = requestDTO.getPageable(Sort.by("no").descending());
-		BooleanBuilder booleanBuilder = getSearch(requestDTO);
+		Pageable pageable = requestDTO.getPageable(Sort.by("grno").descending().and(Sort.by("grgrod").ascending()).and(Sort.by("depth").ascending()).and(Sort.by("createdAt").descending()));
 		Page<Consultation> result = consultationRepository.findAll(pageable);
 		Function<Consultation, ConsultationDTO> fn = (entity -> entityToDTO(entity));
 		return new PageResultDTO<ConsultationDTO, Consultation>(result, fn);

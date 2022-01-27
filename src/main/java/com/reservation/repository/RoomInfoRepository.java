@@ -57,6 +57,8 @@ public interface RoomInfoRepository extends JpaRepository<RoomInfo, Long>, Query
 	@Query("select i.buildCd from RoomInfo i group by i.buildCd")
 	List<Integer> getBuildCd();
 	
+	List<RoomInfo> findRoominfoByBuildCd(int buildCd);
+	
 	//랜덤방 가져오기
 	//@Query("select i.no from RoomInfo where i.deleteFlg = '0' and ")
 	//Long getRandomRoom(Long rand);

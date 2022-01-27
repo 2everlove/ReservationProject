@@ -26,6 +26,7 @@ public class UserNoticeController {
 	private final NoticeService noticeService;
 	private final RoomInfoService roomInfoService;
 	
+	//wholeList
 	@GetMapping("/notice")
 	public String list(PageRequestDTO pageRequestDTO, Model model) {
 		log.info("list: "+pageRequestDTO);
@@ -35,6 +36,7 @@ public class UserNoticeController {
 		return "notice";
 	}
 	
+	//getAnobject
 	@GetMapping("/notice/{no}")
 	public String getOne(@PathVariable("no")Long no ,PageRequestDTO pageRequestDTO, Model model) {
 		log.info("getOne: "+no);
@@ -43,6 +45,7 @@ public class UserNoticeController {
 		return "detailNotice";
 	}
 	
+	//register-get
 	@GetMapping("/notice/register")
 	public String register(PageRequestDTO pageRequestDTO, Model model) {
 		model.addAttribute("buildCdList", roomInfoService.getBuildCd());
@@ -50,6 +53,7 @@ public class UserNoticeController {
 		return "detailNotice";
 	}
 	
+	//register-post
 	@PostMapping("/notice/register")
 	public String registerPost(NoticeDTO dto, PageRequestDTO pageRequestDTO, Model model, RedirectAttributes rttr) {
 		log.info("registerPost: "+dto);
