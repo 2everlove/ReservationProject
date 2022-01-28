@@ -30,6 +30,10 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 	@Query("update Reserve r set r.cancelFlg = :deleteFlg where r.no = :no")
 	int modifyDeleteByNo(@Param("no") Long no, @Param("deleteFlg") String deleteFlg);
 	
+	@Modifying
+	@Query("update Reserve r set r.deleteFlg = :deleteFlg, r.cancelFlg = :cancelFlg, r.paymentFlg = :paymentFlg where r.no = :no")
+	int modifyStatusChange(@Param("no") Long no, @Param("deleteFlg") String deleteFlg, @Param("cancelFlg") String cancelFlg, @Param("paymentFlg") String paymentFlg);
+	
 	//이름,폰으로 예약 검색 with page
 	@Query("select i, r from RoomInfo i "
 			+ "left join Reserve r on r.roomNo.no = i "
@@ -39,6 +43,10 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 	//이름,폰으로 예약 검색
 	@Query("select i,r from RoomInfo i left join Reserve r on r.roomNo.no = i where r.name = :name and r.phone = :phone and r.no = :reserveNo")
 	List<Object[]> findReserveByNameAndPhone(@Param("name") String name, @Param("phone") String phone, @Param("reserveNo") Long reserveNo);
+	
+	//주문번호로 예약 검색
+	@Query("select i,r from RoomInfo i left join Reserve r on r.roomNo.no = i where r.no = :reserveNo")
+	List<Object[]> findReserveByReserveNo( @Param("reserveNo") Long reserveNo);
 	
 	@Query("select i, r from RoomInfo i " +
 			"left join Reserve r on r.roomNo.no = i " + 
@@ -94,9 +102,10 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 	//중복체크
 	@Query("select count(*) from RoomInfo i " +
 			"left outer join Reserve r on r.roomNo.no = i and r.roomNo.no = :roomno "
-			+ "where to_date(r.startDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
+			+ "where r.cancelFlg = 0 and r.deleteFlg = 0 "
+			+ "and to_date(r.startDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
 			+ "or to_date(r.endDate,'YYYYMMDD') between to_date(:dateStart,'YYYYMMDD') and to_date(:dateEnd,'YYYYMMDD') "
-			+ "and r.cancelFlg = 0 and r.deleteFlg = 0 order by r.roomNo.no"
+			+ "order by r.roomNo.no"
 			)
 	Long getDateCount(@Param("dateStart") String dateStart, @Param("dateEnd") String dateEnd, @Param("roomno") Long roomno);
 	

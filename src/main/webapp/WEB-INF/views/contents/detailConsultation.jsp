@@ -296,7 +296,7 @@ $('.result__List').click(function(){
 </c:if>
 
 <c:if test="${result != null || result == 'delete'}">
-let modal = $('.detailConsultation-modal);
+let modal = $('.detailConsultation-modal');
 let lockDisplay = '';
 $(document).ready(function(){
 	

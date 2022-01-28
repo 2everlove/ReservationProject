@@ -1,5 +1,6 @@
 package com.reservation.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -184,6 +185,19 @@ public class ReserveServiceImpl implements ReserveService {
 	public List<Object[]> findReserveByNameAndPhone(String name, String phone, Long reserveNo) {
 		Function<Object[], Object[]> fn = (en -> entityToDtoObject((RoomInfo)en[0], (Reserve)en[1]));
 		return reserveRepository.findReserveByNameAndPhone(name, phone, reserveNo).stream().map(fn).collect(Collectors.toList());
+	}
+
+	//예약 확인 - 상세 - 상태 변경
+	@Transactional
+	@Override
+	public List<Object[]> modifyStatusOnReserve(ReserveDTO dto) {
+		Function<Object[], Object[]> fn = (en -> entityToDtoObject((RoomInfo)en[0], (Reserve)en[1]));
+		int status =reserveRepository.modifyStatusChange(dto.getNo(), dto.getDeleteFlg(), dto.getCancelFlg(), dto.getPaymentFlg());
+		log.info("modifyStatusOnReserve: "+status);
+		if(status >= 0)
+			return reserveRepository.findReserveByReserveNo(dto.getNo()).stream().map(fn).collect(Collectors.toList());
+		else
+			return null;
 	}
 	
 	

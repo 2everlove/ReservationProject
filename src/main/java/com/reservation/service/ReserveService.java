@@ -165,4 +165,6 @@ public interface ReserveService {
 				.build();
 		return entity;
 	}
+
+	List<Object[]> modifyStatusOnReserve(ReserveDTO dto);
 }

@@ -163,7 +163,6 @@ a{text-decoration: none;}
 		</div>
 	</div>
 </div>
-
 <script type="text/javascript">
 
 function changeImage(e){
@@ -176,7 +175,8 @@ $('.thumbList').on('mouseout', function(){
 	$(this).children().css('border','1px solid transparent')
 	//$('.img-fluid').attr('src', $('.img-thumb0').children().attr('src'));
 })
-
+let roomInfoDataArr = new Array();
+let reserveSearchJson ={};
 $(document).ready(function(){
 let disabledArr = [];
 	let amount = 0;
@@ -200,9 +200,9 @@ let disabledArr = [];
 		$.getJSON('/api/payment/list' ,function(arr){
 			console.log(arr);
 			$.each(arr, function(i, bank){
-				console.log(bank);
+				//console.log(bank);
 				let optionGroup = document.createElement('option');
-				console.log(bank.bankName + bank.bankCd)
+				//console.log(bank.bankName + bank.bankCd)
 				optionGroup.innerText = bank.bankName;
 				optionGroup.value=bank.bankCd;
 				$('.bankSelect').append(optionGroup);
@@ -242,7 +242,7 @@ let disabledArr = [];
 			endDate : $('.endDate').val(),
 			totalCost : $('.detail__totalPrice-payment').val(),
 			phone : $('.phone__clone').val(),
-			paymentFlg: ($('.bankSelect option:selected').val() === '18'? 1:0),
+			paymentFlg: '0',
 			roomNo : ${roomInfo.no },
 			cancelFlg : '0',
 			deleteFlg : '0',
@@ -260,6 +260,11 @@ let disabledArr = [];
 				$('.checkOrder').show();
 				$('.payReserve').hide();
 				$('.response__data').text('예약번호:'+data+'\n결제가 완료되었습니다.');
+				reserveSearchJson ={
+					no: data,
+					name: reserve.name,
+					phone: reserve.phone,
+				}
 			}
 		})
 	})
@@ -504,7 +509,37 @@ let disabledArr = [];
 	
 });//
 	
-	
+$('.checkOrder').on('click', function(){
+	$.ajax({
+		url: '/api/getReserve/search/'+reserveSearchJson.no,
+		method: 'post',
+		data: JSON.stringify(reserveSearchJson),
+		contentType: 'application/json; charset=utf-8',
+		dataType: 'json',
+		success: function(datas){
+			console.log(datas)
+			let json = new Object();
+			$.each(datas , function (i, data){
+				//console.log(data)
+		   		json.roomNo = data[1].no;
+		   		json.reserveNo = data[0].no;
+		   		json.title = (data[0].paymentFlg==0?"❌ ":"✔ ") + data[1].roomNum + "号室 " ;
+		   		json.roomNum = data[1].roomNum;
+		   		json.bankNo = data[0].bankNo;
+		   		json.adultCost = data[1].adultCost;
+		   		json.childCost = data[1].childCost;
+		   		json.buildCd = data[1].buildCd;
+		   		json.max = data[1].max;
+		   		json.colorCd = data[1].colorCd;
+		   		json.images = data[1].images;
+		   		json.start = moment(data[0].startDate).format('YYYY-MM-DD');
+		   		json.end = moment(moment(data[0].endDate).add(1, 'days')).format('YYYY-MM-DD');
+		   		json.color =data[1].colorCd;
+		   		roomInfoDataArr.push(json);
+			});
+		}
+	});	
+});
 	
 		
 	

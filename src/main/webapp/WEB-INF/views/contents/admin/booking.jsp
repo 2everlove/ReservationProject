@@ -179,10 +179,11 @@ $(document).ready(function(){
 	$('#calendar').click(function(e){
 		if(e.target == document.querySelector('button[title="Previous month"]') || e.target == document.querySelector('span[class="fc-icon fc-icon-chevron-left"]')){
 			amount = amount - 1;
-			checkReserve(amount);
+			moment().subtract(amount, 'months').format('YYYY-MM-DD');
+			checkReserve(amount, moment().add(amount, 'months').format('YYYY-MM-DD'));
 		} else if(e.target == document.querySelector('button[title="Next month"]') || e.target == document.querySelector('span[class="fc-icon fc-icon-chevron-right"]')){
 			amount = amount + 1;
-			checkReserve(amount)
+			checkReserve(amount, moment().add(amount, 'months').format('YYYY-MM-DD'))
 		} else if(e.target == document.querySelector('button[title="This month"]')){
 			amount = 0;
 			checkReserve(amount)
@@ -428,7 +429,7 @@ $(document).ready(function(){
 	
 });//
 
-	function checkReserve(amount) {
+	function checkReserve(amount, calcDate) {
 		var today = new Date();
 	
 		var year = today.getFullYear();
@@ -445,7 +446,8 @@ $(document).ready(function(){
 		var day = ('0' + today.getDate()).slice(-2);
 	
 		var dateString = year + '-' + ('0'+month).slice(-2)  + '-' + day;
-		
+		var dateString = calcDate
+		console.log(dateString)
 		buildCd = $('.buildCdList option:selected').val();
 		roomNo = $('.roomNoList option:selected').val();
 		let url = "";
@@ -454,7 +456,7 @@ $(document).ready(function(){
 		}else if(buildCd !== ''){
 			url = '/'+buildCd;
 		}
-		
+		console.log(dateString);
 		console.log(url)
 		//console.log(dateString);
 		$.getJSON('/api/checkReserve/'+amount+url ,function(arr){

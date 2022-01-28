@@ -365,7 +365,7 @@
         		</div>
         	</div>
         	<div class="people" style="width: calc(50% - 122px);background-color: #fff !important; border-color: #e7e7e7; border: 1px solid; height: 66px; border-radius: 8px; font-size: 16px; display: inline-block; margin-left: 20px; cursor: pointer;">
-        		<div style="width: 36%;padding: 0 20px;position: absolute;top: 14%;-webkit-transform: translateY(-13%);transform: translateY(-13%);">
+        		<div style="width: 40%;padding: 0 20px;position: absolute;top: 14%;-webkit-transform: translateY(-13%);transform: translateY(-13%);">
         			<i class="fas fa-users" style="padding-right: 16px;display: inline-block;vertical-align: middle;text-align: left;"></i>
         			<div style="width: calc(100% -180px);vertical-align: middle;display: inline-block;box-sizing: border-box;">
         				<div style="width: auto;padding: 10px 0;font-size: 16px;">

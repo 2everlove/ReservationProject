@@ -62,6 +62,12 @@ public class RestReserve {
 		log.info("AjaxGetReserveByNameAndPhone: " + dto);
 		return new ResponseEntity<List<Object[]>>(reserveService.findReserveByNameAndPhone(dto.getName(), dto.getPhone(), reserveNo) ,HttpStatus.OK);
 	}
+	//modify specific data's status
+	@PostMapping(value = "/getReserve/search/statusChange", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Object[]>> AjaxModifyStatus(@RequestBody ReserveDTO dto){
+		log.info("AjaxModifyStatus: " + dto);
+		return new ResponseEntity<List<Object[]>>(reserveService.modifyStatusOnReserve(dto) ,HttpStatus.OK);
+	}
 	
 	//search whole room
 	@PostMapping(value = "/getReserve", produces = MediaType.APPLICATION_JSON_VALUE)
