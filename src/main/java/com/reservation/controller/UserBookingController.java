@@ -55,9 +55,10 @@ public class UserBookingController {
 	
 	//방 검색
 	@GetMapping("/booking/search")
-	public String bookingSearchedRoomList(ReserveDTO reserveDTO, Integer max, @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
+	public String bookingSearchedRoomList(ReserveDTO reserveDTO, @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
 		System.out.println("startDate: "+reserveDTO.getStartDate());
 		System.out.println("endDate: "+reserveDTO.getEndDate());
+		int max = Integer.parseInt(reserveDTO.getAdult())+Integer.parseInt(reserveDTO.getChild());
 		System.out.println("people: "+max);
 		PageResultDTO<RoomInfoDTO, RoomInfo> list = roomInfoService.getListPageOnMain(requestDTO, reserveDTO.getStartDate(), reserveDTO.getEndDate(), max);
 		model.addAttribute("roomInfoList", list.getDtoList());

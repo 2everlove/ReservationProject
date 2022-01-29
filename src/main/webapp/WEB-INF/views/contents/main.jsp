@@ -299,7 +299,8 @@
 		submit('/booking/search', 'GET', [
 		    { name: 'startDate', value: $('.startDate').val() },
 		    { name: 'endDate', value: $('.endDate').val() },
-		    { name: 'max', value: parseInt($('.adult').val())+parseInt($('.child').val()) },
+		    { name: 'adult', value: parseInt($('.adult').val()) },
+		    { name: 'child', value: parseInt($('.child').val()) },
 		]);
 	}
     

@@ -65,7 +65,7 @@ a{text-decoration: none;}
 					<c:param name="fileName" value="${roomInfo.images[0]}"></c:param>
 				</c:url>
 			        <div class="card" style="cursor: pointer; width: 500px;" 
-			        OnClick="location.href ='/booking/${roomInfo.no}<c:if test="${dateObject.startDate != null && dateObject.startDate != ''}">?startDate=${dateObject.startDate}&endDate=${dateObject.endDate}</c:if>'" onmouseout="this.style.background='#F8F9F7';" onmouseover="this.style.background= 'rgba(170, 166, 157,0.3)';">
+			        OnClick="location.href ='/booking/${roomInfo.no}<c:if test="${dateObject.startDate != null && dateObject.startDate != ''}">?startDate=${dateObject.startDate}&endDate=${dateObject.endDate}&adult=${dateObject.adult }&child=${dateObject.child }</c:if>'" onmouseout="this.style.background='#F8F9F7';" onmouseover="this.style.background= 'rgba(170, 166, 157,0.3)';">
 			            <div class="row no-gutters" style="align-items: center; justify-content: flex-end; width: 100%; margin: 0; --bs-gutter-x: 0;">
 			            	<div style="position: absolute;left: -0.2%;transform: rotate(180deg);top: 9%;width: 0;height: 0;border-bottom: 25px solid ${roomInfo.colorCd};border-left: 25px solid transparent;-webkit-transform-origin-y: top;"></div>
 			            	<%-- <div style="background-color: ${roomInfo.colorCd}; position: absolute;width: 5%;left: 0; top: 11.5%;height: 5px; z-index: 1;"></div>
