@@ -60,6 +60,26 @@
       	<div class="bg-dark " style="height: 94px"></div>
         <header class="masthead" style="padding-top: 10% !important">
 			<div class="container px-4 px-lg-5">
+				<div class="table-responsive-lg">
+						<table class="table table-hover">
+							<thead class="tHead">
+								<tr class="newTemplate">
+									<th scope="col" style="border-top: 0px !important; max-width: 150px !important; width: 0px !important;"></th>
+									<th scope="col" style="border-top: 0px !important;" colspan="2">RoomNo</th>
+									<th scope="col" style="border-top: 0px !important;">Title</th>
+									<th scope="col" style="border-top: 0px !important;">Content</th>
+									<th scope="col" style="border-top: 0px !important;">Max</th>
+									<th scope="col" style="border-top: 0px !important;">Adult</th>
+									<th scope="col" style="border-top: 0px !important;">Child</th>
+									<th scope="col" style="border-top: 0px !important;">Floor</th>
+									<th scope="col" style="border-top: 0px !important;">Delete</th>
+									<th scope="col" class="result__regDate" style="border-top: 0px !important;">RegDate</th>
+									<th scope="col" style="border-top: 0px !important;"></th>
+								</tr>
+							</thead>
+							<tbody class="baseLine"></tbody>
+						</table>
+					</div>
 			</div>
         </header>
         <!-- <div class="d-block h-100" style="width:70rem !important; height:40rem !important; background-image: url('/resources/assets/img/room/room3.jpg');  background-size: cover;"></div> -->
