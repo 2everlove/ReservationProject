@@ -18,9 +18,9 @@ a{text-decoration: none;}
 				<div class="container px-4 px-lg-5">
 					<div class="form-group row" style="align-items: center;">
 						<h2 class="col-sm-10 title">お知らせ</h2>
-						<div class="col-sm-2">
+						<!-- <div class="col-sm-2">
 							<input type="button" value="Register" class="form-control btn btn-primary result__register btn-sm">
-						</div>
+						</div> -->
 					</div>
 					<hr/>
 					<div class="table-responsive-lg">

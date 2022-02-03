@@ -301,7 +301,7 @@ function searchedSpecificData(data, dataArr){
 	if(data[0][0].cancelFlg === '1' && data[0][0].paymentFlg === '0'){
 		$('.search-modal').find('.search-modal-body').find('.headModal-secondTr').append(
 			'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">취소됨</label>'+
-			'<div class="col-sm-2"><button type="button" class="btn btn-danger search-modalDeleteBtn">삭제</button></div>'
+			'<div class="col-sm-2"><button type="button" class="btn btn-danger search-modalDeleteBtn">삭제</button><button type="button" class="btn btn-success search-modalPaymentBtn">결제</button></div>'
 		);
 		buttonFlgSetting(data)
 	}
@@ -507,8 +507,20 @@ $('.search-modal').on('click','.search-modal-body .btn', function(){
 		console.log(reserveStatus)
 		statusCode = '1';
 	}
-	//삭제 표시
-	else if($(this).attr('data-deleteFlg') === '0' && $(this).attr('data-cancelFlg') === '1' && $(this).attr('data-paymentFlg') === '0'){
+	//삭제 표시 - 재결제
+	else if($(this).attr('data-deleteFlg') === '0' && $(this).attr('data-cancelFlg') === '1' && $(this).attr('data-paymentFlg') === '0' && $(this).text() === '결제'){
+		console.log("삭제 표시-결제"+$(this).attr('data-cancelFlg'))
+		reserveStatus = {
+			no: reserveNo,
+			deleteFlg: 0,
+			cancelFlg: 0,
+			paymentFlg: 1,
+		}
+		console.log(reserveStatus)
+		statusCode = '3';
+	}
+	//삭제 표시 - 삭제
+	else if($(this).attr('data-deleteFlg') === '0' && $(this).attr('data-cancelFlg') === '1' && $(this).attr('data-paymentFlg') === '0' && $(this).text() === '삭제'){
 		console.log("삭제 표시"+$(this).attr('data-cancelFlg'))
 		reserveStatus = {
 			no: reserveNo,

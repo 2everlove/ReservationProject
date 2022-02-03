@@ -61,7 +61,7 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 			"left join Reserve r on r.roomNo.no = i " +
 			"where RPAD(to_char(add_months(:date,-1),'yyyymm'),8,'00') <= RPAD(to_char(to_date(r.startDate,'yyyy/mm/dd'),'yyyymm'),8,'00') " + 
 			"and RPAD(to_char(add_months(:date,1),'yyyymm'),8,'00') >= RPAD(to_char(to_date(r.endDate,'yyyy/mm/dd'),'yyyymm'),8,'00') "
-			+ "and r.cancelFlg = 0 and r.deleteFlg = 0 order by r.roomNo.no"
+			+ "and r.deleteFlg = 0 order by r.roomNo.no"
 			)
 	List<Object[]> getDateList(@Param("date") Calendar date);
 	

@@ -70,39 +70,42 @@ a{text-decoration: none;}
 			</div>
 			<div class="modal-body">
 				<div class="form-group row" style="justify-content: flex-end;">
-					<label for="" class="col-sm-1 col-form-label">総金額</label>
+					<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">phone</label>
 					<div class="col-sm-2">
-						<input class="form-control detail__totalPrice" type="text" placeholder="" readonly style="background-color: #fff;"/>
+						<input class="form-control phone" type="text" placeholder="" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{3,4}" maxlength="13"/>
+						<input class="form-control phone__clone" type="hidden" placeholder="" style="display: none;"/>
 					</div>
-					<label for="" class="col-sm-1 col-form-label">Bank</label>
+					<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Bank</label>
 					<div class="col-sm-2">
 						<select class="bankSelect form-control mx-sm-10">
 							<option value="">---</option>
 						</select>
 					</div>
-					<label for="" class="col-sm-1 col-form-label">Adult</label>
+					<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">입실일</label>
 					<div class="col-sm-2">
-						<input class="form-control detail__count-adult" type="number" placeholder=""/>
-					</div>
-					<label for="" class="col-sm-1 col-form-label">Child</label>
-					<div class="col-sm-2">
-						<input class="form-control detail__count-child" type="number" placeholder=""/>
-					</div>
-				</div>
-				<div class="form-group row" style="justify-content: flex-end;">
-					<label for="" class="col-sm-1 col-form-label">입실일</label>
-					<div class="col-sm-3">
 						<input class="form-control start" type="text" placeholder="" readonly style="background-color: #fff;"/>
 					</div>
-					<label for="" class="col-sm-1 col-form-label">퇴실일</label>
-					<div class="col-sm-3">
+					<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">퇴실일</label>
+					<div class="col-sm-2">
 						<input class="form-control end" type="text" placeholder="" readonly style="background-color: #fff;"/>
 					</div>
-					<label for="" class="col-sm-1 col-form-label">phone</label>
-					<div class="col-sm-3">
-						<input class="form-control phone" type="text" placeholder="" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{3,4}" maxlength="13"/>
-						<input class="form-control phone__clone" type="hidden" placeholder="" style="display: none;"/>
+					
+				</div>
+				<div class="form-group row headModal-secondTr" style="justify-content: flex-end;">
+					<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Adult</label>
+					<div class="col-sm-1">
+						<input class="form-control detail__count-adult" type="number" placeholder=""/>
 					</div>
+					<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Child</label>
+					<div class="col-sm-1">
+						<input class="form-control detail__count-child" type="number" placeholder=""/>
+					</div>
+					<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">総金額</label>
+					<div class="col-sm-2">
+						<input class="form-control detail__totalPrice" type="text" placeholder="" readonly style="background-color: #fff;"/>
+					</div>
+					
+					
 				</div>
 				<div class="form-group row" style="justify-content: flex-end;">
 					
@@ -272,8 +275,8 @@ $(document).ready(function(){
 		$('.startDate').val(start.format('YYYYMMDD'));
 		$('.endDate').val(end.format('YYYYMMDD'));
 		
-		$('.start').val(start.format('YY年MM月DD日'));
-		$('.end').val(end.format('YYYY年MM月DD日'));
+		$('.start').val(start.format('YY/MM/DD'));
+		$('.end').val(end.format('YY/MM/DD'));
 	});
    $('.end').daterangepicker({
 	   isInvalidDate: function(arg){
@@ -332,8 +335,8 @@ $(document).ready(function(){
 		$('.startDate').val(start.format('YYYYMMDD'));
 		$('.endDate').val(end.format('YYYYMMDD'));
 		
-		$('.start').val(start.format('YYYY年MM月DD日'));
-		$('.end').val(end.format('YYYY年MM月DD日'));
+		$('.start').val(start.format('YYYY/MM/DD'));
+		$('.end').val(end.format('YYYY/MM/DD'));
 	});
    
    $(".start, .end").on("apply.daterangepicker",function(e,picker){
@@ -429,6 +432,13 @@ $(document).ready(function(){
 	
 });//
 
+function changDataStatusOnBtn(data){
+	modal.find('.modal-body').find('.btn').attr('data-deleteFlg', data.deleteFlg)
+	modal.find('.modal-body').find('.btn').attr('data-cancelFlg', data.cancelFlg)
+	modal.find('.modal-body').find('.btn').attr('data-paymentFlg', data.paymentFlg)
+	modal.find('.modal-body').find('.btn').attr('data-reserveNo', data.no)
+}
+
 	function checkReserve(amount, calcDate) {
 		var today = new Date();
 	
@@ -501,6 +511,43 @@ $(document).ready(function(){
 						dataType: 'json',
 						success: function(data){
 							console.log(data);
+							modal.find('.modal-body').find('.headModal-secondTr').empty();
+							modal.find('.modal-body').find('.headModal-secondTr').append(
+								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Adult</label>'+
+								'<div class="col-sm-1"><input class="form-control detail__count-adult" type="number" placeholder=""/></div>'+
+								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Child</label>'+
+								'<div class="col-sm-1"><input class="form-control detail__count-child" type="number" placeholder=""/></div>'+
+								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">総金額</label>'+
+								'<div class="col-sm-2"><input class="form-control detail__totalPrice" type="text" placeholder="" readonly style="background-color: #fff;"/></div>'
+							);
+							if(data.paymentFlg === '0' && data.cancelFlg === '0' && data.deleteFlg === '0'){
+								modal.find('.modal-body').find('.headModal-secondTr').append(
+									'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제대기중</label>'+
+									'<div class="col-sm-2"><button type="button" class="btn btn-success search-modalPaymentBtn">결제</button></div>'
+								);
+								changDataStatusOnBtn(data)
+							}
+							if(data.paymentFlg === '1'){
+								modal.find('.modal-body').find('.headModal-secondTr').append(
+									'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제완료</label>'+
+									'<div class="col-sm-2"><button type="button" class="btn btn-danger search-modalCancelBtn">주문취소</button></div>'
+								);
+								changDataStatusOnBtn(data)
+							}
+							if(data.cancelFlg === '1' && data.paymentFlg === '0'){
+								modal.find('.modal-body').find('.headModal-secondTr').append(
+									'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">취소됨</label>'+
+									'<div class="col-sm-2"><button type="button" class="btn btn-danger search-modalDeleteBtn">삭제</button><button type="button" class="btn btn-success search-modalPaymentBtn">결제</button></div>'
+								);
+								changDataStatusOnBtn(data)
+							}
+							if(data.deleteFlg === '1'){
+								modal.find('.modal-body').find('.headModal-secondTr').append(
+									'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">삭제됨</label>'+
+									'<div class="col-sm-2"></div>'
+								);
+								changDataStatusOnBtn(data)
+							}
 							
 							$('.colorMark').css('background-color', eventObj.extendedProps.colorCd)
 							$('.startDate').val(data.startDate);
@@ -509,8 +556,8 @@ $(document).ready(function(){
 							$('.detail__totalPrice').val(eventObj.extendedProps.adultCost*data.adult+eventObj.extendedProps.childCost*data.child)
 							$('.detail__count-adult').val(data.adult );
 							$('.detail__count-child').val(data.child);
-							$('.start').val(moment(data.startDate).format('YYYY年MM月DD日'))
-							$('.end').val(moment(data.endDate).format('YYYY年MM月DD日'))
+							$('.start').val(moment(data.startDate).format('YYYY/MM/DD'))
+							$('.end').val(moment(data.endDate).format('YYYY/MM/DD'))
 							$('.customer').val(data.name)
 							$('.phone').val(data.phone.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3"))
 							$('.phone__clone').val(data.phone)
@@ -741,6 +788,200 @@ $(document).ready(function(){
 		}
 	}
 	
+	
+	//Modify status
+	modal.on('click','.modal-body .btn', function(){
+		//console.log($(this))
+		modal.find('.modal-body').find('.btn').attr('data-deleteFlg')
+		modal.find('.modal-body').find('.btn').attr('data-cancelFlg')
+		modal.find('.modal-body').find('.btn').attr('data-paymentFlg')
+		//console.log($(this).attr('data-deleteFlg'))
+		//console.log($(this).attr('data-cancelFlg'))
+		//console.log($(this).attr('data-paymentFlg'))
+		let reserveNo = $(this).attr('data-reserveNo')
+		//결제 취소
+		let reserveStatus = {};
+		let statusCode = "";
+		if($(this).attr('data-cancelFlg') === '0' && $(this).attr('data-paymentFlg') === '1' && $(this).attr('data-deleteFlg') === '0'){
+			console.log("결제 취소"+$(this).attr('data-cancelFlg'))
+			reserveStatus = {
+				no: reserveNo,
+				deleteFlg: 0,
+				cancelFlg: 1,
+				paymentFlg: 0,
+			}
+			console.log(reserveStatus)
+			statusCode = '1';
+		}
+		//삭제 표시 - 재결제
+		else if($(this).attr('data-deleteFlg') === '0' && $(this).attr('data-cancelFlg') === '1' && $(this).attr('data-paymentFlg') === '0' && $(this).text() === '결제'){
+			console.log("삭제 표시-결제"+$(this).attr('data-cancelFlg'))
+			reserveStatus = {
+				no: reserveNo,
+				deleteFlg: 0,
+				cancelFlg: 0,
+				paymentFlg: 1,
+			}
+			console.log(reserveStatus)
+			statusCode = '3';
+		}
+		//삭제 표시 - 삭제
+		else if($(this).attr('data-deleteFlg') === '0' && $(this).attr('data-cancelFlg') === '1' && $(this).attr('data-paymentFlg') === '0' && $(this).text() === '삭제'){
+			console.log("삭제 표시"+$(this).attr('data-cancelFlg'))
+			reserveStatus = {
+				no: reserveNo,
+				deleteFlg: 1,
+				cancelFlg: 0,
+				paymentFlg: 0,
+			}
+			console.log(reserveStatus)
+			statusCode = '2';
+		}
+		//결제 가능
+		else if($(this).attr('data-cancelFlg') === '0' && $(this).attr('data-paymentFlg') === '0' && $(this).attr('data-deleteFlg') === '0'){
+			console.log("결제 가능"+$(this).attr('data-paymentFlg'))
+			reserveStatus = {
+				no: reserveNo,
+				deleteFlg: 0,
+				cancelFlg: 0,
+				paymentFlg: 1,
+			}
+			console.log(reserveStatus)
+			statusCode = '3';
+		}
+		$.ajax({
+			url: '/api/getReserve/search/statusChange',
+			method: 'post',
+			data: JSON.stringify(reserveStatus),
+			contentType: 'application/json; charset=utf-8',
+			dataType: 'json',
+			success: function(datas){
+				console.log(datas)
+				if(statusCode === '1'){
+					$('.toast').css('z-index','2560');
+					$('.toast').css('right','2%');
+					$('.toast').toast('show')
+					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 취소되었습니다.");
+					$('.mr-auto').text("Success");
+				} else if(statusCode === '2'){
+					$('.toast').css('z-index','2560');
+					$('.toast').css('right','2%');
+					$('.toast').toast('show')
+					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 삭제되었습니다.");
+					$('.mr-auto').text("Success");
+				} else {
+					$('.toast').css('z-index','2560');
+					$('.toast').css('right','2%');
+					$('.toast').toast('show')
+					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 결제되었습니다.");
+					$('.mr-auto').text("Success");
+				}
+				//console.log(dataArr)
+				checkReserve(amount);
+				let reserve = {
+						no: datas[0][0].no,
+						roomNo: datas[0][0].roomNo,
+					}
+				$.ajax({
+					url: '/api/getReserve',
+					method: 'post',
+					data: JSON.stringify(reserve),
+					contentType: 'application/json; charset=utf-8',
+					dataType: 'json',
+					success: function(data){
+						console.log(data);
+						modal.find('.modal-body').find('.headModal-secondTr').empty();
+						modal.find('.modal-body').find('.headModal-secondTr').append(
+							'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Adult</label>'+
+							'<div class="col-sm-1"><input class="form-control detail__count-adult" type="number" placeholder=""/></div>'+
+							'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Child</label>'+
+							'<div class="col-sm-1"><input class="form-control detail__count-child" type="number" placeholder=""/></div>'+
+							'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">総金額</label>'+
+							'<div class="col-sm-2"><input class="form-control detail__totalPrice" type="text" placeholder="" readonly style="background-color: #fff;"/></div>'
+						);
+						if(data.paymentFlg === '0' && data.cancelFlg === '0' && data.deleteFlg === '0'){
+							modal.find('.modal-body').find('.headModal-secondTr').append(
+								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제대기중</label>'+
+								'<div class="col-sm-2"><button type="button" class="btn btn-success search-modalPaymentBtn">결제</button></div>'
+							);
+							changDataStatusOnBtn(data)
+						}
+						if(data.paymentFlg === '1'){
+							modal.find('.modal-body').find('.headModal-secondTr').append(
+								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제완료</label>'+
+								'<div class="col-sm-2"><button type="button" class="btn btn-danger search-modalCancelBtn">주문취소</button></div>'
+							);
+							changDataStatusOnBtn(data)
+						}
+						if(data.cancelFlg === '1' && data.paymentFlg === '0'){
+							modal.find('.modal-body').find('.headModal-secondTr').append(
+								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">취소됨</label>'+
+								'<div class="col-sm-2"><button type="button" class="btn btn-danger search-modalDeleteBtn">삭제</button><button type="button" class="btn btn-success search-modalPaymentBtn">결제</button></div>'
+							);
+							changDataStatusOnBtn(data)
+						}
+						if(data.deleteFlg === '1'){
+							modal.find('.modal-body').find('.headModal-secondTr').append(
+								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">삭제됨</label>'+
+								'<div class="col-sm-2"></div>'
+							);
+							changDataStatusOnBtn(data)
+						}
+						
+						$('.colorMark').css('background-color', eventObj.extendedProps.colorCd)
+						$('.startDate').val(data.startDate);
+						$('.endDate').val(data.endDate);
+						$('.modal-title').text(eventObj.extendedProps.roomNum +" 号室");
+						$('.detail__totalPrice').val(eventObj.extendedProps.adultCost*data.adult+eventObj.extendedProps.childCost*data.child)
+						$('.detail__count-adult').val(data.adult );
+						$('.detail__count-child').val(data.child);
+						$('.start').val(moment(data.startDate).format('YYYY/MM/DD'))
+						$('.end').val(moment(data.endDate).format('YYYY/MM/DD'))
+						$('.customer').val(data.name)
+						$('.phone').val(data.phone.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3"))
+						$('.phone__clone').val(data.phone)
+						$('.reserveNo').val(data.no)
+						$('.regDate').val(moment(data.createdAt).format('YY年MM月DD日 HH:mm:ss'));
+						if(today>moment(data.startDate,'YYYYMMDD')){
+							$('.modifyPwBtn').hide();
+						}
+						modal.find('input').attr('disabled', true);
+						modal.find('select').attr('disabled', true);
+						modal.find('input').css('background-color','#fff');
+						modal.find('input').css('border','none');
+						modal.find('select').css('background-color','#fff');
+						modal.find('select').css('border','none');
+						
+						modal.modal('show');
+						
+						$.getJSON('/api/checkReserveSpecify/'+amount+'/'+eventObj.extendedProps.roomNo+'/'+eventObj.extendedProps.reserveNo ,function(arr){
+							let jsonList = new Array();
+					       	  $.each(arr, function(i, data){
+					       		disabledArr.push(getRange(data[1].startDate, data[1].endDate, 'days').flat(Infinity));
+					       	  });
+						});
+						//bankInfo
+						$.getJSON('/api/payment/list' ,function(arr){
+							$('.bankSelect').html('<option value="">---</option>');
+							//console.log(arr);
+							$.each(arr, function(i, bank){
+								//console.log(bank);
+								let optionGroup = document.createElement('option');
+								//console.log(bank.bankName + bank.bankCd)
+								optionGroup.innerText = bank.bankName;
+								optionGroup.value=bank.bankCd;
+								if(bank.bankCd == eventObj.extendedProps.bankNo){
+									optionGroup.setAttribute ("selected", true);
+								}
+								
+								$('.bankSelect').append(optionGroup);
+							})
+						});//
+					}
+				});//
+			}
+		}); 
+	});
 </script>
 
 </body>

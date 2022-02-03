@@ -29,8 +29,8 @@ a{text-decoration: none;}
 								<tr>
 									<th scope="col" style="border-top: 0px !important;">#</th>
 									<th scope="col" style="border-top: 0px !important;">Title</th>
-									<th scope="col" style="border-top: 0px !important;">Name</th>
-									<th scope="col" style="border-top: 0px !important;">RegDate</th>
+									<th scope="col" style="text-align: center; border-top: 0px !important;">Name</th>
+									<th scope="col" style="text-align: center; border-top: 0px !important;" >RegDate</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -54,8 +54,8 @@ a{text-decoration: none;}
 													<c:if test="${dto.lockFlg == '1'}">&nbsp;&nbsp;<i class="fas fa-lock" style="color: #FFC312;"></i></c:if>
 												</td>
 												
-												<td class="result__buildCd">${dto.name }</td>
-												<td class="result__createdAt"><c:out value="${nowDate == reg ? regTime : reg}"></c:out></td>
+												<td class="result__name" style="text-align: center;"><span style="text-align: center; <c:if test="${dto.name == 'Admin'}">background-color: #dfe6e9;border-radius: 3px;</c:if>">${dto.name }</span></td>
+												<td class="result__createdAt" style="text-align: center;"><c:out value="${nowDate == reg ? regTime : reg}"></c:out></td>
 											</tr>
 										</c:when>
 										<c:otherwise>
