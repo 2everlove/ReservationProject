@@ -28,7 +28,7 @@ public interface ReserveService {
 	PageResultDTO<ReserveDTO, Object[]> getList(PageRequestDTO requestDTO);
 	
 	//이름,폰으로 예약 검색
-	PageResultDTO<Object[], Object[]> findReserveByNameAndPhone(PageRequestDTO pageable, String name, String phone);
+	PageResultDTO<Object[], Object[]> findReserveByNameAndPhoneAndDeleteFlg(PageRequestDTO pageable, String name, String phone);
 	
 	List<ReserveDTO> getDateList(Date dateStart, Date dateEnd, Long roomno);
 	

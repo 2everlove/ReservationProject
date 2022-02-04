@@ -335,12 +335,17 @@
 				<version>${spring-framework.version}</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-resources-plugin -->
-			 <dependency>
-			     <groupId>org.apache.maven.plugins</groupId>
-			     <artifactId>maven-resources-plugin</artifactId>
-			     <version>3.0.2</version>
-			 </dependency>
+			<dependency>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-resources-plugin</artifactId>
+			    <version>3.0.2</version>
+			</dependency>
 			 
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjrt</artifactId>
+				<version>1.9.0</version>
+			</dependency>	
 			 <!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
 			<dependency>
 			    <groupId>javax.annotation</groupId>

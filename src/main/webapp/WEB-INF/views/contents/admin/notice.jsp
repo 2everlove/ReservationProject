@@ -80,11 +80,11 @@ a{text-decoration: none;}
 <script type="text/javascript">
 $(document).ready(function(){
 	$('.result__title').closest('tr').click(function(){
-		location.href = '/notice/'+$(this).find('.result__no').text()+'?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}';
+		location.href = '/admin/notice/'+$(this).find('.result__no').text()+'?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}';
 	});
 	
 	$('.result__register').click(function(){
-		location.href = '/notice/register?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}';
+		location.href = '/admin/notice/register?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}';
 	})
 	
 	let msg = '${msg}';

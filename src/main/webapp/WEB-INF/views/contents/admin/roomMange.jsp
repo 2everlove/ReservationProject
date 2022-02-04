@@ -512,6 +512,7 @@ $('.baseLine').on('click', '.registerBtn', function(){
 					$('.baseLine').empty();
 					tbody.find('.tr-sortable').hide();
 					tbody.find(fileObject).hide();
+					tbody.find('.imagesShowing__new').hide();
 				}
 			});
 			

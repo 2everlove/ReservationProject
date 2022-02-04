@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.reservation.dto.ConsultationDTO;
 import com.reservation.dto.PageRequestDTO;
+import com.reservation.dto.UserDTO;
 import com.reservation.service.ConsultationService;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class UserConsultationController {
 
+	private final UserDTO ADMIN = UserDTO.builder().name("Admin").passwd("admin").role("ROLE_ADMIN").build();
 	private final ConsultationService consultationService;
 	
 	@GetMapping("/consultation")
@@ -58,6 +60,7 @@ public class UserConsultationController {
 	@PostMapping("/consultation/register")
 	public String registerPost(ConsultationDTO dto, PageRequestDTO pageRequestDTO, RedirectAttributes rttr, Model model) {
 		System.out.println("/consultation/register: "+dto);
+		dto.getName().equals(ADMIN.getName());
 		model.addAttribute("page", pageRequestDTO);
 		rttr.addFlashAttribute("msg", consultationService.wrtiteConsultation(dto));
 		return "redirect:/consultation";

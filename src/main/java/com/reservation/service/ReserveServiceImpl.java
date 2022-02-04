@@ -174,9 +174,9 @@ public class ReserveServiceImpl implements ReserveService {
 	}
 
 	@Override
-	public PageResultDTO<Object[], Object[]> findReserveByNameAndPhone(PageRequestDTO requestDTO, String name, String phone) {
+	public PageResultDTO<Object[], Object[]> findReserveByNameAndPhoneAndDeleteFlg(PageRequestDTO requestDTO, String name, String phone) {
 		Pageable pageable = requestDTO.getPageable(Sort.by("no").descending());
-		Page<Object[]> result = reserveRepository.findReserveByNameAndPhone(name, phone, pageable);
+		Page<Object[]> result = reserveRepository.findReserveByNameAndPhoneAndDeleteFlg(name, phone, "0",pageable);
 		Function<Object[], Object[]> fn = (en -> entityToDtoObject((RoomInfo)en[0], (Reserve)en[1]));
 		return new PageResultDTO<Object[], Object[]>(result, fn);
 	}

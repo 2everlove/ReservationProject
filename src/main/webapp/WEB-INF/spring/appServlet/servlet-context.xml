@@ -42,6 +42,13 @@
 	
 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"></beans:bean>
 	
+	<beans:bean id="authInterceptor" class="com.reservation.interceptor.AuthInterceptor"></beans:bean>
 	
+	<interceptors>
+		<interceptor>
+			<mapping path="/admin/**"/>
+			<beans:ref bean="authInterceptor"/>
+		</interceptor>
+	</interceptors>
 	
 </beans:beans>

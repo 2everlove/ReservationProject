@@ -100,15 +100,23 @@ a{text-decoration: none;}
 								<label for="staticEmail" class="col-sm col-form-label" style="text-align: center;"></label>
 								</div>
 								<div class="col-sm-4">
-								<div class="form-check" style="display: flex; justify-content: space-between; align-items: center;">
-									<label class="form-check-label" for="defaultCheck1">
-										<input class="form-check-input result__reCheckedPw" name="lockFlg" type="checkbox" value="0" >
-										<input class="form-check-input result__reCheckdeleteFlg" name="deleteFlg" type="hidden" value="0" >
-										<i class="fas fa-lock-open re__unlock"></i>
-										<i class="fas fa-lock re__lock" style="display: none;"></i>
-									</label>
-									<input type="password" name="passwd" placeholder="Password" class="form-check result__rePasswd" style="width: 80%; padding-left: 0.5rem !important; display: none;">
-								</div>
+								<c:if test="${result.passwd == ''}">
+									<div class="form-check" style="display: flex; justify-content: space-between; align-items: center;">
+										<label class="form-check-label" for="defaultCheck1">
+											<input class="form-check-input result__reCheckedPw" name="lockFlg" type="checkbox" value="0" >
+											<input class="form-check-input result__reCheckdeleteFlg" name="deleteFlg" type="hidden" value="0" >
+											<i class="fas fa-lock-open re__unlock"></i>
+											<i class="fas fa-lock re__lock" style="display: none;"></i>
+										</label>
+										<input type="password" name="passwd" placeholder="Password" class="form-check result__rePasswd" style="width: 80%; padding-left: 0.5rem !important; display: none;">
+									</div>
+								</c:if>
+								<c:if test="${result.passwd != ''}">
+									<div class="form-check" style="display: flex; justify-content: space-between; align-items: center;">
+										<i class="fas fa-lock re__lock"></i>
+									</div>
+								</c:if>
+								
 								</div>
 								<div class="col-sm-5">
 									<input type="text" value="Admin" name="name" placeholder="Name" class="form-control form-control-sm result__reName" style="width: 80%;" readonly>
@@ -421,31 +429,26 @@ $('.result__modify').click(function(){
 
 $('.result__delete').click(function(){
 	
-	if('<c:out value="${result.passwd != null && result.passwd != ''? 'lock':'unlock'}"></c:out>' == 'lock'){
-		modal.modal('show');
+	let consultation = {
+		no: "${result.no}",
+		deleteFlg: "1"
 	}
-	else {
-		let consultation = {
-			no: "${result.no}",
-			deleteFlg: "1"
-		}
-		
-		$.ajax({
-			url: '/api/consultation/delete',
-			method: 'post',
-			data: JSON.stringify(consultation),
-			contentType: 'application/json; charset=utf-8',
-			dataType: 'text',
-			success: function(data){
-				if(data == 'success'){
-					$('section').empty();
-					alert(consultation.no +'번 글이 삭제되었습니다.');
-					location.href="/admin/consultation?page=${page.page}&type=${page.type}&keyword=${page.keyword}";
-				}
+	
+	$.ajax({
+		url: '/api/consultation/delete',
+		method: 'post',
+		data: JSON.stringify(consultation),
+		contentType: 'application/json; charset=utf-8',
+		dataType: 'text',
+		success: function(data){
+			if(data == 'success'){
+				$('section').empty();
+				alert(consultation.no +'번 글이 삭제되었습니다.');
+				location.href="/admin/consultation?page=${page.page}&type=${page.type}&keyword=${page.keyword}";
 			}
-		});
-		console.log(notice);
-	}
+		}
+	});
+	console.log(notice);
 });
 //close modal
 $('.modal-footer .btn-secondary, .close').click(function(){
@@ -520,6 +523,7 @@ $('.result__register').click(function(){
 		}
 		
 	}
+	
 	submit('/admin/consultation/register', 'POST', [
 	    { name: 'title', value: $('.result__reTitle').val() },
 	    { name: 'contents', value: $('#reSummernote').summernote('code') },

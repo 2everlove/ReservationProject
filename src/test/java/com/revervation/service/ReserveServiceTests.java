@@ -117,7 +117,7 @@ public class ReserveServiceTests {
 		}
 	}
 	
-	@Test
+	/*@Test
 	public void findReserveByNameAndPhoneOnpage() {
 		PageRequestDTO pageRequestDTO = new PageRequestDTO();
 		PageResultDTO<ReserveDTO, Reserve> result = reserveService.findReserveByNameAndPhone(pageRequestDTO, "鈴木", "01023582410");
@@ -132,7 +132,7 @@ public class ReserveServiceTests {
 		for(Object reserveDTO : result) {
 			System.out.println(Arrays.asList( reserveDTO).toString());
 		}
-	}
+	}*/
 	
 	@Test
 	public void testPagingList() {

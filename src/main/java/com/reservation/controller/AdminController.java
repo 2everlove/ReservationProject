@@ -20,6 +20,7 @@ import com.reservation.dto.NoticeDTO;
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
 import com.reservation.dto.RoomInfoDTO;
+import com.reservation.dto.UserDTO;
 import com.reservation.entity.Consultation;
 import com.reservation.entity.RoomInfo;
 import com.reservation.service.ConsultationService;
@@ -32,7 +33,8 @@ import lombok.extern.log4j.Log4j2;
 @Controller
 @Log4j2
 public class AdminController {
-
+	
+			
 	@Autowired
 	RoomInfoService roomInfoService;
 	@Autowired
@@ -152,6 +154,34 @@ public class AdminController {
 		model.addAttribute("now", cal.getTime());
 		model.addAttribute("result", noticeService.getListAdmin(pageRequestDTO));
 		return "/admin/notice";
+	}
+	
+	
+	//register-get
+	@GetMapping("/admin/notice/register")
+	public String register(PageRequestDTO pageRequestDTO, Model model) {
+		model.addAttribute("buildCdList", roomInfoService.getBuildCd());
+		model.addAttribute("page", pageRequestDTO);
+		return "/admin/detailNotice";
+	}
+	
+	//register-post
+	@PostMapping("/admin/notice/register")
+	public String registerPost(NoticeDTO dto, PageRequestDTO pageRequestDTO, Model model, RedirectAttributes rttr) {
+		log.info("registerPost: "+dto);
+		Long result = noticeService.registerNoticec(dto);
+		model.addAttribute("page", pageRequestDTO);
+		rttr.addAttribute("msg", result);
+		return "redirect:/admin//notice";
+	}
+	
+	//getAnobject
+	@GetMapping("/admin/notice/{no}")
+	public String getOne(@PathVariable("no")Long no ,PageRequestDTO pageRequestDTO, Model model) {
+		log.info("getOne: "+no);
+		model.addAttribute("result", noticeService.get(no));
+		model.addAttribute("page", pageRequestDTO);
+		return "/admin/detailNotice";
 	}
 	
 	

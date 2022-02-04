@@ -53,7 +53,7 @@ public class RestReserve {
 	@PostMapping(value = "/getReserve/search", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PageResultDTO<Object[], Object[]>> AjaxGetReserveByNameAndPhone(@RequestBody ReserveDTO dto, PageRequestDTO requestDTO){
 		log.info("AjaxGetReserveByNameAndPhone: " + dto);
-		return new ResponseEntity<PageResultDTO<Object[], Object[]>>(reserveService.findReserveByNameAndPhone(requestDTO, dto.getName(), dto.getPhone()) ,HttpStatus.OK);
+		return new ResponseEntity<PageResultDTO<Object[], Object[]>>(reserveService.findReserveByNameAndPhoneAndDeleteFlg(requestDTO, dto.getName(), dto.getPhone()) ,HttpStatus.OK);
 	}
 	
 	//search specific reserve acc name, phone

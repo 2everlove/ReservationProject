@@ -39,7 +39,7 @@
 							</div>
 						</li>
                         <li class="nav-item"><a class="nav-link" href="/consultation">相談</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+                        <li class="nav-item"><a class="nav-link adminLink" href="javascript:void(0);">Admin</a></li>
                     </ul>
                 </div>
             </div>
@@ -52,6 +52,7 @@
 let amount = 0;
 let dataArr = new Array();
 let reserve = {};
+console.log(window.location.pathname)
 $(document).ready(function(){
 	
 	$('.search-modal__phone').keyup(function(){
@@ -81,6 +82,107 @@ $(document).ready(function(){
 		phone: $('.search-modal').find('.search-modal__phone__clone').val(),
 	};
 });//ready
+
+let flag = "${sessionScope.loginFlg}";
+let inteFlag = "${interceptorMsg}";
+console.log(flag)
+console.log(inteFlag)
+$('.adminLink').click(function(){
+	$('.search-modal').empty();
+	if(flag === "0"){
+		
+		$('.search-modal').append(`
+				<div class="modal-dialog search-modal-dialog" style="margin: 10.75rem auto;width: 600px;">
+				<div class="modal-content search-modal-content" style="width: 600px;">
+					<div class="modal-header">
+						<h5 class="modal-title">Login</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body search-modal-body">
+						<div class="form-group row" style="justify-content: flex-end;">
+					<label for="" class="col-sm-2 col-form-label">Name</label>
+					<div class="col-sm-4">
+						<input class="form-control search-modal__username" type="text" placeholder=""/>
+						</div>
+						<label for="" class="col-sm-2 col-form-label">password</label>
+						<div class="col-sm-4">
+							<input class="form-control search-modal__password" type="password"/>
+						</div>
+					</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary login-modalLoginBtn">Login</button>
+					</div>
+				</div>
+			</div>
+		`);
+		$('.search-modal').modal('show');
+	} else {
+		location.href = "/admin";
+	}
+});
+
+if(inteFlag === "0"){
+	$('.search-modal').empty();
+	if(flag === "0"){
+		
+		$('.search-modal').append(`
+				<div class="modal-dialog search-modal-dialog" style="margin: 10.75rem auto;width: 600px;">
+				<div class="modal-content search-modal-content" style="width: 600px;">
+					<div class="modal-header">
+						<h5 class="modal-title">Login</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body search-modal-body">
+						<div class="form-group row" style="justify-content: flex-end;">
+					<label for="" class="col-sm-2 col-form-label">Name</label>
+					<div class="col-sm-4">
+						<input class="form-control search-modal__username" type="text" placeholder=""/>
+						</div>
+						<label for="" class="col-sm-2 col-form-label">password</label>
+						<div class="col-sm-4">
+							<input class="form-control search-modal__password" type="password"/>
+						</div>
+					</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary login-modalLoginBtn">Login</button>
+					</div>
+				</div>
+			</div>
+		`);
+		$('.search-modal').modal('show');
+	} else {
+		location.href = "/admin";
+	}
+}
+
+
+$('.search-modal').on('click', '.login-modalLoginBtn', function(){
+	submit('/main', 'POST', [
+	    { name: 'name', value: $('.search-modal__username').val() },
+	    { name: 'passwd', value: $('.search-modal__password').val() },
+	]);
+});
+
+function submit(action, method, values) {
+    let form = $('<form/>', {
+        action: action,
+        method: method
+    });
+    $.each(values, function() {
+        form.append($('<input/>', {
+            type: 'hidden',
+            name: this.name,
+            value: this.value
+        }));    
+    });
+    form.appendTo('body').submit();
+}
 
 //처음 예약 확인 클릭 시 inner setting
 function headerInitModal(){

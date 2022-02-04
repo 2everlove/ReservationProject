@@ -55,7 +55,8 @@ a{text-decoration: none;}
 						</c:if>
 						<c:if test="${result != null }">
 							<input type="button" value="List" class="btn btn-secondary result__List">
-							<input type="button" value="Delete" class="btn btn-warning result__delete"">
+							<input type="button" value="Delete" class="btn btn-warning result__delete" <c:if test="${result.deleteFlg != '0'}">style="display: none;"</c:if>>
+							<input type="button" value="Recover" class="btn btn-success result__recover" <c:if test="${result.deleteFlg == '0'}">style="display: none;"</c:if>>
 							<input type="button" value="Modify" class="btn btn-primary result__modify">
 						</c:if>
 					</div>
@@ -69,7 +70,7 @@ $(document).ready(function(){
 	
 });//
 $('.result__List').click(function(){
-	location.href = '/notice?page=${page.page}&type=${page.type}&keyword=${page.keyword}';
+	location.href = '/admin/notice?page=${page.page}&type=${page.type}&keyword=${page.keyword}';
 });
 <c:if test="${result == null }">
 	$('#summernote').summernote({
@@ -100,7 +101,7 @@ $('.result__List').click(function(){
 			return false
 		}
 		
-		submit('/notice/register', 'POST', [
+		submit('/admin/notice/register', 'POST', [
 		    { name: 'title', value: $('.result__title').val() },
 		    { name: 'contents', value: $('#summernote').summernote('code') },
 		    { name: 'deleteFlg', value: '0' },
@@ -192,7 +193,29 @@ $('.result__delete').click(function(){
 			if(data == 'success'){
 				$('section').empty();
 				alert(notice.no +'번 글이 삭제되었습니다.');
-				location.href="/notice?page=${page.page}&type=${page.type}&keyword=${page.keyword}";
+				location.href="/admin/notice?page=${page.page}&type=${page.type}&keyword=${page.keyword}";
+			}
+		}
+	});
+	console.log(notice);
+});
+$('.result__recover').click(function(){
+	let notice = {
+		no: "${result.no}",
+		deleteFlg: "0"
+	}
+	
+	$.ajax({
+		url: '/api/notice/delete',
+		method: 'post',
+		data: JSON.stringify(notice),
+		contentType: 'application/json; charset=utf-8',
+		dataType: 'text',
+		success: function(data){
+			if(data == 'success'){
+				alert(notice.no +'번 글이 복구되었습니다.');
+				$('.result__recover').hide();
+				$('.result__delete').show();
 			}
 		}
 	});

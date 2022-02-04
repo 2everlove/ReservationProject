@@ -53,8 +53,8 @@ a{text-decoration: none;}
 											<c:if test="${dto.deleteFlg == '1'}">&nbsp;&nbsp;<i class="fas fa-trash" style="color: #44bd32;"></i></c:if>
 										</td>
 										
-										<td class="result__buildCd">${dto.name }</td>
-										<td class="result__createdAt"><c:out value="${nowDate == reg ? regTime : reg}"></c:out></td>
+										<td class="result__name" style="text-align: center;"><span style="text-align: center; <c:if test="${dto.name == 'Admin'}">background-color: #dfe6e9;border-radius: 3px;</c:if>">${dto.name }</span></td>
+												<td class="result__createdAt" style="text-align: center;"><c:out value="${nowDate == reg ? regTime : reg}"></c:out></td>
 										
 									</tr>
 									
