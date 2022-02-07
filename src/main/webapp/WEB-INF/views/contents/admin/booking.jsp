@@ -14,8 +14,8 @@ a{text-decoration: none;}
 	<section class="masthead">
 		<div style="padding-top: 20px;">
 			<div class="container">
-				<div di>
-					<form class="form-inline">
+				<div class="selectRoomMenu">
+					<form class="form-inline" style="justify-content: space-between;">
 						<div class="form-group">
 					    	<select class="buildCdList form-control mx-sm-3">
 								<option value="">---</option>
@@ -24,24 +24,18 @@ a{text-decoration: none;}
 								</c:forEach>
 							</select>
 					    	<label>階</label>
-						</div>
-						<div class="form-group">
 					    	<select class="roomNoList form-control mx-sm-3">
 								<option value="">---</option>
 							</select>
 					    	<label>号室</label>
 						</div>
+						<div class="form-group">
+					    	<span class="calendarMenu" style="font-size: 2.5rem; margin-right: 1rem; cursor: pointer;"><i class="far fa-calendar-alt"></i></span>
+							<span class="tableMenu" style="font-size: 2.5rem; cursor: pointer;"><i class="fas fa-table"></i></span>
+						</div>
 					</form>
+					
 				</div>
-				<br/>
-					<div id='calendar'></div>
-				<br/>
-				<form class="form-inline d-flex justify-content-end">
-					<div class="form-group">
-				    	<label>Search</label>
-				    	<input type="text" class="form-control" name="keyword">
-					</div>
-				</form>
 				<br/>
 			</div>
 		</div>
@@ -114,10 +108,8 @@ a{text-decoration: none;}
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-success permitPwBtn" style="display: none;">Permit</button>
-				<button type="button" class="btn btn-danger cancelPwBtn" style="display: none;">Cancel</button>
 				<button type="button" class="btn btn-primary modifyPwBtn">Modify</button>
-				<button type="button" class="btn btn-primary checkPwBtn" style="display: none;">Confirm</button>
+				<button type="button" class="btn btn-success checkPwBtn" style="display: none;">Confirm</button>
 			</div>
 		</div>
 	</div>
@@ -150,6 +142,10 @@ let disabledArr = [];
 let eventObj = "";
 let amount = 0;
 let today = new Date();
+$('.selectRoomMenu').after(
+		'<br/><div class="wrapperCalendar"><div id="calendar"></div></div><br/>'
+)
+$('.calendarMenu').css('color','#ff7f50')
 const WEEKDAY = ["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"];
 $(document).ready(function(){
 	
@@ -170,8 +166,8 @@ $(document).ready(function(){
 		$('.modifyPwBtn').hide();
 		modal.find('input').attr('disabled', false);
 		modal.find('select').attr('disabled', false);
-		modal.find('input').css('background-color','#fff');
-		modal.find('input').css('border','1px solid #ced4da');
+		modal.find('input[type=text]').css('background-color','#fff');
+		modal.find('input[type=text]').css('border','1px solid #ced4da');
 		modal.find('select').css('border-radius','0.25rem');
 		modal.find('select').css('border','1px solid #ced4da');
 		modal.find('select').css('border-radius','0.25rem');
@@ -523,21 +519,21 @@ function changDataStatusOnBtn(data){
 							if(data.paymentFlg === '0' && data.cancelFlg === '0' && data.deleteFlg === '0'){
 								modal.find('.modal-body').find('.headModal-secondTr').append(
 									'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제대기중</label>'+
-									'<div class="col-sm-2"><button type="button" class="btn btn-success search-modalPaymentBtn">결제</button></div>'
+									'<div class="col-sm-2"><input type="button" value="결제" class="btn btn-success search-modalPaymentBtn"></input></div>'
 								);
 								changDataStatusOnBtn(data)
 							}
 							if(data.paymentFlg === '1'){
 								modal.find('.modal-body').find('.headModal-secondTr').append(
 									'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제완료</label>'+
-									'<div class="col-sm-2"><button type="button" class="btn btn-danger search-modalCancelBtn">주문취소</button></div>'
+									'<div class="col-sm-2"><input type="button" value="주문취소" class="btn btn-danger search-modalCancelBtn"></input></div>'
 								);
 								changDataStatusOnBtn(data)
 							}
 							if(data.cancelFlg === '1' && data.paymentFlg === '0'){
 								modal.find('.modal-body').find('.headModal-secondTr').append(
 									'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">취소됨</label>'+
-									'<div class="col-sm-2"><button type="button" class="btn btn-danger search-modalDeleteBtn">삭제</button><button type="button" class="btn btn-success search-modalPaymentBtn">결제</button></div>'
+									'<div class="col-sm-2"><input type="button" value="삭제" class="btn btn-danger search-modalDeleteBtn"></input><input type="button" value="결제" class="btn btn-success search-modalPaymentBtn"></input></div>'
 								);
 								changDataStatusOnBtn(data)
 							}
@@ -568,8 +564,8 @@ function changDataStatusOnBtn(data){
 							}
 							modal.find('input').attr('disabled', true);
 							modal.find('select').attr('disabled', true);
-							modal.find('input').css('background-color','#fff');
-							modal.find('input').css('border','none');
+							modal.find('input[type=text]').css('background-color','#fff');
+							modal.find('input[type=text]').css('border','none');
 							modal.find('select').css('background-color','#fff');
 							modal.find('select').css('border','none');
 							
@@ -626,6 +622,39 @@ function changDataStatusOnBtn(data){
 	        calendar.render();
 		});
 	}
+	
+	//calendar icon
+	$('.calendarMenu').on('click', function(){
+		if(!$('#calendar').length>0){
+			$(this).css('color','#ff7f50')
+			$('.tableMenu').css('color','black')
+			$('.wrapperCalendar').append(
+					'<div id="calendar"></div>'
+				);
+			checkReserve(amount);
+		}
+		
+	});
+	
+	
+	//table icon
+	$('.tableMenu').on('click', function(){
+		$(this).css('color','#ff7f50')
+		$('.calendarMenu').css('color','black')
+		$('.wrapperCalendar').empty();
+		$('.wrapperCalendar').append(
+			'<div class="table-responsive-lg"><table class="table table-hover">'+
+			'<thead>'+
+				'<tr>'+
+					'<th scope="col" style="border-top: 0px !important;">Room</th>'+
+					'<th scope="col"  style="border-top: 0px !important;">Date</th>'+
+					'<th scope="col"  style="border-top: 0px !important;">Cost</th>'+
+					'<th scope="col" style="border-top: 0px !important;">RegDate</th>'+
+				'</tr>'+
+			'</thead>'
+			
+		);
+	});
 	
 	//modify
 	$('.checkPwBtn').click(function(){
@@ -902,21 +931,21 @@ function changDataStatusOnBtn(data){
 						if(data.paymentFlg === '0' && data.cancelFlg === '0' && data.deleteFlg === '0'){
 							modal.find('.modal-body').find('.headModal-secondTr').append(
 								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제대기중</label>'+
-								'<div class="col-sm-2"><button type="button" class="btn btn-success search-modalPaymentBtn">결제</button></div>'
+								'<div class="col-sm-2"><input type="button" value="결제" class="btn btn-success search-modalPaymentBtn"></input></div>'
 							);
 							changDataStatusOnBtn(data)
 						}
 						if(data.paymentFlg === '1'){
 							modal.find('.modal-body').find('.headModal-secondTr').append(
 								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제완료</label>'+
-								'<div class="col-sm-2"><button type="button" class="btn btn-danger search-modalCancelBtn">주문취소</button></div>'
+								'<div class="col-sm-2"><input type="button" value="주문취소" class="btn btn-danger search-modalCancelBtn"></input></div>'
 							);
 							changDataStatusOnBtn(data)
 						}
 						if(data.cancelFlg === '1' && data.paymentFlg === '0'){
 							modal.find('.modal-body').find('.headModal-secondTr').append(
 								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">취소됨</label>'+
-								'<div class="col-sm-2"><button type="button" class="btn btn-danger search-modalDeleteBtn">삭제</button><button type="button" class="btn btn-success search-modalPaymentBtn">결제</button></div>'
+								'<div class="col-sm-2"><input type="button" value="삭제" class="btn btn-danger search-modalDeleteBtn"></input><input type="button" value="결제" class="btn btn-success search-modalPaymentBtn"></input></div>'
 							);
 							changDataStatusOnBtn(data)
 						}

@@ -33,14 +33,21 @@ public class ConsultationServiceImpl implements ConsultationService {
 	public Long wrtiteConsultation(ConsultationDTO dto) {
 		log.info("DTO------");
 		log.info(dto);
+		Consultation entity = dtoToEntity(dto);
+		
 		if(dto.getGrgrod() > 0) {
 			consultationRepository.changeGrgrod(dto.getGrno(),dto.getGrgrod());
 		}
-		Consultation entity = dtoToEntity(dto);
+		
+		if(null != entity.getGrno()) {
+			Optional<Consultation> originEntity =consultationRepository.findById(entity.getGrno());
+			entity.changeLockFlg(originEntity.get().getLockFlg());
+			entity.changePasswd(originEntity.get().getPasswd());
+		}
 		
 		log.info(entity);
-		
 		consultationRepository.save(entity);
+		
 		if(null == entity.getGrno()) {
 			entity.changeGrno(entity.getNo());
 			consultationRepository.save(entity);

@@ -218,6 +218,8 @@
         	} else if($(this).data('people') === 'family'){
         		$('.adult').val('2');
         		$('.child').val('2');
+        		$('.adultPopup').text('2');
+   				$('.childPopup').text('2');
         		$('.showingPeople').text('Adult '+$('.adult').val() +' 名 , Child '+$('.child').val()+' 名');
         		$(this).addClass('activePeople');
         		$('.numberOfPeople').css('display','table-cell');

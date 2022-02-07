@@ -585,6 +585,7 @@ $('.search-modal').on('click', 'td', function(){
 		});
 });//
 
+
 //Modify status
 $('.search-modal').on('click','.search-modal-body .btn', function(){
 	//console.log($(this))
