@@ -2,6 +2,10 @@ package com.reservation.controller;
 
 import java.util.Calendar;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +24,6 @@ import com.reservation.dto.NoticeDTO;
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
 import com.reservation.dto.RoomInfoDTO;
-import com.reservation.dto.UserDTO;
 import com.reservation.entity.Consultation;
 import com.reservation.entity.RoomInfo;
 import com.reservation.service.ConsultationService;
@@ -45,6 +48,13 @@ public class AdminController {
 	@GetMapping("/admin")
 	public String admin() {
 		return "/admin/main";
+	}
+	
+	@GetMapping("/admin/logout")
+	public String logout(HttpServletRequest request, HttpServletResponse response, RedirectAttributes rttr) {
+		HttpSession session = request.getSession();
+		session.invalidate();
+		return "redirect:/";
 	}
 	
 	@GetMapping("/admin/booking")

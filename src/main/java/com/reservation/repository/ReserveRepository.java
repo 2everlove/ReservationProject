@@ -37,15 +37,15 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 	//이름,폰으로 예약 검색 with page
 	@Query("select i, r from RoomInfo i "
 			+ "left join Reserve r on r.roomNo.no = i "
-			+ "where r.name = :name and r.phone = :phone and r.deleteFlg = :deleteFlg")
+			+ "where r.name = :name and r.phone = :phone and r.deleteFlg = :deleteFlg and i.deleteFlg = 0")
 	Page<Object[]> findReserveByNameAndPhoneAndDeleteFlg(@Param("name") String name, @Param("phone") String phone, @Param("deleteFlg") String deleteFlg, Pageable pageable);
 	
 	//이름,폰으로 예약 검색
-	@Query("select i,r from RoomInfo i left join Reserve r on r.roomNo.no = i where r.name = :name and r.phone = :phone and r.no = :reserveNo")
+	@Query("select i,r from RoomInfo i left join Reserve r on r.roomNo.no = i where r.name = :name and r.phone = :phone and r.no = :reserveNo and i.deleteFlg = 0")
 	List<Object[]> findReserveByNameAndPhone(@Param("name") String name, @Param("phone") String phone, @Param("reserveNo") Long reserveNo);
 	
 	//주문번호로 예약 검색
-	@Query("select i,r from RoomInfo i left join Reserve r on r.roomNo.no = i where r.no = :reserveNo")
+	@Query("select i,r from RoomInfo i left join Reserve r on r.roomNo.no = i where r.no = :reserveNo and i.deleteFlg = 0")
 	List<Object[]> findReserveByReserveNo( @Param("reserveNo") Long reserveNo);
 	
 	@Query("select i, r from RoomInfo i " +
@@ -61,7 +61,7 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 			"left join Reserve r on r.roomNo.no = i " +
 			"where RPAD(to_char(add_months(:date,-1),'yyyymm'),8,'00') <= RPAD(to_char(to_date(r.startDate,'yyyy/mm/dd'),'yyyymm'),8,'00') " + 
 			"and RPAD(to_char(add_months(:date,1),'yyyymm'),8,'00') >= RPAD(to_char(to_date(r.endDate,'yyyy/mm/dd'),'yyyymm'),8,'00') "
-			+ "and r.deleteFlg = 0 order by r.roomNo.no"
+			+ "and r.deleteFlg = 0 and i.deleteFlg = 0 order by r.roomNo.no"
 			)
 	List<Object[]> getDateList(@Param("date") Calendar date);
 	
@@ -70,7 +70,7 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 			"left join Reserve r on r.roomNo.no = i " +
 			"where RPAD(to_char(add_months(:date,-1),'yyyymm'),8,'00') <= RPAD(to_char(to_date(r.startDate,'yyyy/mm/dd'),'yyyymm'),8,'00') " + 
 			"and RPAD(to_char(add_months(:date,1),'yyyymm'),8,'00') >= RPAD(to_char(to_date(r.endDate,'yyyy/mm/dd'),'yyyymm'),8,'00') "
-			+ "and r.cancelFlg = 0 and r.deleteFlg = 0 and r.buildCd = :buildCd order by r.roomNo.no"
+			+ "and r.cancelFlg = 0 and r.deleteFlg = 0 and r.buildCd = :buildCd and i.deleteFlg = 0 order by r.roomNo.no"
 			)
 	List<Object[]> getDateListAccToBuildCd(@Param("date") Calendar date, @Param("buildCd") int buildCd);
 	
@@ -79,7 +79,7 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 			"left join Reserve r on r.roomNo.no = i " +
 			"where RPAD(to_char(add_months(:date,-1),'yyyymm'),8,'00') <= RPAD(to_char(to_date(r.startDate,'yyyy/mm/dd'),'yyyymm'),8,'00') " + 
 			"and RPAD(to_char(add_months(:date,1),'yyyymm'),8,'00') >= RPAD(to_char(to_date(r.endDate,'yyyy/mm/dd'),'yyyymm'),8,'00') "
-			+ "and r.cancelFlg = 0 and r.deleteFlg = 0 and r.buildCd = :buildCd and r.roomNo.no = :roomNo order by r.roomNo.no"
+			+ "and r.cancelFlg = 0 and r.deleteFlg = 0 and r.buildCd = :buildCd and r.roomNo.no = :roomNo and i.deleteFlg = 0 order by r.roomNo.no"
 			)
 	List<Object[]> getDateListAccToBuildCdAndRoomNum(@Param("date") Calendar date, @Param("buildCd") int buildCd, @Param("roomNo") Long roomNo);
 	
@@ -87,7 +87,7 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 	@Query("select i, r from RoomInfo i " +
 			"right join Reserve r on r.roomNo.no = i "
 			+ "where r.roomNo.no = :roomno and to_date(r.startDate,'YYYYMMDD') > :dateStart and :dateEnd < to_date(r.endDate,'YYYYMMDD') "
-			+ "and r.cancelFlg = 0 and r.deleteFlg = 0 order by r.roomNo.no"
+			+ "and r.cancelFlg = 0 and r.deleteFlg = 0 and i.deleteFlg = 0 order by r.roomNo.no"
 			)
 	List<Object[]> getDateList(@Param("dateStart") Date dateStart,@Param("dateEnd") Date dateEnd, @Param("roomno") Long roomno);
 	
@@ -95,7 +95,7 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 	@Query("select i, r from RoomInfo i " +
 			"right join Reserve r on r.roomNo.no = i "
 			+ "where r.roomNo.no = :roomno and to_date(r.startDate,'YYYYMMDD') > :dateStart and :dateEnd < to_date(r.endDate,'YYYYMMDD') "
-			+ "and r.cancelFlg = 0 and r.deleteFlg = 0 and r.no != :reserveno order by r.roomNo.no"
+			+ "and r.cancelFlg = 0 and r.deleteFlg = 0 and r.no != :reserveno and i.deleteFlg = 0 order by r.roomNo.no"
 			)
 	List<Object[]> getDateList(@Param("dateStart") Date dateStart,@Param("dateEnd") Date dateEnd, @Param("roomno") Long roomno, @Param("reserveno") Long reserveno);
 	
@@ -122,9 +122,17 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 	@Query("select i, r from RoomInfo i " +
 			"left outer join Reserve r on r.roomNo.no = i and r.roomNo.no = :roomno "
 			+ "where to_date(r.startDate,'YYYYMMDD') between :dateStart and :dateEnd "
-			+ "or to_date(r.endDate,'YYYYMMDD') between :dateStart and :dateEnd "			+ "and r.cancelFlg = 0 and r.deleteFlg = 0 order by r.roomNo.no"
+			+ "or to_date(r.endDate,'YYYYMMDD') between :dateStart and :dateEnd "			+ "and r.cancelFlg = 0 and r.deleteFlg = 0  and i.deleteFlg = 0 order by r.roomNo.no"
 			)
 	List<Object[]> getReserveAndRoomSpecificDate(@Param("dateStart") Date dateStart,@Param("dateEnd") Date dateEnd, @Param("roomno") Long roomno);
+	
+	//월별 예약정보 가져오기
+	@Query("select i, r from Reserve r" + 
+			" left join RoomInfo i on i.no = r.roomNo.no" + 
+			" where to_char(to_date(r.startDate,'YYYYMMDD'),'yyyymm') = to_char(:inputDate, 'yyyymm')" + 
+			" and r.buildCd = :buildCd and i.deleteFlg = 0"
+			)
+	Page<Object[]> getReserveAndRoomMonthlyData(Pageable pageable, @Param("inputDate") Date inputDate, @Param("buildCd") int buildCd);
 
 	
 	

@@ -103,7 +103,7 @@ public class ReserveServiceTests {
 		Long roomNo = 1L;
 		List<ReserveDTO> result = reserveService.getDateList(dateStart,dateEnd, roomNo);
 		for(Object objects : result) {
-			Arrays.asList(objects).forEach(i -> log.info(i.getClass().getName()));;
+			Arrays.asList(objects).forEach(i -> log.info(i.getClass().getName()));
 		}
 	}
 	
@@ -114,6 +114,19 @@ public class ReserveServiceTests {
 		PageResultDTO<ReserveDTO, Object[]> result = reserveService.getList(pageRequestDTO);
 		for(ReserveDTO reserveDTO : result.getDtoList()) {
 			System.out.println(reserveDTO);
+		}
+	}
+	
+	@Test
+	public void getReserveAndRoomMonthlyData() {
+		PageRequestDTO pageRequestDTO = new PageRequestDTO();
+		Date date = new Date();
+		
+		PageResultDTO<Object[], Object[]> result = reserveService.getReserveAndRoomMonthlyData(pageRequestDTO, date, 7);
+		for(Object[] reserveDTO : result.getDtoList()) {
+			for(Object objects : reserveDTO) {
+				Arrays.asList(objects).forEach(i -> System.out.println(i.toString()));
+			}
 		}
 	}
 	

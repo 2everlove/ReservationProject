@@ -39,6 +39,7 @@
 						</li>
                         <li class="nav-item"><a class="nav-link" href="/admin/consultation">相談</a></li>
                         <li class="nav-item"><a class="nav-link" href="/">User</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/logout">Logout</a></li>
                     </ul>
                 </div>
             </div>

@@ -68,7 +68,7 @@ a{text-decoration: none;}
 											<i class="fas fa-lock-open"></i>
 											<i class="fas fa-lock" style="display: none;"></i>
 										</label>
-										<input type="password" name="passwd" value="${result.passwd }" placeholder="Password" class="form-check result__passwd" style="width: 30%; padding-left: 0.5rem !important; display: none;">
+										<input type="password" name="passwd" placeholder="Password" class="form-check result__passwd" style="width: 30%; padding-left: 0.5rem !important; display: none;">
 									</div>
 								</c:if>
 							</div>
@@ -151,9 +151,7 @@ a{text-decoration: none;}
 				<div class="form-group row" style="justify-content: flex-end;">
 					<label for="" class="col-sm-2 col-form-label">Passwd</label>
 					<div class="col-sm">
-						<form>
-							<input class="form-control reply__register-pw" autocomplete="off" type="password" placeholder="" />
-						</form>
+						<input class="form-control reply__register-pw" autocomplete="off" type="password" placeholder="" />
 					</div>
 				</div>
 				<p class="response__data"></p>
@@ -172,7 +170,6 @@ $(document).ready(function(){
 		//location.href = '/admin/consultation?page=${page.page}&type=${page.type}&keyword=${page.keyword}';
 	</c:if>
 	$('.modal').modal({backdrop: 'static', keyboard: false})
-	$("#reply__register-pw").keyup(function(e){if(e.keyCode == 13)  checkPassword(); });
 
 	let checkContents = '<c:out value="${result == null ? 'emp': 'full'}"></c:out>';
 	if('emp'==checkContents){
@@ -195,6 +192,12 @@ $(document).ready(function(){
 });//
 $('.result__checkedPw').click(function(){
 	checkPwFlg();
+});
+
+//enter pw
+$(".detailConsultation-modal").on('keyup', '.reply__register-pw', function(key){
+	if(key.keyCode == 13)
+		$('.checkPwBtn').click();
 });
 
 function checkPwFlg(){
@@ -222,6 +225,7 @@ function displayCancel(event){
 		$('.result__cancel').hide();
 		$('.result__reply').show();
 		$('.form-check-label').hide();
+		$('.result__passwd').hide();
 		$('#summernote').summernote('destroy');
 		$('.result__delete').hide();
 		$('#contents').show();
@@ -618,6 +622,7 @@ function checkPassword(){
         contentType: false, //헤더의 Content-Type을 설정 : false 값을 해야 form data로 인식합니다
 		success: function(data){
 			console.log(data)
+			$('.result__passwd').val(formData.get('passwd'))
 			lockDisplay = data;
 			if(data != ''){
 				onAjaxCompleted();

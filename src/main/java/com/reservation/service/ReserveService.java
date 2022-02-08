@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.reservation.dto.PageRequestDTO;
@@ -49,6 +50,8 @@ public interface ReserveService {
 	int modifyPaymentReserve(ReserveDTO dto);
 
 	List<Object[]> findReserveByNameAndPhone(String name, String phone, Long reserveNo);
+	
+	PageResultDTO<Object[], Object[]> getReserveAndRoomMonthlyData(PageRequestDTO requestDTO, Date inputDate, int buildCd);
 
 	
 	default ReserveDTO entityToDTO(RoomInfo roomInfo, Reserve reserve) {

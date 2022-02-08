@@ -1,8 +1,12 @@
 package com.reservation.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,7 +22,6 @@ import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
 import com.reservation.dto.ReserveDTO;
 import com.reservation.dto.RoomInfoDTO;
-import com.reservation.entity.Reserve;
 import com.reservation.service.ReserveService;
 import com.reservation.service.RoomInfoService;
 import com.reservation.utils.Bank;
@@ -51,9 +54,23 @@ public class RestReserve {
 	
 	//search reserve acc name, phone
 	@PostMapping(value = "/getReserve/search", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PageResultDTO<Object[], Object[]>> AjaxGetReserveByNameAndPhone(@RequestBody ReserveDTO dto, PageRequestDTO requestDTO){
-		log.info("AjaxGetReserveByNameAndPhone: " + dto);
-		return new ResponseEntity<PageResultDTO<Object[], Object[]>>(reserveService.findReserveByNameAndPhoneAndDeleteFlg(requestDTO, dto.getName(), dto.getPhone()) ,HttpStatus.OK);
+	public ResponseEntity<PageResultDTO<Object[], Object[]>> AjaxGetReserveByNameAndPhone(@RequestBody Map<String, String> map, PageRequestDTO requestDTO){
+		log.info("AjaxGetReserveByNameAndPhone: " + map.get("name")+ map.get("phone")+map.get("page"));
+		requestDTO.setPage(Integer.parseInt(map.get("page")));
+		return new ResponseEntity<PageResultDTO<Object[], Object[]>>(reserveService.findReserveByNameAndPhoneAndDeleteFlg(requestDTO, map.get("name"), map.get("phone")) ,HttpStatus.OK);
+	}
+	
+	//monthly reserve data
+	@PostMapping(value = "/getReserve/monthly", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<PageResultDTO<Object[], Object[]>> AjaxGetReserveAndRoomSpecificDate(@RequestBody Map<String, String> map, PageRequestDTO requestDTO){
+		log.info("AjaxGetReserveAndRoomSpecificDate: " + map.get("buildCd") +"/ "+ map.get("startDate")+"/ " + map.get("page"));
+		log.info(requestDTO);
+		requestDTO.setPage(Integer.parseInt(map.get("page")));
+		String str = map.get("startDate");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		LocalDateTime dateTime = LocalDate.parse(str, formatter).atStartOfDay();
+		Date date = java.sql.Timestamp.valueOf(dateTime);
+		return new ResponseEntity<PageResultDTO<Object[], Object[]>>(reserveService.getReserveAndRoomMonthlyData(requestDTO, date, Integer.parseInt(map.get("buildCd"))) ,HttpStatus.OK);
 	}
 	
 	//search specific reserve acc name, phone
@@ -146,7 +163,6 @@ public class RestReserve {
 	@GetMapping(value = "/payment/list", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Bank>> showBank(){
 		return new ResponseEntity<List<Bank>>(Bank.getAll(), HttpStatus.OK);
-		
 	}
 	
 	//bank whole list

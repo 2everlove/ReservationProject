@@ -168,6 +168,8 @@ $(document).ready(function(){
 		modal.find('select').attr('disabled', false);
 		modal.find('input[type=text]').css('background-color','#fff');
 		modal.find('input[type=text]').css('border','1px solid #ced4da');
+		modal.find('input[type=number]').css('background-color','#fff');
+		modal.find('input[type=number]').css('border','1px solid #ced4da');
 		modal.find('select').css('border-radius','0.25rem');
 		modal.find('select').css('border','1px solid #ced4da');
 		modal.find('select').css('border-radius','0.25rem');
@@ -510,9 +512,9 @@ function changDataStatusOnBtn(data){
 							modal.find('.modal-body').find('.headModal-secondTr').empty();
 							modal.find('.modal-body').find('.headModal-secondTr').append(
 								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Adult</label>'+
-								'<div class="col-sm-1"><input class="form-control detail__count-adult" type="number" placeholder=""/></div>'+
+								'<div class="col-sm-1"><input class="form-control detail__count-adult" type="number" placeholder="" style="background-color: rgb(255, 255, 255); border: none;"/></div>'+
 								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Child</label>'+
-								'<div class="col-sm-1"><input class="form-control detail__count-child" type="number" placeholder=""/></div>'+
+								'<div class="col-sm-1"><input class="form-control detail__count-child" type="number" placeholder="" style="background-color: rgb(255, 255, 255); border: none;"/></div>'+
 								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">総金額</label>'+
 								'<div class="col-sm-2"><input class="form-control detail__totalPrice" type="text" placeholder="" readonly style="background-color: #fff;"/></div>'
 							);
@@ -623,11 +625,70 @@ function changDataStatusOnBtn(data){
 		});
 	}
 	
+	function drawTable(datas, reserveAndPage){
+		$('.wrapperCalendar').append(
+				'<div class="table-responsive-lg"><table class="table table-hover">'+
+					'<thead>'+
+						'<tr>'+
+							'<th scope="col" style="border-top: 0px !important;">Room</th>'+
+							'<th scope="col"  style="border-top: 0px !important;">Name</th>'+
+							'<th scope="col"  style="border-top: 0px !important;">Phone</th>'+
+							'<th scope="col" style="border-top: 0px !important;">Cost</th>'+
+							'<th scope="col" style="border-top: 0px !important;">Date</th>'+
+							'<th scope="col" style="border-top: 0px !important;">RegDate</th>'+
+						'</tr>'+
+					'</thead>'+
+					'<tbody style="border-top: none;">'+
+					'</tbody>'+
+				'</table></div>'
+			);
+		$.each(datas.dtoList, function(i, data){
+			$('.wrapperCalendar').find('tbody').append(
+				'<tr data-trReserveNo='+data[0].no+'>'+
+				'<th class="result__no" scope="row" style="display: flex; align-items: center;">'+data[1].roomNum+'号室'+
+				'<span class="dot span__colorCd" style="height: 15px; width: 15px; background-color:'+ data[1].colorCd +'; border-radius: 50%; display: inline-block; border: 0.5px solid;"></span></th>'+
+				'<td class="result__name">'+data[0].name+'</td>'+
+				'<td class="result__phone">'+data[0].phone.replace(/[^0-9]/g, "").replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3")+'</td>'+
+				'<td class="result__buildCd">'+data[0].totalCost.toLocaleString('ja-JP')+'(<i class="fas fa-male"></i>:'+data[0].adult+'/<i class="fas fa-child"></i>:'+data[0].child+')</td>'+
+				'<td class="result__date">'+moment(data[0].startDate).format('YYYY/MM/DD')+'~'+moment(data[0].endDate).format('YYYY/MM/DD')+'</td>'+
+				'<td class="result__createdAt">'+moment(data[0].createdAt).format('YYYY年MM月DD日')+'</td>'+
+				'</tr>'
+			)
+		});
+		$('.wrapperCalendar').find('.table-responsive-lg').append(
+				'<ul class="pagination pagination-sm h-100 justify-content-center align-items-center" ></ul>'
+		);
+		if(datas.prev){
+			$('.wrapperCalendar').find('.table-responsive-lg').find('.pagination').append(
+				'<li class="page-item" style="cursor: pointer;"><span class="page-link" data-adminBookingPage="'+datas.start-1+'" style="cursor: pointer;">&laquo;</span></li>'
+	        )
+		}
+	    $.each(datas.pageList, function(i, pages){
+	    	if(Number(reserveAndPage.page) === pages){
+	    		$('.wrapperCalendar').find('.table-responsive-lg').find('.pagination').append(
+	    	            '<li class="page-item active"><span class="page-link" data-adminBookingPage="'+ pages +'" style="cursor: pointer;">'+pages+'</span></li>'
+	    	        )
+	    	} else {
+	    		$('.wrapperCalendar').find('.table-responsive-lg').find('.pagination').append(
+	    	            '<li class="page-item"><span class="page-link" data-adminBookingPage="'+ pages +'" style="cursor: pointer;">'+pages+'</span></li>'
+	    	        )
+	    	}
+	    	
+		});
+	    if(datas.next){
+	    	$('.wrapperCalendar').find('.table-responsive-lg').find('.pagination').append(
+	            '<li class="page-item"><span class="page-link" data-adminBookingPage="'+datas.end+1+'" style="cursor: pointer;">&raquo;</span></li>'	
+			)
+	    }
+			
+	}
+	
 	//calendar icon
 	$('.calendarMenu').on('click', function(){
 		if(!$('#calendar').length>0){
 			$(this).css('color','#ff7f50')
 			$('.tableMenu').css('color','black')
+			$('.wrapperCalendar').empty();
 			$('.wrapperCalendar').append(
 					'<div id="calendar"></div>'
 				);
@@ -642,18 +703,48 @@ function changDataStatusOnBtn(data){
 		$(this).css('color','#ff7f50')
 		$('.calendarMenu').css('color','black')
 		$('.wrapperCalendar').empty();
-		$('.wrapperCalendar').append(
-			'<div class="table-responsive-lg"><table class="table table-hover">'+
-			'<thead>'+
-				'<tr>'+
-					'<th scope="col" style="border-top: 0px !important;">Room</th>'+
-					'<th scope="col"  style="border-top: 0px !important;">Date</th>'+
-					'<th scope="col"  style="border-top: 0px !important;">Cost</th>'+
-					'<th scope="col" style="border-top: 0px !important;">RegDate</th>'+
-				'</tr>'+
-			'</thead>'
-			
-		);
+		let reserveAndPage = {
+			buildCd: '7',
+			startDate: '20220208',
+			page: '1',
+		}
+		console.log(reserveAndPage)
+		$.ajax({
+			url: '/api/getReserve/monthly',
+			method: 'POST',
+			data: JSON.stringify(reserveAndPage),
+			contentType: 'application/json; charset=utf-8',
+			dataType: 'json',
+			success: function(datas){
+				drawTable(datas, reserveAndPage);
+			}
+		});
+		
+	});
+	
+	//paging
+	$('.wrapperCalendar').on('click', '.page-link', function(){
+		$('.wrapperCalendar').empty();
+		//console.log($(this).attr('data-modalheadpage'))
+		let modalHeadPage = $(this).attr('data-adminBookingPage');
+		let reserveAndPage = {
+			buildCd: '7',
+			startDate: '20220208',
+			page: $(this).attr('data-adminBookingPage'),
+		}
+		console.log(reserveAndPage)
+		//console.log(reserveAndPage);
+		$.ajax({
+			url: '/api/getReserve/monthly',
+			method: 'POST',
+			data: JSON.stringify(reserveAndPage),
+			contentType: 'application/json; charset=utf-8',
+			dataType: 'json',
+			success: function(datas){
+				console.log(datas)
+				drawTable(datas, reserveAndPage);
+			}
+		});
 	});
 	
 	//modify
@@ -843,7 +934,7 @@ function changDataStatusOnBtn(data){
 			statusCode = '1';
 		}
 		//삭제 표시 - 재결제
-		else if($(this).attr('data-deleteFlg') === '0' && $(this).attr('data-cancelFlg') === '1' && $(this).attr('data-paymentFlg') === '0' && $(this).text() === '결제'){
+		else if($(this).attr('data-deleteFlg') === '0' && $(this).attr('data-cancelFlg') === '1' && $(this).attr('data-paymentFlg') === '0' && $(this).val().includes('결제')){
 			console.log("삭제 표시-결제"+$(this).attr('data-cancelFlg'))
 			reserveStatus = {
 				no: reserveNo,
@@ -855,7 +946,7 @@ function changDataStatusOnBtn(data){
 			statusCode = '3';
 		}
 		//삭제 표시 - 삭제
-		else if($(this).attr('data-deleteFlg') === '0' && $(this).attr('data-cancelFlg') === '1' && $(this).attr('data-paymentFlg') === '0' && $(this).text() === '삭제'){
+		else if($(this).attr('data-deleteFlg') === '0' && $(this).attr('data-cancelFlg') === '1' && $(this).attr('data-paymentFlg') === '0' && $(this).val().includes('삭제')){
 			console.log("삭제 표시"+$(this).attr('data-cancelFlg'))
 			reserveStatus = {
 				no: reserveNo,
@@ -921,7 +1012,7 @@ function changDataStatusOnBtn(data){
 						console.log(data);
 						modal.find('.modal-body').find('.headModal-secondTr').empty();
 						modal.find('.modal-body').find('.headModal-secondTr').append(
-							'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Adult</label>'+
+							'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px; ">Adult</label>'+
 							'<div class="col-sm-1"><input class="form-control detail__count-adult" type="number" placeholder=""/></div>'+
 							'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Child</label>'+
 							'<div class="col-sm-1"><input class="form-control detail__count-child" type="number" placeholder=""/></div>'+
@@ -974,14 +1065,14 @@ function changDataStatusOnBtn(data){
 						if(today>moment(data.startDate,'YYYYMMDD')){
 							$('.modifyPwBtn').hide();
 						}
-						modal.find('input').attr('disabled', true);
+						/* modal.find('input').attr('disabled', true);
 						modal.find('select').attr('disabled', true);
 						modal.find('input').css('background-color','#fff');
 						modal.find('input').css('border','none');
 						modal.find('select').css('background-color','#fff');
 						modal.find('select').css('border','none');
 						
-						modal.modal('show');
+						modal.modal('show'); */
 						
 						$.getJSON('/api/checkReserveSpecify/'+amount+'/'+eventObj.extendedProps.roomNo+'/'+eventObj.extendedProps.reserveNo ,function(arr){
 							let jsonList = new Array();

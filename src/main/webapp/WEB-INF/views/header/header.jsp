@@ -48,7 +48,7 @@
 <div class="search-modal modal" tabindex="-1">
 	
 </div>
-<script type="text/javascript">
+<script type="text/javascript" defer>
 let amount = 0;
 let dataArr = new Array();
 let reserve = {};
@@ -83,6 +83,11 @@ $(document).ready(function(){
 	};
 });//ready
 
+$('.search-modal').on('keyup', '.search-modal__password', function(key){
+    if(key.keyCode==13) {
+    	$('.login-modalLoginBtn').click();
+    }
+});
 let flag = "${sessionScope.loginFlg}";
 let inteFlag = "${interceptorMsg}";
 console.log(flag)
@@ -95,22 +100,26 @@ $('.adminLink').click(function(){
 				<div class="modal-dialog search-modal-dialog" style="margin: 10.75rem auto;width: 600px;">
 				<div class="modal-content search-modal-content" style="width: 600px;">
 					<div class="modal-header">
+						<i class="fas fa-hotel" id="navbar__log-bar"></i>
+						<span>&nbsp;</span>
 						<h5 class="modal-title">Login</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body search-modal-body">
-						<div class="form-group row" style="justify-content: flex-end;">
-					<label for="" class="col-sm-2 col-form-label">Name</label>
-					<div class="col-sm-4">
-						<input class="form-control search-modal__username" type="text" placeholder=""/>
+						<div class="form-group row" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
+							<label for="" class="col-sm-2 col-form-label">ID</label>
+							<div class="col-sm-6">
+								<input class="form-control search-modal__username" type="text" placeholder=""/>
+							</div>
 						</div>
-						<label for="" class="col-sm-2 col-form-label">password</label>
-						<div class="col-sm-4">
-							<input class="form-control search-modal__password" type="password"/>
+						<div class="form-group row" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
+							<label for="" class="col-sm-2 col-form-label">PassWord</label>
+							<div class="col-sm-6">
+								<input class="form-control search-modal__password" type="password"/>
+							</div>
 						</div>
-					</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-primary login-modalLoginBtn">Login</button>
@@ -163,6 +172,14 @@ if(inteFlag === "0"){
 
 
 $('.search-modal').on('click', '.login-modalLoginBtn', function(){
+	if($('.search-modal__username').val() === ''){
+		$('.search-modal__username').focus()
+		return false
+	}
+	if($('.search-modal__password').val() === ''){
+		$('.search-modal__password').focus()
+		return false
+	}
 	submit('/main', 'POST', [
 	    { name: 'name', value: $('.search-modal__username').val() },
 	    { name: 'passwd', value: $('.search-modal__password').val() },
@@ -182,6 +199,126 @@ function submit(action, method, values) {
         }));    
     });
     form.appendTo('body').submit();
+}
+
+//get Cookie for popup
+function getCookie(key) {
+    let result = null;
+    let cookie = document.cookie.split(';');
+    cookie.some(function (item) {
+        // 공백을 제거
+        item = item.replace(' ', '');
+ 
+        let dic = item.split('=');
+ 
+        if (key === dic[0]) {
+            result = dic[1];
+            return true;    // break;
+        }
+    });
+    return result;
+}
+
+let popupFlg = getCookie('popupNotice');
+let popupFlgUserCheck = getCookie('popupFlgUserCheck');
+console.log(popupFlgUserCheck)
+if(popupFlg !== '' && popupFlgUserCheck === null){
+	if(!String(window.location.pathname).includes("notice")){
+		console.log(popupFlg);
+		
+		$.ajax({
+			url: '/api/notice/'+popupFlg,
+			method: 'get',
+			processData: false,
+		    contentType: false,
+		    cache: false,
+			data: 'json',
+			success: function(data){
+				console.log(data)
+				popupInitModal(data);
+				popupInitBody(data)
+			}
+		});
+	}
+	
+}
+function setCookie(cname, value, expire) {
+   let todayValue = new Date();
+   // 오늘 날짜를 변수에 저장
+
+   todayValue.setDate(todayValue.getDate() + Number(expire));
+   document.cookie = cname + "=" + encodeURI(value) + "; expires=" + todayValue.toGMTString() + "; path=/;";
+}
+
+function ClosePopup(event) {
+	console.log(event)
+	console.log(typeof(event.val()))
+    if (event.val() === '1') {
+    	console.log("asdfsadf")
+       	$('.close').click();
+        setCookie("popupFlgUserCheck", '', event.val());
+    }
+}
+
+$('.search-modal').on('click', '.popupCheck', function() {
+	console.log($(this))
+	ClosePopup($(this));
+	/* $.ajax({
+		url: '/api/notice/removeSession/'+popupFlg,
+		method: 'get',
+		contentType: 'application/json; charset=utf-8',
+		dataType: 'json',
+		success: function(data){
+			console.log(data)
+			popupInitModal(data);
+			popupInitBody(data)
+		}
+	}); */
+});
+
+function popupInitModal(data){
+	$('.search-modal').empty();
+	$('.search-modal').modal('show');
+	$('.search-modal').append(
+			'<div class="modal-dialog search-modal-dialog" style="margin: 5.75rem auto; left: 25%; width: 800px; position: absolute;">'+
+			'<div class="modal-content search-modal-content" style="width: 800px;">'+
+				'<div class="modal-header">'+
+					'<i class="fas fa-hotel" id="navbar__log-bar"></i>'+
+					'<span>&nbsp;</span>'+
+					'<h3 class="modal-title">お知らせ</h3>'+
+					'<button type="button" class="close" data-dismiss="modal" aria-label="Close">'+
+						'<span aria-hidden="true">&times;</span>'+
+					'</button>'+
+				'</div>'+
+				'<div class="modal-body search-modal-body" style="min-height: 600px; cursor: pointer;" onclick="location.href='+"'"+'/notice/'+data.no+"'"+'">'+
+					
+				'</div>'+
+				'<div class="modal-footer">'+
+					'<div class="form-check" style="cursor: pointer;">'+
+						'<input id="flexCheckIndeterminate" class="form-check-input popupCheck" type="checkbox" value="1" style="cursor: pointer;">'+
+						'<label class="form-check-label" for="flexCheckIndeterminate" style="cursor: pointer;">今日一日見ない'+
+						'</label>'+
+					'</div>'+
+				'</div>'+
+			'</div>'+
+		'</div>'
+	);
+}
+
+function popupInitBody(data){
+	$('.search-modal').find('.modal-body').append(
+		'<div class="form-group row" style="justify-content: flex-end;">'+
+		'<div style="display: flex;align-items: center;flex-direction: row;flex-wrap: wrap;margin-bottom: 1rem;justify-content: space-evenly;">'+
+			'<span>'+data.buildCd+'層&nbsp;</span>'+
+			'<h2 style="margin: 0;">'+data.title+'</h2>'+
+			'<span>&nbsp;</span>'+
+		'</div>'+
+		'<hr style="width: 98%;"/></div>'+
+		'<div class="form-group row" style="justify-content: flex-end;">'+
+			'<div>'+data.contents+'</div>'+
+		'</div>'
+			
+	);
 }
 
 //처음 예약 확인 클릭 시 inner setting
@@ -221,7 +358,8 @@ function headerInitModal(){
 }
 
 //검색 후 데이터 있을 시 테이블 생성
-function bodyGetDataModal(datas){
+function bodyGetDataModal(datas, reserve){
+	console.log(reserve)
 	$('.search-modal').find('.search-modalListBtn').hide();
 	//console.log(datas);
 	$('.search-modal-content').animate({width: '900px'});
@@ -258,6 +396,7 @@ function bodyGetDataModal(datas){
 					'<th scope="col"  style="border-top: 0px !important;">Date</th>'+
 					'<th scope="col"  style="border-top: 0px !important;">Cost</th>'+
 					'<th scope="col" style="border-top: 0px !important;">RegDate</th>'+
+					'<th scope="col" style="border-top: 0px !important;">Status</th>'+
 				'</tr>'+
 			'</thead>'
 	);
@@ -290,14 +429,34 @@ function bodyGetDataModal(datas){
 		//console.log(data)
 		//console.log(dataArr)
 		$('.search-modal').find('.search-modal-body').find('.table').find('tbody').append(
-			'<tr data-trReserveNo='+data[0].no+'>'+
+			'<tr class="tr-'+data[0].no+'" data-trReserveNo='+data[0].no+'>'+
 				'<th class="result__no" scope="row" style="display: flex; align-items: center;">'+data[1].roomNum+'号室'+
 				'<span class="dot span__colorCd" style="height: 15px; width: 15px; background-color:'+ data[1].colorCd +'; border-radius: 50%; display: inline-block; border: 0.5px solid;"></span></th>'+
 				'<td class="result__title">'+moment(data[0].startDate).format('YYYY/MM/DD')+'~'+moment(data[0].endDate).format('YYYY/MM/DD')+'</td>'+
 				'<td class="result__buildCd">'+data[0].totalCost.toLocaleString('ja-JP')+'(<i class="fas fa-male"></i>:'+data[0].adult+'/<i class="fas fa-child"></i>:'+data[0].child+')</td>'+
-				'<td class="result__createdAt">'+moment(data[0].createdAt).format('YYYY年MM月DD日')+'</td>'+
-			'</tr>'
+				'<td class="result__createdAt">'+moment(data[0].createdAt).format('YYYY年MM月DD日')+'</td>'
+			
 		);
+		console.log('tr-'+data[0].no);
+		if(data[0].paymentFlg === '0' && data[0].cancelFlg === '0' && data[0].deleteFlg === '0'){
+			$('.search-modal').find('.search-modal-body').find('.table').find('tbody').find('.tr-'+data[0].no).append(
+					'<td class="result__status">결제대기</td>'+
+					'</tr>'
+			)
+		}
+		if(data[0].paymentFlg === '1'){
+			$('.search-modal').find('.search-modal-body').find('.table').find('tbody').find('.tr-'+data[0].no).append(
+					'<td class="result__status">결제완료</td>'+
+					'</tr>'
+			)
+		}
+		if(data[0].cancelFlg === '1' && data[0].paymentFlg === '0'){
+			$('.search-modal').find('.search-modal-body').find('.table').find('tbody').find('.tr-'+data[0].no).append(
+					'<td class="result__status">취소됨</td>'+
+					'</tr>'
+			)
+		}
+		
 	});
 	$('.search-modal').find('.search-modal-body').append(
 			'<ul class="pagination pagination-sm h-100 justify-content-center align-items-center"></ul>'
@@ -308,9 +467,15 @@ function bodyGetDataModal(datas){
         )
 	}
     $.each(datas.pageList, function(i, pages){
-		$('.search-modal').find('.search-modal-body').find('.pagination').append(
-            '<li class="page-item"><span class="page-link" data-modalHeadPage="'+ pages +'">'+pages+'</span></li>'
-        )
+    	if(Number(reserve.page) === pages){
+			$('.search-modal').find('.search-modal-body').find('.pagination').append(
+	            '<li class="page-item active"><span class="page-link" data-modalHeadPage="'+ pages +'">'+pages+'</span></li>'
+	        )
+    	} else {
+			$('.search-modal').find('.search-modal-body').find('.pagination').append(
+	            '<li class="page-item"><span class="page-link" data-modalHeadPage="'+ pages +'">'+pages+'</span></li>'
+	        )
+    	}
 	});
     if(datas.next){
 		$('.search-modal').find('.search-modal-body').find('.pagination').append(
@@ -499,6 +664,7 @@ $('.search-modal').on('click', '.search-modalSearchBtn, .search-modalListBtn' , 
 		reserve = {
 				name: $('.search-modal').find('.search-modal__name').val(),
 				phone: $('.search-modal').find('.search-modal__phone__clone').val(),
+				page: '1',
 			};
 	}
 	let searchmodalListBtn = $(this)
@@ -513,13 +679,14 @@ $('.search-modal').on('click', '.search-modalSearchBtn, .search-modalListBtn' , 
 		contentType: 'application/json; charset=utf-8',
 		dataType: 'json',
 		success: function(datas){
+			console.log(reserve)
 			if(searchmodalListBtn.hasClass('search-modalListBtn')){
 				dataArr.length = 0;
-				bodyGetDataModal(datas);
+				bodyGetDataModal(datas, reserve);
 			} else if(datas.dtoList.length !== 0) {
 				$('.search-modal').find('.search-modalSearchBtn').hide();
 				$('.search-modal').find('.search-modalListBtn').hide();
-				bodyGetDataModal(datas);
+				bodyGetDataModal(datas, reserve);
 				$('.colorMark').css('background-color', "#2ed573")
 				$('.toast').css('z-index','2560');
 				$('.toast').css('right','2%');
@@ -558,7 +725,7 @@ $('.search-modal').on('click', '.page-link', function(){
 		dataType: 'json',
 		success: function(datas){
 			//console.log(datas)
-			bodyGetDataModal(datas);
+			bodyGetDataModal(datas, reserve);
 		}
 	});
 		dataArr.length = 0;

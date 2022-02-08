@@ -44,7 +44,7 @@ a{text-decoration: none;}
 							</div>
 						</div>
 						
-						<div class="card-body" style="min-height: 500px;">
+						<div class="card-body" style="min-height: 500px; overflow: auto;">
 							<div id="summernote">${result.contents }</div>
 						</div>
 					</div>

@@ -42,7 +42,7 @@ a{text-decoration: none;}
 									<tr>
 										<th class="result__no" scope="row">${dto.no }</th>
 										<td class="result__title">
-											<a href="/notice/${dto.no }">${dto.title } </a>
+											<a href="/admin/notice/${dto.no }?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">${dto.title } </a>
 											<c:if test="${nowDate == reg}">&nbsp;&nbsp;<i class="fas fa-plus-square"></i></c:if>
 											<c:if test="${dto.deleteFlg == '1'}">&nbsp;&nbsp;<i class="fas fa-trash" style="color: #44bd32;"></i></c:if>
 										</td>

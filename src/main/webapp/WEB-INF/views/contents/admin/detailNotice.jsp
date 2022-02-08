@@ -22,7 +22,7 @@ a{text-decoration: none;}
 								</c:if>
 								<label for="staticEmail" class="col-sm-1 col-form-label" style="text-align: center;"> Title</label>
 								<div class="col-sm-6">
-									<input type="text" aria-label="Last name" class="form-control result__title" value="${result.title }">
+									<input type="text" aria-label="Last name" class="form-control result__title" value="${result.title }" disabled="disabled" style="background-color: #fff">
 								</div>
 								<fmt:parseDate value="${result.updatedAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="modDate" type="both"/>
 								<c:if test="${result != null }">
@@ -44,7 +44,7 @@ a{text-decoration: none;}
 							</div>
 						</div>
 						
-						<div class="card-body" style="min-height: 500px;">
+						<div class="card-body" style="min-height: 500px; overflow: auto;">
 							<div id="summernote">${result.contents }</div>
 						</div>
 					</div>
@@ -57,6 +57,7 @@ a{text-decoration: none;}
 							<input type="button" value="List" class="btn btn-secondary result__List">
 							<input type="button" value="Delete" class="btn btn-warning result__delete" <c:if test="${result.deleteFlg != '0'}">style="display: none;"</c:if>>
 							<input type="button" value="Recover" class="btn btn-success result__recover" <c:if test="${result.deleteFlg == '0'}">style="display: none;"</c:if>>
+							<input type="button" value="Popup" class="btn btn-info result__popup" <c:if test="${result.deleteFlg != '0'}">style="display: none;"</c:if>>
 							<input type="button" value="Modify" class="btn btn-primary result__modify">
 						</c:if>
 					</div>
@@ -73,6 +74,7 @@ $('.result__List').click(function(){
 	location.href = '/admin/notice?page=${page.page}&type=${page.type}&keyword=${page.keyword}';
 });
 <c:if test="${result == null }">
+	$('.result__title').attr('disabled', false);
 	$('#summernote').summernote({
 	    tabsize: 2,
 	    minHeight: 450,
@@ -128,6 +130,45 @@ $('.result__List').click(function(){
 </c:if>
 
 <c:if test="${result != null }">
+
+//get Cookie for popup
+function getCookie(key) {
+    let result = null;
+    let cookie = document.cookie.split(';');
+    cookie.some(function (item) {
+        // 공백을 제거
+        item = item.replace(' ', '');
+ 
+        let dic = item.split('=');
+ 
+        if (key === dic[0]) {
+            result = dic[1];
+            return true;    // break;
+        }
+    });
+    return result;
+}
+
+$('.result__popup').on('click', function(){
+	$.ajax({
+		url: '/api/notice/'+${result.no},
+		method: 'post',
+		contentType: 'application/json; charset=utf-8',
+		dataType: 'text',
+		success: function(data){
+			console.log(data);
+			console.log(getCookie('popupNotice'));
+			if(data === 'OK'){
+				$('.colorMark').css('background-color', "#2ed573")
+				$('.toast').css('z-index','2560');
+				$('.toast').css('right','2%');
+				$('.toast-body').text(getCookie('popupNotice')+ "번이 공지글로 게시되었습니다.");
+				$('.toast').toast('show')
+			}
+		}
+	});
+});
+
 $('.result__modify').click(function(){
 	$('#summernote').summernote({
 	    tabsize: 2,
@@ -145,6 +186,7 @@ $('.result__modify').click(function(){
 	if($('.result__modify').val() == 'Modify'){
 		$('.result__delete').show();
 		$('#contents').hide();
+		$('.result__title').attr('disabled', false);
 		document.querySelector('.result__modify').value = 'Confirm';
 		document.querySelector('.result__modify').classList.add('result__confirm');
 		document.querySelector('.result__confirm').classList.remove('result__modify');
@@ -216,6 +258,7 @@ $('.result__recover').click(function(){
 				alert(notice.no +'번 글이 복구되었습니다.');
 				$('.result__recover').hide();
 				$('.result__delete').show();
+				$('.result__popup').show();
 			}
 		}
 	});

@@ -4,7 +4,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -13,8 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.FlashMap;
-import org.springframework.web.servlet.FlashMapManager;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
@@ -42,7 +42,7 @@ public class UserBookingController {
 	private final ReserveService reserveService;
 	
 	@GetMapping({"/","/main"})
-	public String main(HttpServletRequest request, RedirectAttributes rttr) {
+	public String main(HttpServletRequest request, HttpServletResponse response,RedirectAttributes rttr) {
 		HttpSession session = request.getSession();
 		if(session.getAttribute("user") == null)
 			session.setAttribute("loginFlg",TableStatus.Y.getCode());
@@ -53,6 +53,18 @@ public class UserBookingController {
 			interceptorMsg = (String) RequestContextUtils.getInputFlashMap(request).get("interceptorMsg");
 		}
 		rttr.addAttribute("interceptorMsg", interceptorMsg);
+		
+		
+		if(null != request.getSession().getServletContext().getContext("/").getAttribute("popupNotice")) {
+			Cookie cookie = new Cookie("popupNotice", request.getSession().getServletContext().getContext("/").getAttribute("popupNotice").toString());
+			int time = 3 * 24 * 60 *60;
+			cookie.setMaxAge(time);
+			//cookie.setSecure(true); // Https 일때만 전송
+			//cookie.setHttpOnly(true); //document.cookie 값 노출 안되게하는 것
+			cookie.setPath("/");
+			
+			response.addCookie(cookie);
+		}
 		
 		return "main";
 	}

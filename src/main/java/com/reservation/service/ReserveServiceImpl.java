@@ -76,17 +76,26 @@ public class ReserveServiceImpl implements ReserveService {
 		return result;
 	}
 	
-	
-	
 	@Override
 	public List<ReserveDTO> getReserveAndRoomSpecificDate(Date dateStart, Date dateEnd, Long roomno) {
 		List<Object[]> tempResult = reserveRepository.getReserveAndRoomSpecificDate(dateStart, dateEnd, roomno);
 		Function<Object[], ReserveDTO> fn = (en -> entityToDTO((RoomInfo)en[0], (Reserve)en[1]));
 		List<ReserveDTO> result = tempResult.stream().map(fn).collect(Collectors.toList());
-		System.out.println("getDateList--------------------");
+		System.out.println("getReserveAndRoomSpecificDate--------------------");
 		System.out.println(result.toString());
 		System.out.println("--------------------");
 		return result;
+	}
+	
+	@Override
+	public PageResultDTO<Object[], Object[]> getReserveAndRoomMonthlyData(PageRequestDTO requestDTO, Date inputDate, int buildCd) {
+		Pageable pageable = requestDTO.getPageable(Sort.by("startDate").descending());
+		Page<Object[]> result =  reserveRepository.getReserveAndRoomMonthlyData(pageable, inputDate, buildCd);
+		Function<Object[], Object[]> fn = (en -> entityToDtoObject((RoomInfo)en[0], (Reserve)en[1]));
+		System.out.println("getReserveAndRoomMonthlyData--------------------");
+		System.out.println(result.toString());
+		System.out.println("--------------------");
+		return new PageResultDTO<Object[], Object[]>(result, fn);
 	}
 	
 	//해당하는 방 가져옴(현재기준 1달 후, 1달 전)
@@ -199,7 +208,5 @@ public class ReserveServiceImpl implements ReserveService {
 		else
 			return null;
 	}
-	
-	
 
 }
