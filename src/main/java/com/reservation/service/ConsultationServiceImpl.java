@@ -35,10 +35,12 @@ public class ConsultationServiceImpl implements ConsultationService {
 		log.info(dto);
 		Consultation entity = dtoToEntity(dto);
 		
+		//순서 조정
 		if(dto.getGrgrod() > 0) {
 			consultationRepository.changeGrgrod(dto.getGrno(),dto.getGrgrod());
 		}
 		
+		//답글 등록(원글이 있을때)
 		if(null != entity.getGrno()) {
 			Optional<Consultation> originEntity =consultationRepository.findById(entity.getGrno());
 			entity.changeLockFlg(originEntity.get().getLockFlg());
@@ -48,6 +50,7 @@ public class ConsultationServiceImpl implements ConsultationService {
 		log.info(entity);
 		consultationRepository.save(entity);
 		
+		//원글 등록
 		if(null == entity.getGrno()) {
 			entity.changeGrno(entity.getNo());
 			consultationRepository.save(entity);

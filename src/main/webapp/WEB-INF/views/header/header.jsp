@@ -65,9 +65,11 @@ $(document).ready(function(){
 		$(".search-modal__phone__clone").val(tmp);
 	});
 	
+	//open 예약 확인 modal
 	$('.reserveCheckModal').click(function(){
 		headerInitModal();
-		$('.search-modal').modal('show')
+		$('.search-modal').modal('show');
+		$('.search-modal').find('.search-modal__name').focus();
 	});
 	$('.search-modal').on('keyup', '.search-modal__phone' , function(){
 		let str = $(this).val();
@@ -111,7 +113,7 @@ $('.adminLink').click(function(){
 						<div class="form-group row" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
 							<label for="" class="col-sm-2 col-form-label">ID</label>
 							<div class="col-sm-6">
-								<input class="form-control search-modal__username" type="text" placeholder=""/>
+								<input class="form-control search-modal__username" type="text"/>
 							</div>
 						</div>
 						<div class="form-group row" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
@@ -128,6 +130,7 @@ $('.adminLink').click(function(){
 			</div>
 		`);
 		$('.search-modal').modal('show');
+		$('.search-modal').find('.search-modal__username').focus();
 	} else {
 		location.href = "/admin";
 	}

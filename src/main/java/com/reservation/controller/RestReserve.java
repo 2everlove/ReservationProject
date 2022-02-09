@@ -52,6 +52,13 @@ public class RestReserve {
 		return new ResponseEntity<List<RoomInfoDTO>>(roomInfoService.findRoominfoByBuildCd(buildCd),HttpStatus.OK);
 	}
 	
+	//예약번호로 예약 검색 with page for admin
+	@GetMapping(value = "/getReserve/reserveNo/{reserveNo}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Object[]>> AjaxfindReserveByNameAndPhoneForAdmin(@PathVariable("reserveNo") Long reserveNo){
+		log.info("AjaxCheckReserveDate " + "search whole room");
+		return new ResponseEntity<List<Object[]>>(reserveService.findReserveByNameAndPhoneForAdmin(reserveNo), HttpStatus.OK);
+	}
+	
 	//search reserve acc name, phone
 	@PostMapping(value = "/getReserve/search", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PageResultDTO<Object[], Object[]>> AjaxGetReserveByNameAndPhone(@RequestBody Map<String, String> map, PageRequestDTO requestDTO){

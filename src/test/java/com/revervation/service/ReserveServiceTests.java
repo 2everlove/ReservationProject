@@ -130,6 +130,18 @@ public class ReserveServiceTests {
 		}
 	}
 	
+	@Test
+	public void findReserveByNameAndPhoneForAdmin() {
+		
+		List<Object[]> result = reserveService.findReserveByNameAndPhoneForAdmin(3L);
+		for(Object[] reserveDTO : result) {
+			for(Object objects : reserveDTO) {
+				Arrays.asList(objects).forEach(i -> System.out.println(i.toString()));
+			}
+		}
+	}
+	
+	
 	/*@Test
 	public void findReserveByNameAndPhoneOnpage() {
 		PageRequestDTO pageRequestDTO = new PageRequestDTO();

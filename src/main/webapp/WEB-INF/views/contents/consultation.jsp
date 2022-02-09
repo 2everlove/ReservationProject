@@ -106,9 +106,7 @@ a{text-decoration: none;}
 				<div class="form-group row" style="justify-content: flex-end;">
 					<label for="" class="col-sm-2 col-form-label">Passwd</label>
 					<div class="col-sm">
-						<form>
-							<input class="form-control reply__register-pw" autocomplete="off" type="password" placeholder="" />
-						</form>
+						<input class="form-control reply__register-pw" autocomplete="off" type="password" placeholder="" />
 					</div>
 				</div>
 				<p class="response__data"></p>
@@ -125,6 +123,10 @@ a{text-decoration: none;}
 let modal = $('.consultation-modal');
 let no = "";
 $(document).ready(function(){
+	$(".consultation-modal").on('keyup', '.reply__register-pw', function(key){
+		if(key.keyCode == 13)
+			$('.checkPwBtn').click();
+	});
 	$('.result__title').closest('tr').click(function(){
 		if($(this).data('flg') === 1){
 			modal.modal('show');
