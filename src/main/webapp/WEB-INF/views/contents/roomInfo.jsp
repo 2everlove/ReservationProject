@@ -11,7 +11,7 @@ a{text-decoration: none;}
 <div class="bg-dark " style="height: 94px"></div>
 <div class="masthead">
 	<div style="padding-top: 0px;">
-       	<section class="projects-section bg-light" style="margin-top: 20px; padding-bottom: 40px;">
+       	<section class="projects-section bg-light" style="padding-top: 20px; padding-bottom: 40px;">
             	<div class="container px-4 px-lg-4">
             	<div style="display: flex;flex-direction: row;justify-content: center;align-items: center;flex-wrap: wrap;">
             		

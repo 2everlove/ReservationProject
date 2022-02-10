@@ -22,7 +22,7 @@ a{text-decoration: none;}
 	<div class="masthead">
 	
 		<div style="padding-top: 0px;">
-			<section class="projects-section bg-light" style="margin-top: 20px; padding-bottom: 40px;">
+			<section class="projects-section bg-light" style="padding-top: 20px; padding-bottom: 40px;">
 				<div class="container px-4 px-lg-5">
 				<div class="form-group row" style="align-items: center;">
 					<h2 class="col-sm-10 title">RoomManage</h2>
@@ -392,7 +392,6 @@ function initStoredFiles(e){
 		storedFiles.push($(this).attr('file'));
 	})
 	console.log(storedFiles)
-	
 }
 
 $('.baseLine').on('click', '.registerBtn', function(){

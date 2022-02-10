@@ -75,7 +75,7 @@ public class AdminController {
 		PageResultDTO<ConsultationDTO, Consultation> list = consultationService.getAdminList(requestDTO);
 		log.info(list);
 		model.addAttribute("now", cal.getTime());
-		model.addAttribute("result", consultationService.getList(requestDTO));
+		model.addAttribute("result", list);
 		model.addAttribute("now", cal.getTime());
 		return "/admin/consultation";
 	}

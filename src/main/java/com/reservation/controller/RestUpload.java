@@ -52,12 +52,24 @@ public class RestUpload {
 		try {
 			List<String> tempfileNmae = Arrays.asList(fileName.split(","));
 			tempfileNmae.forEach(i -> System.out.println(i));
-			srcFileName = URLDecoder.decode(fileName,"UTF-8");
-			File file = new File(uploadPath + File.separator +srcFileName);
-			boolean result = file.delete();
-			File thumbnail = new File(file.getParent(),"s_"+file.getName());
-			result = thumbnail.delete();
-			return new ResponseEntity<Boolean>(result,HttpStatus.OK);
+			if(tempfileNmae.size() > 0) {
+				boolean result = false;
+				for(String fileNameFromList : tempfileNmae) {
+					srcFileName = URLDecoder.decode(fileNameFromList,"UTF-8");
+					File file = new File(uploadPath + File.separator +srcFileName);
+					result = file.delete();
+					File thumbnail = new File(file.getParent(),"s_"+file.getName());
+					result = thumbnail.delete();
+				}
+				return new ResponseEntity<Boolean>(result,HttpStatus.OK);
+			} else {
+				srcFileName = URLDecoder.decode(fileName,"UTF-8");
+				File file = new File(uploadPath + File.separator +srcFileName);
+				boolean result = file.delete();
+				File thumbnail = new File(file.getParent(),"s_"+file.getName());
+				result = thumbnail.delete();
+				return new ResponseEntity<Boolean>(result,HttpStatus.OK);
+			}
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

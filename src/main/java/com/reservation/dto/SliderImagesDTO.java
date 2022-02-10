@@ -26,7 +26,7 @@ public class SliderImagesDTO {
 	private Long no;
 	private String filename;
 	private String sortNo;
-	private String Activity;
+	private String activity;
 	
 	private LocalDateTime createdAt, updatedAt;
     private String deleteFlg;
@@ -40,7 +40,7 @@ public class SliderImagesDTO {
 		return sortNo;
 	}
 	public String getActivity() {
-		return Activity;
+		return activity;
 	}
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)

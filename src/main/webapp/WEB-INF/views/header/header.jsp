@@ -97,7 +97,6 @@ console.log(inteFlag)
 $('.adminLink').click(function(){
 	$('.search-modal').empty();
 	if(flag === "0"){
-		
 		$('.search-modal').append(`
 				<div class="modal-dialog search-modal-dialog" style="margin: 10.75rem auto;width: 600px;">
 				<div class="modal-content search-modal-content" style="width: 600px;">
@@ -144,6 +143,8 @@ if(inteFlag === "0"){
 				<div class="modal-dialog search-modal-dialog" style="margin: 10.75rem auto;width: 600px;">
 				<div class="modal-content search-modal-content" style="width: 600px;">
 					<div class="modal-header">
+						<i class="fas fa-hotel" id="navbar__log-bar"></i>
+						<span>&nbsp;</span>
 						<h5 class="modal-title">Login</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
@@ -225,25 +226,29 @@ function getCookie(key) {
 let popupFlg = getCookie('popupNotice');
 let popupFlgUserCheck = getCookie('popupFlgUserCheck');
 console.log(popupFlgUserCheck)
-if(popupFlg !== '' && popupFlgUserCheck === null){
+if(popupFlg !== '' && popupFlgUserCheck === null && !$('.search-modal').hasClass('show')){
 	if(!String(window.location.pathname).includes("notice")){
-		console.log(popupFlg);
-		
-		$.ajax({
-			url: '/api/notice/'+popupFlg,
-			method: 'get',
-			processData: false,
-		    contentType: false,
-		    cache: false,
-			data: 'json',
-			success: function(data){
-				console.log(data)
-				popupInitModal(data);
-				popupInitBody(data)
-			}
-		});
+		if(popupFlg !== null){
+			console.log(popupFlg);
+			$.ajax({
+				url: '/api/notice/'+popupFlg,
+				method: 'get',
+				processData: false,
+			    contentType: false,
+			    cache: false,
+				data: 'json',
+				success: function(data){
+					console.log(data)
+					popupInitModal(data);
+					popupInitBody(data)
+					setTimeout(function(){
+						$('.search-modal').modal('show');
+					}, 200);
+					
+				}
+			});
+		}
 	}
-	
 }
 function setCookie(cname, value, expire) {
    let todayValue = new Date();
@@ -281,9 +286,8 @@ $('.search-modal').on('click', '.popupCheck', function() {
 
 function popupInitModal(data){
 	$('.search-modal').empty();
-	$('.search-modal').modal('show');
 	$('.search-modal').append(
-			'<div class="modal-dialog search-modal-dialog" style="margin: 5.75rem auto; left: 25%; width: 800px; position: absolute;">'+
+			'<div class="modal-dialog search-modal-dialog" style="margin: 5.75rem auto; left: 50%; width: 800px; position: absolute; transform: translateX(-80%);">'+
 			'<div class="modal-content search-modal-content" style="width: 800px;">'+
 				'<div class="modal-header">'+
 					'<i class="fas fa-hotel" id="navbar__log-bar"></i>'+
@@ -329,7 +333,7 @@ function headerInitModal(){
 	dataArr.length = 0;
 	$('.search-modal').empty();
 	$('.search-modal').append(`
-			<div class="modal-dialog search-modal-dialog" style="margin: 10.75rem auto;width: 600px;">
+			<div class="modal-dialog search-modal-dialog" style="margin: 10.75rem auto;width: 600px;transform: translateX(-70%);left: 50%;position: absolute;">
 			<div class="modal-content search-modal-content" style="width: 600px;">
 				<div class="modal-header">
 					<h5 class="modal-title">予約確認</h5>
@@ -341,12 +345,12 @@ function headerInitModal(){
 					<div class="form-group row" style="justify-content: flex-end;">
 				<label for="" class="col-sm-2 col-form-label">Name</label>
 				<div class="col-sm-4">
-					<input class="form-control search-modal__name" type="text" placeholder="" value="guest239"/>
+					<input class="form-control search-modal__name" type="text" placeholder="" value=""/>
 					</div>
 					<label for="" class="col-sm-2 col-form-label">phone</label>
 					<div class="col-sm-4">
 						<input class="form-control search-modal__phone" type="text" placeholder="" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{3,4}" maxlength="13"/>
-						<input class="form-control search-modal__phone__clone" type="hidden" placeholder="" value="41" style="display: none;"/>
+						<input class="form-control search-modal__phone__clone" type="hidden" placeholder="" value="" style="display: none;"/>
 					</div>
 				</div>
 				</div>
@@ -370,10 +374,10 @@ function bodyGetDataModal(datas, reserve){
 	$('.search-modal-body').css('border-bottom', 'none;')
 	$('.search-modal-body').css('margin-bottom', '0px')
 	$('.search-modal-body').css('padding', '1rem')
-	$('.search-modal-dialog').css('transform:' ,' translateX(calc(-40%))');
+	$('.search-modal-dialog').css('transform','translateX(-95%)');
 	$('.search-modal-dialog').css('width' ,'900px !important');
-	$('.search-modal-dialog').css('margin' ,'5.75rem 5.75rem 5.75rem 25%');
-	$('.search-modal-dialog').animate({margin: '5.75rem 5.75rem 5.75rem 25%'});
+	$('.search-modal-dialog').css('margin' ,'1.75rem auto');
+	$('.search-modal-dialog').animate({margin: '1.75rem auto'});
 	$('.search-modal-content').animate({margin: '0 auto'});
 	$('.search-modal-body').css('display','flex');
 	$('.search-modal-body').css('flex-direction','column');
@@ -443,19 +447,19 @@ function bodyGetDataModal(datas, reserve){
 		console.log('tr-'+data[0].no);
 		if(data[0].paymentFlg === '0' && data[0].cancelFlg === '0' && data[0].deleteFlg === '0'){
 			$('.search-modal').find('.search-modal-body').find('.table').find('tbody').find('.tr-'+data[0].no).append(
-					'<td class="result__status">결제대기</td>'+
+					'<td class="result__status"><i class="fas fa-shopping-cart"></i></td>'+
 					'</tr>'
 			)
 		}
 		if(data[0].paymentFlg === '1'){
 			$('.search-modal').find('.search-modal-body').find('.table').find('tbody').find('.tr-'+data[0].no).append(
-					'<td class="result__status">결제완료</td>'+
+					'<td class="result__status"><i class="fas fa-check" style="color: #2ecc71;"></i></td>'+
 					'</tr>'
 			)
 		}
 		if(data[0].cancelFlg === '1' && data[0].paymentFlg === '0'){
 			$('.search-modal').find('.search-modal-body').find('.table').find('tbody').find('.tr-'+data[0].no).append(
-					'<td class="result__status">취소됨</td>'+
+					'<td class="result__status"><i class="fas fa-times" style="color: #e74c3c;"></i></td>'+
 					'</tr>'
 			)
 		}
@@ -639,7 +643,7 @@ function searchedSpecificData(data, dataArr){
 		$('.search-modal').find('.search-modal-content').find('.modal-calendar').find('.search-modalBodyCalendar').css('margin','0 auto');
 		
 	}, 50);
-	$('.search-modal-dialog').animate({margin: '1.75rem 3.75rem 3.75rem 25%'});
+	$('.search-modal-dialog').animate({margin: '1.75rem auto'});
 	$('.search-modal').find('.modal-footer').before('<div class="modal-calendar style="display: flex;flex-shrink: 0;align-items: center;justify-content: space-between;padding: 1rem 1rem;border-bottom: 1px solid #dee2e6;border-top-left-radius: calc(0.3rem - 1px);border-top-right-radius: calc(0.3rem - 1px);margin: 30px 0 0 0;">'+
 		'<div class="search-modalBodyCalendar" style="width: 95%"></div></div>')
 		//console.log(amount)
@@ -660,8 +664,10 @@ $('.search-modal').on('click', '.close' , function(){
 	$('.search-modal').modal('hide');
 });
 
-
-//search
+$('.search-modal').on('keyup', '.search-modal__phone', function(key){
+		if(key.keyCode == 13)
+			$('.search-modalSearchBtn').click();
+});
 $('.search-modal').on('click', '.search-modalSearchBtn, .search-modalListBtn' , function(){
 	if($('.search-modal').find('.search-modal__name').val() !== undefined){
 		reserve = {
@@ -670,9 +676,16 @@ $('.search-modal').on('click', '.search-modalSearchBtn, .search-modalListBtn' , 
 				page: '1',
 			};
 	}
+	if(reserve.name === ''){
+		$('.search-modal__name').focus();
+		return false;
+	}
+	if(reserve.phone === ''){
+		$('.search-modal__phone').focus();
+		return false;
+	}
 	let searchmodalListBtn = $(this)
 	$('.search-modal').find('.search-modal-content').find('.modal-calendar').empty();
-	$('.search-modal').find('.modal-footer').find('.search-modalListBtn').show();
 	
 	//console.log(reserve)
 	$.ajax({
@@ -686,7 +699,9 @@ $('.search-modal').on('click', '.search-modalSearchBtn, .search-modalListBtn' , 
 			if(searchmodalListBtn.hasClass('search-modalListBtn')){
 				dataArr.length = 0;
 				bodyGetDataModal(datas, reserve);
+				$('.search-modal').find('.modal-footer').find('.search-modalListBtn').show();
 			} else if(datas.dtoList.length !== 0) {
+				$('.search-modal').find('.modal-footer').find('.search-modalListBtn').show();
 				$('.search-modal').find('.search-modalSearchBtn').hide();
 				$('.search-modal').find('.search-modalListBtn').hide();
 				bodyGetDataModal(datas, reserve);
@@ -703,7 +718,10 @@ $('.search-modal').on('click', '.search-modalSearchBtn, .search-modalListBtn' , 
 				$('.toast').toast('show')
 				$('.toast-body').text("일치하는 사용자가 없습니다.");
 				$('.mr-auto').text("Fail");
+				$('.search-modal').find('.search-modal__name').val('');
 				$('.search-modal').find('.search-modal__name').select();
+				$('.search-modal').find('.search-modal__phone').val('')
+				$('.search-modal').find('.search-modal__phone__clone').val('')
 			}
 		}
 	});

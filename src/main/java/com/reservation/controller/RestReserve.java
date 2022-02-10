@@ -117,7 +117,7 @@ public class RestReserve {
 	public ResponseEntity<List<Object[]>> AjaxCheckReserveDateWithBcAndRoomNum(@PathVariable("amount") int amount,@PathVariable("buildCd") int buildCd, @PathVariable("roomNo") Long roomNo){
 		Calendar date = Calendar.getInstance();
 		date.add(date.MONTH, amount);
-		log.info("AjaxCheckReserveDate");
+		log.info("AjaxCheckReserveDateWithBcAndRoomNum");
 		System.out.println(date.MONTH);
 		System.out.println(date.getTime());
 		System.out.println(amount);
@@ -129,7 +129,7 @@ public class RestReserve {
 	public ResponseEntity<List<Object[]>> AjaxCheckReserveDateWithBc(@PathVariable("amount") int amount,@PathVariable("buildCd") int buildCd){
 		Calendar date = Calendar.getInstance();
 		date.add(date.MONTH, amount);
-		log.info("AjaxCheckReserveDate");
+		log.info("AjaxCheckReserveDateWithBc");
 		System.out.println(date.MONTH);
 		System.out.println(date.getTime());
 		System.out.println(amount);

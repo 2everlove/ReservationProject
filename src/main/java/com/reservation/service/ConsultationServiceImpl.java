@@ -17,6 +17,7 @@ import com.reservation.dto.PageResultDTO;
 import com.reservation.entity.Consultation;
 import com.reservation.entity.QConsultation;
 import com.reservation.repository.ConsultationRepository;
+import com.reservation.utils.TableStatus;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -65,7 +66,7 @@ public class ConsultationServiceImpl implements ConsultationService {
 		requestDTO.setSize(20);
 		Pageable pageable = requestDTO.getPageable(Sort.by("grno").descending().and(Sort.by("grgrod").ascending()).and(Sort.by("depth").ascending()).and(Sort.by("createdAt").descending()));
 		//BooleanBuilder booleanBuilder = getSearch(requestDTO);
-		Page<Consultation> result = consultationRepository.findAll(pageable);
+		Page<Consultation> result = consultationRepository.findConsultationByDeleteFlg(pageable,TableStatus.Y.getCode());
 		Function<Consultation, ConsultationDTO> fn = (entity -> entityToDTO(entity));
 		return new PageResultDTO<ConsultationDTO, Consultation>(result, fn);
 	}
@@ -73,6 +74,7 @@ public class ConsultationServiceImpl implements ConsultationService {
 	//admin
 	@Override
 	public PageResultDTO<ConsultationDTO, Consultation> getAdminList(PageRequestDTO requestDTO) {
+		requestDTO.setSize(20);
 		Pageable pageable = requestDTO.getPageable(Sort.by("grno").descending().and(Sort.by("grgrod").ascending()).and(Sort.by("depth").ascending()).and(Sort.by("createdAt").descending()));
 		Page<Consultation> result = consultationRepository.findAll(pageable);
 		Function<Consultation, ConsultationDTO> fn = (entity -> entityToDTO(entity));
@@ -103,7 +105,14 @@ public class ConsultationServiceImpl implements ConsultationService {
 	@Transactional
 	@Override
 	public int modifyDeleteByNo(Long no, String deleteFlg) {
-		int result = consultationRepository.modifyDeleteByNo(no, deleteFlg);
+		Optional<Consultation> entityContent = consultationRepository.findById(no);
+		int result = 0;
+		if(entityContent.get().getGrno() == no) {
+			result = consultationRepository.modifyDeleteByGrno(no, deleteFlg);
+		} else {
+			result = consultationRepository.modifyDeleteByNo(no, deleteFlg);
+		}
+		
 		return result;
 	}
 	

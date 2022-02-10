@@ -11,7 +11,7 @@ a{text-decoration: none;}
 	<div class="bg-dark " style="height: 94px"></div>
 	<div class="masthead">
 		<div style="padding-top: 0px;">
-			<section class="projects-section bg-light" style="margin-top: 20px; padding-bottom: 40px;">
+			<section class="projects-section bg-light" style="padding-top: 20px; padding-bottom: 40px;">
 				<div class="container px-4 px-lg-5">
 				<h2 class="col-sm-10 title-detail">相談-詳細</h2>
 				<h2 class="col-sm-10 title-modify" style="display: none;">相談-修正</h2>
@@ -240,7 +240,7 @@ function displayCancel(event){
 		$('.result__reply').show();
 		$('.re__unlock').show();
 		$('.re__lock').hide();
-		$('.reBody').hide();
+		$('.reBody').slideUp(300,'swing');
 		$('#reSummernote').summernote('reset');
 		$('#reSummernote').summernote('destroy');
 		$('.result__reCheckedPw').val('0');
@@ -258,9 +258,10 @@ $('.result__List').click(function(){
 	location.href = '/admin/consultation?page=${page.page}&type=${page.type}&keyword=${page.keyword}';
 });
 <c:if test="${result == null}">
+
 	let actionForm = document.createElement("form");
+	
 	$('.result__register').click(function(){
-		
 		if($('.result__title').val() == ''){
 			$('.result__title').focus();
 			return false;
@@ -278,7 +279,6 @@ $('.result__List').click(function(){
 				$('.result__passwd').focus();
 				return false
 			}
-			
 		}
 		submit('admin/consultation/register', 'POST', [
 		    { name: 'title', value: $('.result__title').val() },
@@ -370,6 +370,18 @@ $('.result__modify').click(function(){
 				$('.result__passwd').focus()
 				return false;
 			}
+		}
+		if($('.result__title').val() == ''){
+			$('.result__title').focus();
+			return false;
+		}
+		if($('#summernote').summernote('code') == '<p><br></p>'){
+			$('#summernote').summernote({focus: true});
+			return false
+		}
+		if($('.result__name').val() == ''){
+			$('.result__name').focus();
+			return false
 		}
 		let consultation = {
 			no: '${result.no}',
@@ -486,9 +498,8 @@ $('.result__reply').click(function(){
 	document.querySelector('.result__register').classList.add('btn-success');
 	$('.result__modify').hide();
 	$('.result__register').show();
-	
 	$('.result__reCancel').show();
-	$('.reBody').show();
+	$('.reBody').slideDown(300,'swing');
 	$('.result__reply').hide();
 	$('#reSummernote').summernote({
 	    tabsize: 2,
@@ -507,7 +518,6 @@ $('.result__reply').click(function(){
 });
 
 $('.result__register').click(function(){
-	
 	if($('.result__reTitle').val() == ''){
 		$('.result__reTitle').focus();
 		return false;
@@ -525,7 +535,6 @@ $('.result__register').click(function(){
 			$('.result__rePasswd').focus();
 			return false
 		}
-		
 	}
 	
 	submit('/admin/consultation/register', 'POST', [

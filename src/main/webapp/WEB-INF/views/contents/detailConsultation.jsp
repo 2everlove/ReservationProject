@@ -11,7 +11,7 @@ a{text-decoration: none;}
 	<div class="bg-dark " style="height: 94px"></div>
 	<div class="masthead">
 		<div style="padding-top: 0px;">
-			<section class="projects-section bg-light" style="margin-top: 20px; padding-bottom: 40px;">
+			<section class="projects-section bg-light" style="padding-top: 20px; padding-bottom: 40px;">
 				<div class="container px-4 px-lg-5">
 				<h2 class="col-sm-10 title-detail">相談-詳細</h2>
 				<h2 class="col-sm-10 title-modify" style="display: none;">相談-修正</h2>
@@ -100,15 +100,22 @@ a{text-decoration: none;}
 								<label for="staticEmail" class="col-sm col-form-label" style="text-align: center;"></label>
 								</div>
 								<div class="col-sm-4">
-								<div class="form-check" style="display: flex; justify-content: space-between; align-items: center;">
-									<label class="form-check-label" for="defaultCheck1">
-										<input class="form-check-input result__reCheckedPw" name="lockFlg" type="checkbox" value="0" >
-										<input class="form-check-input result__reCheckdeleteFlg" name="deleteFlg" type="hidden" value="0" >
-										<i class="fas fa-lock-open re__unlock" style="color: #FFC312;"></i>
-										<i class="fas fa-lock re__lock" style="color: #FFC312; display: none;"></i>
-									</label>
-									<input type="password" name="passwd" placeholder="Password" class="form-check result__rePasswd" style="width: 80%; padding-left: 0.5rem !important; display: none;">
-								</div>
+								<c:if test="${result.passwd == ''}">
+									<div class="form-check" style="display: flex; justify-content: space-between; align-items: center;">
+										<label class="form-check-label" for="defaultCheck1">
+											<input class="form-check-input result__reCheckedPw" name="lockFlg" type="checkbox" value="0" >
+											<input class="form-check-input result__reCheckdeleteFlg" name="deleteFlg" type="hidden" value="0" >
+											<i class="fas fa-lock-open re__unlock"></i>
+											<i class="fas fa-lock re__lock" style="display: none;"></i>
+										</label>
+										<input type="password" name="passwd" placeholder="Password" class="form-check result__rePasswd" style="width: 80%; padding-left: 0.5rem !important; display: none;">
+									</div>
+								</c:if>
+								<c:if test="${result.passwd != ''}">
+									<div class="form-check" style="display: flex; justify-content: space-between; align-items: center;">
+										<i class="fas fa-lock re__lock"></i>
+									</div>
+								</c:if>
 								</div>
 								<div class="col-sm-5">
 									<input type="input" value="" name="name" placeholder="Name" class="form-control form-control-sm result__reName" style="width: 80%;">
@@ -231,7 +238,7 @@ function displayCancel(event){
 		$('.result__reply').show();
 		$('.re__unlock').show();
 		$('.re__lock').hide();
-		$('.reBody').hide();
+		$('.reBody').slideUp(300,'swing');
 		$('#reSummernote').summernote('reset');
 		$('#reSummernote').summernote('destroy');
 		$('.result__reCheckedPw').val('0');
@@ -249,9 +256,10 @@ $('.result__List').click(function(){
 	location.href = '/consultation?page=${page.page}&type=${page.type}&keyword=${page.keyword}';
 });
 <c:if test="${result == null}">
+
 	let actionForm = document.createElement("form");
+	
 	$('.result__register').click(function(){
-		
 		if($('.result__title').val() == ''){
 			$('.result__title').focus();
 			return false;
@@ -264,12 +272,15 @@ $('.result__List').click(function(){
 			$('.result__name').focus();
 			return false
 		}
+		if($('.result__name').val().toLowerCase().includes('admin')){
+			$('.result__name').focus();
+			return false
+		}
 		if($('.result__checkedPw').val() == '1'){
 			if($('.result__passwd').val() == ''){
 				$('.result__passwd').focus();
 				return false
 			}
-			
 		}
 		submit('/consultation/register', 'POST', [
 		    { name: 'title', value: $('.result__title').val() },
@@ -362,6 +373,18 @@ $('.result__modify').click(function(){
 				return false;
 			}
 		}
+		if($('.result__title').val() == ''){
+			$('.result__title').focus();
+			return false;
+		}
+		if($('#summernote').summernote('code') == '<p><br></p>'){
+			$('#summernote').summernote({focus: true});
+			return false
+		}
+		if($('.result__name').val() == ''){
+			$('.result__name').focus();
+			return false
+		}
 		let consultation = {
 			no: '${result.no}',
 			title: $('.result__title').val(),
@@ -424,33 +447,26 @@ $('.result__modify').click(function(){
 });//
 
 $('.result__delete').click(function(){
+	let consultation = {
+		no: "${result.no}",
+		deleteFlg: "1"
+	}
 	
-	if('<c:out value="${result.passwd != null && result.passwd != ''? 'lock':'unlock'}"></c:out>' == 'lock'){
-		modal.modal('show');
-	}
-	else {
-		let consultation = {
-			no: "${result.no}",
-			deleteFlg: "1"
-		}
-		
-		$.ajax({
-			url: '/api/consultation/delete',
-			method: 'post',
-			data: JSON.stringify(consultation),
-			contentType: 'application/json; charset=utf-8',
-			dataType: 'text',
-			success: function(data){
-				if(data == 'success'){
-					$('section').empty();
-					alert(consultation.no +'番の文が削除されました。');
-					localStorage.msg = '${result.no}'
-					location.href="/consultation?page=${page.page}&type=${page.type}&keyword=${page.keyword}";
-				}
+	$.ajax({
+		url: '/api/consultation/delete',
+		method: 'post',
+		data: JSON.stringify(consultation),
+		contentType: 'application/json; charset=utf-8',
+		dataType: 'text',
+		success: function(data){
+			if(data == 'success'){
+				$('section').empty();
+				alert(consultation.no +'番の文が削除されました。');
+				localStorage.msg = '${result.no}'
+				location.href="/consultation?page=${page.page}&type=${page.type}&keyword=${page.keyword}";
 			}
-		});
-		console.log(notice);
-	}
+		}
+	});
 });
 //close modal
 $('.modal-footer .btn-secondary, .close').click(function(){
@@ -487,7 +503,7 @@ $('.result__reply').click(function(){
 	$('.result__modify').hide();
 	$('.result__register').show();
 	$('.result__reCancel').show();
-	$('.reBody').show();
+	$('.reBody').slideDown(300,'swing');
 	$('.result__reply').hide();
 	$('#reSummernote').summernote({
 	    tabsize: 2,
@@ -506,7 +522,6 @@ $('.result__reply').click(function(){
 });
 
 $('.result__register').click(function(){
-	
 	if($('.result__reTitle').val() == ''){
 		$('.result__reTitle').focus();
 		return false;
@@ -519,12 +534,16 @@ $('.result__register').click(function(){
 		$('.result__reName').focus();
 		return false
 	}
+	if($('.result__reName').val().toLowerCase().includes('admin')){
+		$('.result__reName').val('');
+		$('.result__reName').focus();
+		return false
+	}
 	if($('.result__reCheckedPw').val() == '1'){
 		if($('.result__rePasswd').val() == ''){
 			$('.result__rePasswd').focus();
 			return false
 		}
-		
 	}
 	submit('/consultation/register', 'POST', [
 	    { name: 'title', value: $('.result__reTitle').val() },

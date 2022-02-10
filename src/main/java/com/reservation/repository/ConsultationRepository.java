@@ -14,10 +14,15 @@ import com.reservation.repository.search.SearchConsultationRepository;
 
 public interface ConsultationRepository extends JpaRepository<Consultation, Long>, SearchConsultationRepository {
 	
-	//delete
+	//deleteBtNo
 	@Modifying
 	@Query("update Consultation c set c.deleteFlg = :deleteFlg where c.no = :no")
 	int modifyDeleteByNo(@Param("no") Long no, @Param("deleteFlg") String deleteFlg);
+	
+	//deleteByGrno
+	@Modifying
+	@Query("update Consultation c set c.deleteFlg = :deleteFlg where c.grno = :grno")
+	int modifyDeleteByGrno(@Param("grno") Long grno, @Param("deleteFlg") String deleteFlg);
 	
 	//modifyGrgrod
 	@Modifying

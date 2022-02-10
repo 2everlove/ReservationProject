@@ -25,7 +25,7 @@ import lombok.*;
 		name = "SLIDERIMAGES_SEQ_GENERATOR",
 		sequenceName = "SLIDERIMAGES_SEQ",
 		initialValue = 1, allocationSize = 1)
-public class sliderimages extends BaseEntity{
+public class Sliderimages extends BaseEntity{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SLIDERIMAGES_SEQ_GENERATOR")
@@ -36,7 +36,7 @@ public class sliderimages extends BaseEntity{
 	private String sortNo;
 	
 	@Column(length = 1, nullable = false,columnDefinition = "varchar(1) default '0'")
-	private String Activity;
+	private String activity;
 	@Column(length = 1, nullable = false,columnDefinition = "varchar(1) default '0'")
 	private String deleteFlg;
 	
