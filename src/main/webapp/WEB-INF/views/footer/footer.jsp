@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<div aria-live="polite" aria-atomic="true" style="position: fixed; bottom: 3%;width: 100%;height: 10%; z-index: 2000;">
+<div class="toast-parent" aria-live="polite" aria-atomic="true" style="position: fixed;right: 10%;bottom: 3%;width: 30%;height: 10%;z-index: 2000;">
   <div class="toast" style="position: absolute; top: 0; right: 0; z-index: 1;">
     <div class="toast-header">
       <div class="rounded mr-2 colorMark" style="width: 20px; height: 20px; border-radius: 3px;"></div>

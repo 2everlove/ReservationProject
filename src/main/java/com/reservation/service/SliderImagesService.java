@@ -1,14 +1,21 @@
 package com.reservation.service;
 
-import com.reservation.dto.NoticeDTO;
-import com.reservation.dto.PageRequestDTO;
-import com.reservation.dto.PageResultDTO;
+import java.util.List;
+
 import com.reservation.dto.SliderImagesDTO;
-import com.reservation.entity.Notice;
 import com.reservation.entity.Sliderimages;
 
 public interface SliderImagesService {
 	
+	SliderImagesDTO registerSliderImages(SliderImagesDTO dto);
+	
+	List<SliderImagesDTO> getSlideListForUser(String deleteFlg, String activity, String role);
+	
+	int updateDelteFlg(SliderImagesDTO dto);
+	
+	int updateActivation(SliderImagesDTO dto);
+	
+	SliderImagesDTO modifySliderImages(SliderImagesDTO dto);
 	
 	default Sliderimages dtoToEntity(SliderImagesDTO dto) {
 		Sliderimages entity = Sliderimages.builder()

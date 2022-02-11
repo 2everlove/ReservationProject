@@ -28,6 +28,8 @@ public class SliderImagesDTO {
 	private String sortNo;
 	private String activity;
 	
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class) 
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	private LocalDateTime createdAt, updatedAt;
     private String deleteFlg;
 	public Long getNo() {
@@ -42,14 +44,14 @@ public class SliderImagesDTO {
 	public String getActivity() {
 		return activity;
 	}
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class) 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class) 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)

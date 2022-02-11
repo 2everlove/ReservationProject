@@ -49,6 +49,7 @@ public class RestUpload {
 	@PostMapping("/removeFile")
 	public ResponseEntity<Boolean> removeFile(String fileName){
 		String srcFileName = null;
+		System.out.println("removeFile: "+ fileName);
 		try {
 			List<String> tempfileNmae = Arrays.asList(fileName.split(","));
 			tempfileNmae.forEach(i -> System.out.println(i));

@@ -39,5 +39,18 @@ public class Sliderimages extends BaseEntity{
 	private String activity;
 	@Column(length = 1, nullable = false,columnDefinition = "varchar(1) default '0'")
 	private String deleteFlg;
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+	public void setSortNo(String sortNo) {
+		this.sortNo = sortNo;
+	}
+	public void setActivity(String activity) {
+		this.activity = activity;
+	}
+	public void setDeleteFlg(String deleteFlg) {
+		this.deleteFlg = deleteFlg;
+	}
+
 	
 }

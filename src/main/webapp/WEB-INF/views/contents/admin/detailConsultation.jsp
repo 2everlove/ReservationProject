@@ -100,7 +100,7 @@ a{text-decoration: none;}
 								<label for="staticEmail" class="col-sm col-form-label" style="text-align: center;"></label>
 								</div>
 								<div class="col-sm-4">
-								<c:if test="${result.passwd == ''}">
+								<c:if test="${result.passwd == null}">
 									<div class="form-check" style="display: flex; justify-content: space-between; align-items: center;">
 										<label class="form-check-label" for="defaultCheck1">
 											<input class="form-check-input result__reCheckedPw" name="lockFlg" type="checkbox" value="0" >
@@ -111,7 +111,7 @@ a{text-decoration: none;}
 										<input type="password" name="passwd" placeholder="Password" class="form-check result__rePasswd" style="width: 80%; padding-left: 0.5rem !important; display: none;">
 									</div>
 								</c:if>
-								<c:if test="${result.passwd != ''}">
+								<c:if test="${result.passwd != null}">
 									<div class="form-check" style="display: flex; justify-content: space-between; align-items: center;">
 										<i class="fas fa-lock re__lock"></i>
 									</div>

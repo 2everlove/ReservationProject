@@ -22,10 +22,12 @@ import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
 import com.reservation.dto.ReserveDTO;
 import com.reservation.dto.RoomInfoDTO;
+import com.reservation.dto.SliderImagesDTO;
 import com.reservation.dto.UserDTO;
 import com.reservation.entity.RoomInfo;
 import com.reservation.service.ReserveService;
 import com.reservation.service.RoomInfoService;
+import com.reservation.service.SliderImagesService;
 import com.reservation.utils.TableStatus;
 
 import lombok.RequiredArgsConstructor;
@@ -40,9 +42,10 @@ public class UserBookingController {
 	private final UserDTO ADMIN = UserDTO.builder().name("Admin").passwd("admin").role("ROLE_ADMIN").build();
 	private final RoomInfoService roomInfoService;
 	private final ReserveService reserveService;
+	private final SliderImagesService sliderImagesService;
 	
 	@GetMapping({"/","/main"})
-	public String main(HttpServletRequest request, HttpServletResponse response,RedirectAttributes rttr) {
+	public String main(HttpServletRequest request, HttpServletResponse response,RedirectAttributes rttr, Model model) {
 		HttpSession session = request.getSession();
 		if(session.getAttribute("user") == null)
 			session.setAttribute("loginFlg",TableStatus.Y.getCode());
@@ -65,6 +68,9 @@ public class UserBookingController {
 			
 			response.addCookie(cookie);
 		}
+		
+		List<SliderImagesDTO> slideList = sliderImagesService.getSlideListForUser("0", "0","user");
+		model.addAttribute("slideList", slideList);
 		
 		return "main";
 	}

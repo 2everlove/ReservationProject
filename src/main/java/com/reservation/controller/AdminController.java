@@ -1,6 +1,7 @@
 package com.reservation.controller;
 
 import java.util.Calendar;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,11 +25,13 @@ import com.reservation.dto.NoticeDTO;
 import com.reservation.dto.PageRequestDTO;
 import com.reservation.dto.PageResultDTO;
 import com.reservation.dto.RoomInfoDTO;
+import com.reservation.dto.SliderImagesDTO;
 import com.reservation.entity.Consultation;
 import com.reservation.entity.RoomInfo;
 import com.reservation.service.ConsultationService;
 import com.reservation.service.NoticeService;
 import com.reservation.service.RoomInfoService;
+import com.reservation.service.SliderImagesService;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -44,9 +47,13 @@ public class AdminController {
 	ConsultationService consultationService;
 	@Autowired
 	NoticeService noticeService;
+	@Autowired
+	SliderImagesService sliderImagesService;
 	
 	@GetMapping("/admin")
-	public String admin() {
+	public String admin(Model model) {
+		List<SliderImagesDTO> slideList = sliderImagesService.getSlideListForUser("0", "0","admin");
+		model.addAttribute("slideList", slideList);
 		return "/admin/main";
 	}
 	
@@ -68,7 +75,7 @@ public class AdminController {
 	}
 	
 	
-	///
+	//전체 목록
 	@GetMapping("/admin/consultation")
 	public String consultationList(@ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
 		Calendar cal = Calendar.getInstance();
@@ -154,6 +161,21 @@ public class AdminController {
 		log.info("roomManageRegisterPost: "+dto);
 		
 		return new ResponseEntity<RoomInfoDTO>(roomInfoService.roomRegister(dto), HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@PostMapping("/api/slideImages/register")
+	public ResponseEntity<SliderImagesDTO> slideImagesRegisterPost(@RequestBody SliderImagesDTO dto) {
+		System.out.println("slideImagesRegisterPost: "+dto);
+		
+		return new ResponseEntity<SliderImagesDTO>(sliderImagesService.registerSliderImages(dto), HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@PostMapping("/api/slideImages/modify")
+	public ResponseEntity<SliderImagesDTO> slideImagesModifyPost(@RequestBody SliderImagesDTO dto) {
+		System.out.println("slideImagesModifyPost: "+dto);
+		return new ResponseEntity<SliderImagesDTO>(sliderImagesService.modifySliderImages(dto), HttpStatus.OK);
 	}
 	
 	///

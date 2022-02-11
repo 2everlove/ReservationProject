@@ -44,8 +44,10 @@ public class ConsultationServiceImpl implements ConsultationService {
 		//답글 등록(원글이 있을때)
 		if(null != entity.getGrno()) {
 			Optional<Consultation> originEntity =consultationRepository.findById(entity.getGrno());
-			entity.changeLockFlg(originEntity.get().getLockFlg());
-			entity.changePasswd(originEntity.get().getPasswd());
+			if(originEntity.get().getPasswd() != null) {
+				entity.changeLockFlg(originEntity.get().getLockFlg());
+				entity.changePasswd(originEntity.get().getPasswd());
+			}
 		}
 		
 		log.info(entity);

@@ -337,14 +337,20 @@
         <header class="masthead" style="padding-top: 0% !important">
         <div class="container-fluid px-2 px-lg-2">
 			<div class="owl-carousel owl-drag">
-				  <div><img src="/resources/assets/img/room/room1.jpg" alt="Los Angeles" width="800" height="300"></div>
+				<c:forEach items="${slideList}" var="slideImage">
+					<c:url value="/api/display" var="thumbnail">
+						<c:param name="fileName" value="${slideImage.filename}"></c:param>
+					</c:url>
+					 <div><img src="${thumbnail}" alt="Los Angeles" width="800" height="300"></div>
+				</c:forEach>
+				  <!-- <div><img src="/resources/assets/img/room/room1.jpg" alt="Los Angeles" width="800" height="300"></div>
 				  <div><img src="/resources/assets/img/room/room2.jpg" alt="Los Angeles" width="800" height="300"></div>
 				  <div><img src="/resources/assets/img/room/room3.jpg" alt="Los Angeles" width="800" height="300"></div>
 				  <div><img src="/resources/assets/img/room/room4.jpg" alt="Los Angeles" width="800" height="300"></div>
-				  <div><img src="/resources/assets/img/room/room5.jpg" alt="Los Angeles" width="800" height="300"></div>
+				  <div><img src="/resources/assets/img/room/room5.jpg" alt="Los Angeles" width="800" height="300"></div> -->
 			</div>
 		</div>
-        <div class="container px-4 px-lg-5">
+        <div class="container px-4 px-lg-5" style="margin-top: 20px;">
         	<div style="position: relative; margin: 0 auto;">
         	<div>
         	<div class="demo start" style="width: 25%;background-color: #fff !important; border-color: #dddfe2; border: 1px solid; height: 66px; border-radius: 8px; font-size: 16px; cursor: pointer; display: inline-block; vertical-align: top;box-shadow: none;">

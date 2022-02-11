@@ -1481,6 +1481,7 @@ function changDataStatusOnBtn(data){
 					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 취소되었습니다.");
 					$('.table-originTbody'+reserveNo).find('.result__status').html('<i class="fas fa-times" style="color: #e74c3c;"></i>');
 					$('.mr-auto').text("Success");
+					$('.toast-parent').show();
 					$('.toast').toast('show')
 					
 				//$('.table-originTbody'+data).find('.result__status').html('<i class="fas fa-hammer" style="color: #2c3e50;"></i>');
@@ -1494,12 +1495,14 @@ function changDataStatusOnBtn(data){
 					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 삭제되었습니다.");
 					$('.table-originTbody'+reserveNo).find('.result__status').html('<i class="fas fa-trash" style="color: #e58e26;"></i>');
 					$('.mr-auto').text("Success");
+					$('.toast-parent').show();
 					$('.toast').toast('show')
 				} else if(statusCode === '3'){
 					$('.toast').css('right','2%');
 					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 결제되었습니다.");
 					$('.table-originTbody'+reserveNo).find('.result__status').html('<i class="fas fa-check" style="color: #2ecc71;"></i>');
 					$('.mr-auto').text("Success");
+					$('.toast-parent').show();
 					$('.toast').toast('show')
 				}
 				//console.log(dataArr)
@@ -1727,6 +1730,7 @@ function changDataStatusOnBtn(data){
 				$('.table-originTbody'+data).find('.result__date').text(moment(reserve.startDate).format('YYYY/MM/DD')+"~"+moment(reserve.endDate).format('YYYY/MM/DD'));
 				
 				$('.colorMark').css('background-color',$('.colorCd').val());
+				$('.toast-parent').show();
 				$('.toast').toast('show')
 				$('.toast-body').text($('.table-originTbody'+data).find('.result__no').text()+"号室 "+data+"번 예약이 수정되었습니다.");
 				//checkReserve(amount);
@@ -1793,6 +1797,7 @@ function changDataStatusOnBtn(data){
 				
 
 				modal.modal('hide');
+				$('.toast-parent').show();
 				$('.toast').toast('show')
 				$('.toast-body').text(eventObj.extendedProps.roomNo+"号室 "+eventObj.extendedProps.reserveNo+"번 예약이 수정되었습니다.");
 				checkReserve(amount);
@@ -1826,7 +1831,7 @@ function changDataStatusOnBtn(data){
 				$('.cancelPwBtn').hide();
 				$('.checkPwBtn').hide();
 				$('.modifyPwBtn').show();
-				
+				$('.toast-parent').show();
 				$('.toast').toast('show');
 				$('.toast-body').text(eventObj.extendedProps.roomNo+"号室 "+eventObj.extendedProps.reserveNo+"번 예약이 확정되었습니다.");
 				checkReserve(amount);
@@ -1858,7 +1863,7 @@ function changDataStatusOnBtn(data){
 				$('.cancelPwBtn').hide();
 				$('.checkPwBtn').hide();
 				$('.modifyPwBtn').show();
-				
+				$('.toast-parent').show();
 				$('.toast').toast('show')
 				$('.toast-body').text(eventObj.extendedProps.roomNo+"号室 "+eventObj.extendedProps.reserveNo+"번 예약이 취소되었습니다.");
 				checkReserve(amount);
@@ -1967,16 +1972,19 @@ function changDataStatusOnBtn(data){
 				console.log(datas)
 				if(statusCode === '1'){
 					$('.toast').css('right','2%');
+					$('.toast-parent').show();
 					$('.toast').toast('show')
 					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 취소되었습니다.");
 					$('.mr-auto').text("Success");
 				} else if(statusCode === '2'){
 					$('.toast').css('right','2%');
+					$('.toast-parent').show();
 					$('.toast').toast('show')
 					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 삭제되었습니다.");
 					$('.mr-auto').text("Success");
 				} else {
 					$('.toast').css('right','2%');
+					$('.toast-parent').show();
 					$('.toast').toast('show')
 					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 결제되었습니다.");
 					$('.mr-auto').text("Success");

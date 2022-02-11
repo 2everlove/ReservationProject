@@ -640,7 +640,7 @@ $('.confirm').click(function(){
 			
 			if(deleteFiles.length > 0){
 				if(tbody.find('.ui-sortable li').length !== 0){
-					$.post('//api/removeFile', {fileName: deleteFiles.join(',')}, function(result){
+					$.post('/api/removeFile', {fileName: deleteFiles.join(',')}, function(result){
 						console.log(result);
 						deleteFiles.length = 0;
 					}, "json");
@@ -824,7 +824,7 @@ $('body').on('click','a.delete_image',function(e){
 	console.log(deleteFiles.join(','));
 	for(let i = 0; i < storedFiles.length; i++) {
 	    if(storedFiles[i].name == file) {
-	        storedFiles.splice(i, 1);
+	        //storedFiles.splice(i, 1);
 	        break;
 	    }
 	}
