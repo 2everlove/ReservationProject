@@ -211,7 +211,7 @@ public class ReserveServiceImpl implements ReserveService {
 	
 	//월별 예약 확인 , BuildCD, RoomNo
 	@Override
-	public PageResultDTO<Object[], Object[]> getReserveAndRoomMonthlyDataOnRoomNum(PageRequestDTO requestDTO, Date inputDate, int buildCd, String roomNum) {
+	public PageResultDTO<Object[], Object[]> getReserveAndRoomMonthlyDataOnRoomNum(PageRequestDTO requestDTO, Date inputDate, int buildCd, Long roomNum) {
 		Pageable pageable = requestDTO.getPageable(Sort.by("startDate").descending());
 		Page<Object[]> result =  reserveRepository.getReserveAndRoomMonthlyDataOnRoomNum(pageable, inputDate, buildCd, roomNum);
 		Function<Object[], Object[]> fn = (en -> entityToDtoObject((RoomInfo)en[0], (Reserve)en[1]));
@@ -228,6 +228,5 @@ public class ReserveServiceImpl implements ReserveService {
 		return reserveRepository.findReserveByNameAndPhoneForAdmin(reserveNo).stream().map(fn).collect(Collectors.toList());
 	}
 
-	
 
 }

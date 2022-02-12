@@ -70,14 +70,33 @@ public class RestReserve {
 	//monthly reserve data
 	@PostMapping(value = "/getReserve/monthly", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PageResultDTO<Object[], Object[]>> AjaxGetReserveAndRoomSpecificDate(@RequestBody Map<String, String> map, PageRequestDTO requestDTO){
-		log.info("AjaxGetReserveAndRoomSpecificDate: " + map.get("buildCd") +"/ "+ map.get("startDate")+"/ " + map.get("page"));
+		log.info("AjaxGetReserveAndRoomSpecificDate: " + map.get("buildCd") +"/ "+ map.get("startDate")+"/ " + map.get("page")+"/ "+map.get("roomNo"));
 		log.info(requestDTO);
 		requestDTO.setPage(Integer.parseInt(map.get("page")));
 		String str = map.get("startDate");
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-		LocalDateTime dateTime = LocalDate.parse(str, formatter).atStartOfDay();
-		Date date = java.sql.Timestamp.valueOf(dateTime);
-		return new ResponseEntity<PageResultDTO<Object[], Object[]>>(reserveService.getReserveAndRoomMonthlyData(requestDTO, date, Integer.parseInt(map.get("buildCd"))) ,HttpStatus.OK);
+		PageResultDTO<Object[], Object[]> result = null;
+		
+		try {
+			int buildCd = Integer.parseInt(map.get("buildCd"));
+			Long roomNo = 0L;
+			if(map.get("roomNo") != null) {
+				roomNo = Long.parseLong(map.get("roomNo"));
+			}
+			 
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+			LocalDateTime dateTime = LocalDate.parse(str, formatter).atStartOfDay();
+			Date date = java.sql.Timestamp.valueOf(dateTime);
+			
+			if(roomNo == 0L) {
+				result = reserveService.getReserveAndRoomMonthlyData(requestDTO, date, buildCd);
+			} else {
+				result = reserveService.getReserveAndRoomMonthlyDataOnRoomNum(requestDTO, date, buildCd, roomNo);
+			}
+			return new ResponseEntity<PageResultDTO<Object[], Object[]>>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<PageResultDTO<Object[], Object[]>>(result ,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	//search specific reserve acc name, phone

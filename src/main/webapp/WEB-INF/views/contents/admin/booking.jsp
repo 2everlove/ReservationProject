@@ -197,7 +197,27 @@ $(document).ready(function(){
 					if($('.wrapperCalendar').find('#calendar').length > 0){
 						checkReserve(amount);
 					} else {
-						
+						const sysdate = moment();
+						$('.wrapperCalendar').empty();
+						let reserveAndPage = {
+							buildCd: $('.buildCdList option:selected').val(),
+							startDate: sysdate.format('YYYYMMDD'),
+							roomNo: '0',
+							page: '1',
+						}
+						console.log(reserveAndPage)
+						$.ajax({
+							url: '/api/getReserve/monthly',
+							method: 'POST',
+							data: JSON.stringify(reserveAndPage),
+							contentType: 'application/json; charset=utf-8',
+							dataType: 'json',
+							success: function(datas){
+								$('.wrapperCalendar').empty();
+								drawTable(datas, reserveAndPage);
+								
+							}
+						});
 					}
 				});
 			});
@@ -210,6 +230,7 @@ $(document).ready(function(){
 				let reserveAndPage = {
 					buildCd: '7',
 					startDate: sysdate.format('YYYYMMDD'),
+					roomNo: '0',
 					page: '1',
 				}
 				console.log(reserveAndPage)
@@ -232,25 +253,70 @@ $(document).ready(function(){
 		if($('.wrapperCalendar').find('#calendar').length > 0){
 			checkReserve(amount);
 		} else {
-			const sysdate = moment();
-			//$('.wrapperCalendar').empty();
-			let reserveAndPage = {
-				buildCd: '7',
-				startDate: sysdate.format('YYYYMMDD'),
-				page: '1',
-			}
-			console.log(reserveAndPage)
-			/* $.ajax({
-				url: '/api/getReserve/monthly',
-				method: 'POST',
-				data: JSON.stringify(reserveAndPage),
-				contentType: 'application/json; charset=utf-8',
-				dataType: 'json',
-				success: function(datas){
-					drawTable(datas, reserveAndPage);
-					
+			if($('.buildCdList option:selected').val() != ''){
+				$('.wrapperCalendar').empty();
+				if($('.roomNoList option:selected').val() != ''){
+					let reserveAndPage = {
+							buildCd: $('.buildCdList option:selected').val(),
+							startDate: moment().format('YYYYMMDD'),
+							roomNo: $('.roomNoList option:selected').val(),
+							page: '1',
+						}
+						console.log(reserveAndPage)
+						$.ajax({
+							url: '/api/getReserve/monthly',
+							method: 'POST',
+							data: JSON.stringify(reserveAndPage),
+							contentType: 'application/json; charset=utf-8',
+							dataType: 'json',
+							success: function(datas){
+								drawTable(datas, reserveAndPage);
+								
+							}
+						});
+				} else {
+					$('.wrapperCalendar').empty();
+					let reserveAndPage = {
+						buildCd: $('.buildCdList option:selected').val(),
+						startDate: moment().format('YYYYMMDD'),
+						roomNo: '0',
+						page: '1',
+					}
+					console.log(reserveAndPage)
+					$.ajax({
+						url: '/api/getReserve/monthly',
+						method: 'POST',
+						data: JSON.stringify(reserveAndPage),
+						contentType: 'application/json; charset=utf-8',
+						dataType: 'json',
+						success: function(datas){
+							drawTable(datas, reserveAndPage);
+							
+						}
+					});
 				}
-			}); */
+			} else {
+				$('.wrapperCalendar').empty();
+				let reserveAndPage = {
+					buildCd: '7',
+					startDate: moment().format('YYYYMMDD'),
+					roomNo: '0',
+					page: '1',
+				}
+				console.log(reserveAndPage)
+				$.ajax({
+					url: '/api/getReserve/monthly',
+					method: 'POST',
+					data: JSON.stringify(reserveAndPage),
+					contentType: 'application/json; charset=utf-8',
+					dataType: 'json',
+					success: function(datas){
+						drawTable(datas, reserveAndPage);
+						
+					}
+				});
+			}
+			
 		}
 		
 	})
@@ -800,47 +866,56 @@ function changDataStatusOnBtn(data){
 					
 				'</table></div>'
 			);
-		$.each(datas.dtoList, function(i, data){
+		if(datas.dtoList.length>0){
+			$.each(datas.dtoList, function(i, data){
+				$('.wrapperCalendar').find('thead').after(
+					'<tbody class="table-originTbody'+data[0].no+'" style="border-top: none;">'+
+					'<tr data-trReserveNo='+data[0].no+'>'+
+					'<th class="result__no" scope="row" style="vertical-align: middle;">'+data[1].roomNum+'号室'+
+					'<span class="dot span__colorCd" style="height: 15px; width: 15px; background-color:'+ data[1].colorCd +'; border-radius: 50%; display: inline-block; border: 0.5px solid; text-align: center;"></span></th>'+
+					'<td class="result__name" style="text-align: center;">'+data[0].name+'</td>'+
+					'<td class="result__phone" style="text-align: center;">'+data[0].phone.replace(/[^0-9]/g, "").replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3")+'</td>'+
+					'<td class="result__totalCostAndPeople" style="text-align: center;"><span class="totalCost">'+data[0].totalCost.toLocaleString('ja-JP')+'</span>(<i class="fas fa-male"></i>:<span class="adultCount">'+data[0].adult+'</span>/<i class="fas fa-child"></i>:<span class="childCount">'+data[0].child+'</span>)</td>'+
+					'<td class="result__date base'+i+'" style="text-align: center;">'+moment(data[0].startDate).format('YYYY/MM/DD')+'~'+moment(data[0].endDate).format('YYYY/MM/DD')+'</td>'+
+					'<td class="result__createdAt" style="text-align: center;">'+moment(data[0].createdAt).format('YYYY年MM月DD日')+'</td>'+
+					'</tr></tbody>'
+				);
+				
+				if(data[1].deleteFlg === '1'){
+					$('.base'+i).after(
+						'<td class="result__status" style="text-align: center;"><i class="fas fa-hammer" style="color: #2c3e50;"></i></td>'
+					)
+				} else {
+					if(data[0].deleteFlg === '1'){
+						$('.base'+i).after(
+							'<td class="result__status" style="text-align: center;"><i class="fas fa-trash" style="color: #e58e26;"></i></td>'
+						)
+					}
+					if(data[0].cancelFlg === '1'){
+						$('.base'+i).after(
+							'<td class="result__status" style="text-align: center;"><i class="fas fa-times" style="color: #e74c3c;"></i></td>'
+						)
+					}
+					if(data[0].paymentFlg === '1'){
+						$('.base'+i).after(
+							'<td class="result__status" style="text-align: center;"><i class="fas fa-check" style="color: #2ecc71;"></i></td>'
+						)
+					}
+					if(data[0].paymentFlg === '0' && data[0].cancelFlg === '0' && data[0].deleteFlg === '0'){
+						$('.base'+i).after(
+							'<td class="result__status" style="text-align: center;"><i class="fas fa-shopping-cart"></i></td>'
+						)
+					}
+				}
+			});
+		} else {
 			$('.wrapperCalendar').find('thead').after(
-				'<tbody class="table-originTbody'+data[0].no+'" style="border-top: none;">'+
-				'<tr data-trReserveNo='+data[0].no+'>'+
-				'<th class="result__no" scope="row" style="vertical-align: middle;">'+data[1].roomNum+'号室'+
-				'<span class="dot span__colorCd" style="height: 15px; width: 15px; background-color:'+ data[1].colorCd +'; border-radius: 50%; display: inline-block; border: 0.5px solid; text-align: center;"></span></th>'+
-				'<td class="result__name" style="text-align: center;">'+data[0].name+'</td>'+
-				'<td class="result__phone" style="text-align: center;">'+data[0].phone.replace(/[^0-9]/g, "").replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3")+'</td>'+
-				'<td class="result__totalCostAndPeople" style="text-align: center;"><span class="totalCost">'+data[0].totalCost.toLocaleString('ja-JP')+'</span>(<i class="fas fa-male"></i>:'+data[0].adult+'/<i class="fas fa-child"></i>:'+data[0].child+')</td>'+
-				'<td class="result__date base'+i+'" style="text-align: center;">'+moment(data[0].startDate).format('YYYY/MM/DD')+'~'+moment(data[0].endDate).format('YYYY/MM/DD')+'</td>'+
-				'<td class="result__createdAt" style="text-align: center;">'+moment(data[0].createdAt).format('YYYY年MM月DD日')+'</td>'+
-				'</tr></tbody>'
+				'<tbody style="border-top: none;">'+
+				'<tr>'+
+				'<th class="result__no" scope="row" colspan="7" style="vertical-align: middle; text-align:center;">検索結果がありません。</th></tr></tbody>'
 			);
-			
-			if(data[1].deleteFlg === '1'){
-				$('.base'+i).after(
-					'<td class="result__status" style="text-align: center;"><i class="fas fa-hammer" style="color: #2c3e50;"></i></td>'
-				)
-			} else {
-				if(data[0].deleteFlg === '1'){
-					$('.base'+i).after(
-						'<td class="result__status" style="text-align: center;"><i class="fas fa-trash" style="color: #e58e26;"></i></td>'
-					)
-				}
-				if(data[0].cancelFlg === '1'){
-					$('.base'+i).after(
-						'<td class="result__status" style="text-align: center;"><i class="fas fa-times" style="color: #e74c3c;"></i></td>'
-					)
-				}
-				if(data[0].paymentFlg === '1'){
-					$('.base'+i).after(
-						'<td class="result__status" style="text-align: center;"><i class="fas fa-check" style="color: #2ecc71;"></i></td>'
-					)
-				}
-				if(data[0].paymentFlg === '0' && data[0].cancelFlg === '0' && data[0].deleteFlg === '0'){
-					$('.base'+i).after(
-						'<td class="result__status" style="text-align: center;"><i class="fas fa-shopping-cart"></i></td>'
-					)
-				}
-			}
-		});
+		}
+		
 		$('.wrapperCalendar').find('.table-responsive-lg').append(
 				'<ul class="pagination pagination-sm h-100 justify-content-center align-items-center" ></ul>'
 		);
@@ -886,6 +961,8 @@ function changDataStatusOnBtn(data){
 	
 	//table icon
 	$('.tableMenu').on('click', function(){
+		$('.buildCdList').val('')
+		$('.roomNoList').val('')
 		$(this).css('color','#ff7f50')
 		$('.calendarMenu').css('color','black')
 		const sysdate = moment();
@@ -1150,9 +1227,14 @@ function changDataStatusOnBtn(data){
 			
 	});
 	
-	
-	
 	//click modify on detail
+	$('.wrapperCalendar').on('click', '.table-backPwBtn', function(){
+		$('.loadData').hide(200)
+		setTimeout(() => {
+			$('.loadData').remove();
+		}, 200);
+		
+	});
 	$('.wrapperCalendar').on('click', '.table-modifyPwBtn', function(){
 		$('.table-checkPwBtn').show();
 		$('.table-modifyPwBtn').hide();
@@ -1725,8 +1807,8 @@ function changDataStatusOnBtn(data){
 				$('.table-originTbody'+data).find('.result__name').text(reserve.name);
 				$('.table-originTbody'+data).find('.result__phone').text(reserve.phone.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3"));
 				$('.table-originTbody'+data).find('.totalCost').text(Number(reserve.totalCost).toLocaleString('ja-JP'));
-				$('.table-originTbody'+data).find('.fa-male').text(reserve.adult);
-				$('.table-originTbody'+data).find('.fa-child').text(reserve.child);
+				$('.table-originTbody'+data).find('.adultCount').text(reserve.adult);
+				$('.table-originTbody'+data).find('.childCount').text(reserve.child);
 				$('.table-originTbody'+data).find('.result__date').text(moment(reserve.startDate).format('YYYY/MM/DD')+"~"+moment(reserve.endDate).format('YYYY/MM/DD'));
 				
 				$('.colorMark').css('background-color',$('.colorCd').val());
@@ -1734,6 +1816,10 @@ function changDataStatusOnBtn(data){
 				$('.toast').toast('show')
 				$('.toast-body').text($('.table-originTbody'+data).find('.result__no').text()+"号室 "+data+"번 예약이 수정되었습니다.");
 				//checkReserve(amount);
+				$('.loadData').hide(200)
+				setTimeout(() => {
+					$('.loadData').remove();
+				}, 200);
 			}
 		});
 	});

@@ -416,6 +416,35 @@ $('.baseLine').on('click', '.registerBtn', function(){
         console.log("stored"+item_number +":"+storedFiles[item_number])
     }
 	
+	if(tbody.find('.result__roomNum') == ''){
+		tbody.find('.result__roomNum').focus();
+		return false
+	}
+	if(tbody.find('.result__title') == ''){
+		tbody.find('.result__title').focus();
+		return false
+	}
+	if(tbody.find('.result__roomNum') == ''){
+		tbody.find('.result__roomNum').focus();
+		return false
+	}
+	if(tbody.find('.result__explanation') == ''){
+		tbody.find('.result__explanation').focus();
+		return false
+	}
+	if(tbody.find('.result__max') == ''){
+		tbody.find('.result__max').focus();
+		return false
+	}
+	if(tbody.find('.result__adultCost') == ''){
+		tbody.find('.result__adultCost').focus();
+		return false
+	}
+	if(tbody.find('.result__childCost') == ''){
+		tbody.find('.result__childCost').focus();
+		return false
+	}
+	
 	let formArr = formData.getAll('uploadFiles');
 	
     console.log(storedFiles)
@@ -481,6 +510,10 @@ $('.baseLine').on('click', '.registerBtn', function(){
 					tbody.find('.span__max').text(data.max);
 					tbody.find('.span__roomNum').text(data.roomNum);
 					tbody.find('.span__roomTitle').text(data.roomTitle);
+					
+					tbody.find('.ts-result__deleteFlg').after(
+						'<td class="result__regDate" style="">'+moment().format('YYYY-MM-DD')+'</td>'		
+					);
 					
 					
 					

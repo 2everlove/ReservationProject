@@ -19,21 +19,25 @@
      		}
      	}
     	$('.sortable').on('mouseover', 'img', function(e){
-        	$(this).closest('li').find('.modifyImage').fadeIn(300)
-        	//console.log("showUntransparent")
-        	//console.log($(this))
+        	
+        	for(let i = 0; i<$('.sortable').find('.modifyImage').length; i++){
+           		if(i+1 != $(this).closest('li').val()){
+           			$($('.sortable').find('.modifyImage')[i]).hide();
+           		} else {
+           			$(this).closest('li').find('.modifyImage').fadeIn(200)
+           		}
+           		
+           	}
         })
-        $('.sortable').on('mouseout', '.modifyImage', function(){
+        $('.sortable .card-body').on('mouseout', '.modifyImage', function(e){
         	$(this).css("background-color", "rgba(128, 128, 128, 0.66)");
-        	$('.modifyImage').fadeOut(300);
-           	//console.log("showTranspatent")
-           	//console.log($(this))
+        	$(this).closest('li').find('.modifyImage').fadeOut(200)
         })
         $('.sortable').on('click', '.modifyImage', function(){
         	$(this).css("background-color", "rgba(128, 128, 128, 0.87)");
 	 		$(this).closest('li').find('.fileModify').click();
         });
-        $('.sortable').on('change', '.fileModify', function(){
+        $('.sortable').on('change', '.fileModify', function(e){
         	$(this).css("background-color", "rgba(128, 128, 128, 0.87)");
            	//console.log("showTranspatent")
            	//console.log($(this))
@@ -47,44 +51,53 @@
 	 		}
 	 		console.log($(this));
 	 		console.log(sliderImages);
+	 		console.log(sliderImagesNo);
 	 		console.log(decodeURI($(this).closest('li').attr('file')))
-	 		
-	 		$.post('/api/removeFile', {fileName: decodeURI($(this).closest('li').attr('file'))}, function(result){
-				console.log(result);
-				deleteFiles.length = 0;
-			}, "json");
-			
 	 		fileList.push($(this)[0].files);
-			
-	 		console.log(fileList)
-	 		formData.append('uploadFiles',fileList[0][0]);
-	 		 $.ajax({
-			    	url: '/api/uploadAjax',
-					processData: false,
-					contentType: false,
-					data: formData,
-					type: 'post',
-					dataType: 'json',
-					success: function(data){
-						console.log(data[0]);
-						let url = '/api/display?fileName='+data[0].imageURL;
-						sliderImages.filename=data[0].imageURL;
-						sliderImagesLi.find('img').attr("src", url);
-						sliderImagesLi.attr('file',data[0].imageURL);
-						console.log(sliderImages);
-						$.ajax({
-					    	url: '/api/slideImages/modify',
-					    	method: 'post',
-							data: JSON.stringify(sliderImages),
-							contentType: 'application/json; charset=utf-8',
-							dataType: 'json',
-							success: function(data){
-								console.log(data);
-								
-							}
-		   	 			});
-					}
-	 		 });
+	 		
+			if(sliderImagesNo !== undefined){
+		 		$.post('/api/removeFile', {fileName: decodeURI($(this).closest('li').attr('file'))}, function(result){
+					console.log(result);
+					deleteFiles.length = 0;
+				}, "json");
+				
+		 		console.log(fileList)
+		 		formData.append('uploadFiles',fileList[0][0]);
+				
+		 		$.ajax({
+				    	url: '/api/uploadAjax',
+						processData: false,
+						contentType: false,
+						data: formData,
+						type: 'post',
+						dataType: 'json',
+						success: function(data){
+							console.log(data[0]);
+							let url = '/api/display?fileName='+data[0].imageURL;
+							sliderImages.filename=data[0].imageURL;
+							sliderImagesLi.find('img').attr("src", url);
+							sliderImagesLi.attr('file',data[0].imageURL);
+							console.log(sliderImages);
+							$.ajax({
+						    	url: '/api/slideImages/modify',
+						    	method: 'post',
+								data: JSON.stringify(sliderImages),
+								contentType: 'application/json; charset=utf-8',
+								dataType: 'json',
+								success: function(data){
+									console.log(data);
+									
+								}
+			   	 			});
+						}
+		 		 });
+			} else {
+				storedFiles.splice(sliderImagesLi.attr('item'),1,fileList[0][0]);
+				console.log(URL.createObjectURL($(this)[0].files[0]))
+				sliderImagesLi.attr("file", $(this)[0].files[0].name);
+				$(sliderImagesLi.find('img')[0]).attr("src", URL.createObjectURL($(this)[0].files[0]));
+				console.log(storedFiles)
+			}
 	 		
         });
    		$('.confirm').click(function(){
@@ -213,6 +226,9 @@
    	 		if($(this).hasClass('deleteFlg')){
    	 			if($(this).hasClass('on')){
    	 				sliderImages.deleteFlg = '1';
+   	 				if($(this).closest('li').find('.activation').hasClass('on')){
+	 					$(this).closest('li').find('.activation').toggleClass('on off')
+	 				}
    	 				sliderImages.activity = checkActivation($(this));
    	 				console.log('deleteFlg: on')
    	 			} else {
@@ -224,6 +240,9 @@
    	 		if($(this).hasClass('activation')){
    	 			if($(this).hasClass('on')){
    	 				sliderImages.activity = '0';
+   	 				if($(this).closest('li').find('.deleteFlg').hasClass('on')){
+   	 					$(this).closest('li').find('.deleteFlg').toggleClass('on off')
+   	 				}
    	 				sliderImages.deleteFlg = checkDeleteFlg($(this));
    	 				console.log('activation: on')
 	 			} else {
@@ -245,22 +264,25 @@
 						console.log(data);
 					}
    	 			});
-   	 		}
+   	 		} 
    	 	})
    	 	$('.sortable').on('click','.delete-btn', function(){
 	   	 	tempDelete = $(this).closest('li').detach();
 	   		$(this).closest('li').remove('');
 	   		console.log(tempDelete);
 	   		let file = $(this).closest('li').attr('file');
+	   		let item = $(this).closest('li').attr('item');
+	   		storedFiles.splice(item, 1);
 	   		deleteFiles.push(file);
 	   		//console.log(deleteFiles);
+	   		console.log(storedFiles);
 	   		console.log(deleteFiles.join(','));
-	   		for(let i = 0; i < storedFiles.length; i++) {
+	   		/* for(let i = 0; i < storedFiles.length; i++) {
 	   		    if(storedFiles[i].name == file) {
 	   		        //storedFiles.splice(i, 1);
 	   		        break;
 	   		    }
-	   		}
+	   		} */
    	 	})
     })
     
@@ -272,9 +294,9 @@
     function add_order(e) {
     	console.log(e);
         e.children().each(function(n) {
-        	console.log(n+1);
-        	console.log($(this));
-        	console.log($(this).find('li').attr('item'));
+        	//console.log(n+1);
+        	//console.log($(this));
+        	//console.log($(this).find('li').attr('item'));
         	if($(this).attr('item') === undefined){
         		$(this).val(n+1)
             	$(this).attr('item',n);
@@ -374,9 +396,10 @@
 											'<span class="orderNo" data-spanOrder="'+(Number(sortObject.find('li').length)+1)+'">'+(Number(sortObject.find('li').length)+1)+'</span>'+
 											'<img src="'+e.target.result+'" height=200 width=200 style="cursor: pointer;"/>'+
 											'<input type="file" class="fileModify" accept="image/*" style="display: none;">'+
-											'<div class="modifyImage text-white" style="height: 200px; width: 198px; position: absolute; left: 15px; display: none; text-align: center; background-color: #808080a8; z-index: 2; top: 2px; cursor: pointer;">Modify</div>'+
+											'<div class="modifyImage text-white">Modify</div>'+
 											'<div class="toggle btn btn-danger on deleteFlg" data-toggle="toggle" role="button" style="width: 118.062px; height: 38px; position: absolute; top: 30%;transform: translateX(20px);"><input type="checkbox" checked="" data-toggle="toggle" data-off="Disply" data-on="Delete" data-offstyle="primary" data-onstyle="danger"><div class="toggle-group"><label for="" class="btn btn-danger toggle-on">Delete</label><label for="" class="btn btn-primary toggle-off">Disply</label><span class="toggle-handle btn btn-light"></span></div></div>'+
 											'<div class="toggle btn btn-success on activation" data-toggle="toggle" role="button" style="width: 118.062px; height: 38px; position: absolute; top: 50%;transform: translateX(20px);"><input type="checkbox" checked="" data-toggle="toggle" data-on="Activation" data-off="Disabled" data-onstyle="success" data-offstyle="outline-secondary"><div class="toggle-group"><label for="" class="btn btn-success toggle-on">Activation</label><label for="" class="btn btn-secondary toggle-off">Disabled</label><span class="toggle-handle btn btn-light"></span></div></div>'+
+											'<span style="position: absolute;top: -80px;left: 240px;height: 20px;">'+moment().format('YYYY-MM-DD')+'</span>'+
 											"<a href='javascript:void(0);' class='delete_image' title='Cancel'><img class='delete-btn' src='https://w7.pngwing.com/pngs/776/921/png-transparent-x-mark-check-mark-scalable-graphics-computer-file-red-cross-mark-red-x-illustration-miscellaneous-angle-hand.png' /></a>"+
 										'</div>'+
 									'</div>'+
@@ -405,8 +428,11 @@
 	   	.sortable {display: -webkit-box; list-style-type: none; margin: 60px auto; padding: 0; display: flex;flex-direction: row;flex-wrap: wrap;}
 		.sortable li {background-color: #fff; border: 1px solid #ccc; border-radius: 5px; float: left; margin: 5px 10px 0 0; padding: 2px; width: 420px; height: 212px; line-height: 200px; position: relative;}
 		.sortable li .ui-selected {background: red;}
+		.sortable li .card-body > img {margin-left: 17px;}
 		.sortable li .highlight {border: 1px dashed #000; width: 150px; background-color: #ccc; border-radius: 5px;}
-		.sortable li .orderNo { position: absolute; background-color: black; top: 1px; color: white; width: 15px; left: 15px; transform: translateX(-15px);text-align: center; border-radius: 3px;}
+		.sortable li .orderNo { position: absolute; background-color: black; top: 1px; color: white; width: 30px; left: 15px; transform: translateX(-15px);text-align: center; border-radius: 3px;}
+		.sortable li .modifyImage  { height: 200px; width: 200px; position: absolute; left: 30px; display: none; text-align: center; background-color: rgba(128, 128, 128, 0.66); z-index: 2; top: 2px; cursor: pointer;}
+		.sortable li .modifyImage:hover  { height: 200px; width: 200px; position: absolute; left: 30px; display: none; text-align: center; background-color: rgba(128, 128, 128, 0.66); z-index: 2; top: 2px; cursor: pointer;}
 		.sortable li .delete-btn {width: 24px; border: 0; position: absolute; right: 0px;}
     </style>
         
@@ -427,11 +453,11 @@
 										<span class="orderNo" data-spanOrder="${status.count }" style="top: 2px;">${status.count }</span>
 										<img src="${thumbnail}" height=200 width=200 style="cursor: pointer;"/>
 										<input type="file" class="fileModify" accept="image/*" style="display: none;">
-										<div class="modifyImage text-white" style="height: 200px; width: 198px; position: absolute; left: 15px; display: none; text-align: center; background-color: #808080a8; z-index: 2; top: 2px; cursor: pointer;">Modify</div>
+										<div class="modifyImage text-white">Modify</div>
 										<div class="toggle btn btn-danger <c:out value="${slideImage.deleteFlg =='0'? 'off' : 'on'  }"></c:out> deleteFlg" data-toggle="toggle" role="button" style="width: 118.062px; height: 38px; position: absolute; top: 30%;transform: translateX(20px);"><input type="checkbox" checked="" data-toggle="toggle" data-off="Disply" data-on="Delete" data-offstyle="primary" data-onstyle="danger"><div class="toggle-group"><label for="" class="btn btn-danger toggle-on">Delete</label><label for="" class="btn btn-primary toggle-off">Disply</label><span class="toggle-handle btn btn-light"></span></div></div>
 										<div class="toggle btn btn-success <c:out value="${slideImage.activity =='0'? 'on' : 'off'  }"></c:out> activation" data-toggle="toggle" role="button" style="width: 118.062px; height: 38px; position: absolute; top: 50%;transform: translateX(20px);"><input type="checkbox" checked="" data-toggle="toggle" data-on="Activation" data-off="Disabled" data-onstyle="success" data-offstyle="outline-secondary"><div class="toggle-group"><label for="" class="btn btn-success toggle-on">Activation</label><label for="" class="btn btn-secondary toggle-off">Disabled</label><span class="toggle-handle btn btn-light"></span></div></div>
 										<fmt:parseDate value="${slideImage.createdAt}" pattern="yyyy-MM-dd'T'HH:mm" var="regDate" type="both"/>
-										<span style="position: absolute;top: -80px;left: 232px;height: 20px;"><fmt:formatDate value="${regDate}" pattern="yyyy-MM-dd"/></span>
+										<span style="position: absolute;top: -80px;left: 240px;height: 20px;"><fmt:formatDate value="${regDate}" pattern="yyyy-MM-dd"/></span>
 									</div>
 								</div>
 							</li>

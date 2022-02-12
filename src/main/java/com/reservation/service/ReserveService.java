@@ -53,7 +53,7 @@ public interface ReserveService {
 	
 	PageResultDTO<Object[], Object[]> getReserveAndRoomMonthlyData(PageRequestDTO requestDTO, Date inputDate, int buildCd);
 	
-	PageResultDTO<Object[], Object[]> getReserveAndRoomMonthlyDataOnRoomNum(PageRequestDTO requestDTO, Date inputDate, int buildCd, String roomNum);
+	PageResultDTO<Object[], Object[]> getReserveAndRoomMonthlyDataOnRoomNum(PageRequestDTO requestDTO, Date inputDate, int buildCd, Long roomNum);
 	
 	List<Object[]> findReserveByNameAndPhoneForAdmin(Long reserveNo);
 

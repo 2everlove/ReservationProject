@@ -144,9 +144,9 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 	@Query("select i, r from Reserve r" + 
 			" left join RoomInfo i on i.no = r.roomNo.no" + 
 			" where to_char(to_date(r.startDate,'YYYYMMDD'),'yyyymm') = to_char(:inputDate, 'yyyymm')" + 
-			" and r.buildCd = :buildCd and i.roomNum = :roomNum and i.deleteFlg = 0"
+			" and r.buildCd = :buildCd and r.roomNo.no = :roomno and i.deleteFlg = 0"
 			)
-	Page<Object[]> getReserveAndRoomMonthlyDataOnRoomNum(Pageable pageable, @Param("inputDate") Date inputDate, @Param("buildCd") int buildCd, @Param("roomNum") String roomNum);
+	Page<Object[]> getReserveAndRoomMonthlyDataOnRoomNum(Pageable pageable, @Param("inputDate") Date inputDate, @Param("buildCd") int buildCd, @Param("roomno") Long roomno);
 
 	
 	
