@@ -2,11 +2,16 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<link rel="stylesheet" href="/resources/css/calendar.css">
-<script type="text/javascript" src="/resources/js/calendar.js"></script>
+<link rel="stylesheet" href="/resources/css/MonthPicker.css">
+<script type="text/javascript" src="/resources/js/MonthPicker.js"></script>
 
 <style>
 a{text-decoration: none;}
+.ui-button .ui-icon{
+    background-image: url(https://code.jquery.com/ui/1.11.4/themes/smoothness/images/ui-icons_888888_256x240.png) !important;
+}
+#MonthPicker_Button_AltMonthField2{
+}
 </style>
 <body>
 	<!-- <div id="calendarForm"></div> -->
@@ -28,12 +33,18 @@ a{text-decoration: none;}
 								<option value="">---</option>
 							</select>
 					    	<label>号室</label>
+					    	<input id="AltMonthField2" style='width:100px; cursor: default; opacity: 0;' disabled="disabled" />
+					    	<input name='selectedMonth2' id="serverValue2" type="hidden"/>
 						</div>
 						<div class="form-group">
 					    	<span class="calendarMenu" style="font-size: 2.5rem; margin-right: 1rem; cursor: pointer;"><i class="far fa-calendar-alt"></i></span>
 							<span class="tableMenu" style="font-size: 2.5rem; cursor: pointer;"><i class="fas fa-table"></i></span>
 						</div>
 					</form>
+					<div class="form-inline yearMonth" style="align-items: flex-end; display: none;">　
+						<h2><span class="yearMonth-year">2022</span>年</h2>
+						<h3><span class="yearMonth-month">2</span>月</h3>
+					</div>
 					
 				</div>
 				<br/>
@@ -133,7 +144,59 @@ $('.selectRoomMenu').after(
 $('.calendarMenu').css('color','#ff7f50')
 const WEEKDAY = ["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"];
 $(document).ready(function(){
+	/* let options = {
+	       pattern: 'yyyy-mm'       // input태그에 표시될 형식
+	      ,selectedYear: 2019       // 선택할 연도
+	      ,startYear: 2010          // 시작연도
+	      ,finalYear: 2022          // 마지막연도
+	      // ,monthNames: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+	      ,monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']         // 화면에 보여줄 월이름
+	      ,openOnFocus: true       // focus시에 달력이 보일지 유무
+	      ,disableMonths : [ ]     // 월 비활성화
+	};
 	
+	// 방법1) options 따로 지정
+	$("#monthPicker").monthpicker(options);
+	
+	// 방법2) input 태그에서 연도 지정
+	$("#monthPicker2").monthpicker();
+	
+	$('#btn_monthPicker').bind('click', function () {
+	    $('#monthPicker2').monthpicker('show');
+	});
+		*/
+		
+		$('#AltMonthField2').MonthPicker({
+				SelectedMonth: moment().format('MMM, YYYY'),
+				MonthFormat: 'M, yy', // Short month name, Full year.
+				AltFormat: 'yymmdd', // ODBC time stamp.
+				AltField: '#serverValue2' // Selector for hidden input.
+		});
+		$('#MonthPicker_Button_AltMonthField2').hide();
+		
+		$('.month-picker-month-table').on('click', 'td a',function(){
+			$('.wrapperCalendar').empty();
+			$('.yearMonth-year').text($('#serverValue2').val().slice(0,4))
+			$('.yearMonth-month').text($('#serverValue2').val().slice(4,6))
+			let reserveAndPage = {
+				buildCd: $('.buildCdList option:selected').val()==''?'7':$('.buildCdList option:selected').val(),
+				startDate: $('#serverValue2').val(),
+				roomNo: $('.roomNoList option:selected').val()==''?'0':$('.roomNoList option:selected').val(),
+				page: '1',
+			}
+			$.ajax({
+				url: '/api/getReserve/monthly',
+				method: 'POST',
+				data: JSON.stringify(reserveAndPage),
+				contentType: 'application/json; charset=utf-8',
+				dataType: 'json',
+				success: function(datas){
+					//console.log(datas)
+					drawTable(datas, reserveAndPage);
+				}
+			});
+		});
+	 
 	
 	$('.phone').keyup(function(){
 		//console.log($(this).val().length);
@@ -201,7 +264,7 @@ $(document).ready(function(){
 						$('.wrapperCalendar').empty();
 						let reserveAndPage = {
 							buildCd: $('.buildCdList option:selected').val(),
-							startDate: sysdate.format('YYYYMMDD'),
+							startDate: $('#serverValue2').val(),
 							roomNo: '0',
 							page: '1',
 						}
@@ -229,7 +292,7 @@ $(document).ready(function(){
 				$('.wrapperCalendar').empty();
 				let reserveAndPage = {
 					buildCd: '7',
-					startDate: sysdate.format('YYYYMMDD'),
+					startDate: $('#serverValue2').val(),
 					roomNo: '0',
 					page: '1',
 				}
@@ -258,7 +321,7 @@ $(document).ready(function(){
 				if($('.roomNoList option:selected').val() != ''){
 					let reserveAndPage = {
 							buildCd: $('.buildCdList option:selected').val(),
-							startDate: moment().format('YYYYMMDD'),
+							startDate: $('#serverValue2').val(),
 							roomNo: $('.roomNoList option:selected').val(),
 							page: '1',
 						}
@@ -278,7 +341,7 @@ $(document).ready(function(){
 					$('.wrapperCalendar').empty();
 					let reserveAndPage = {
 						buildCd: $('.buildCdList option:selected').val(),
-						startDate: moment().format('YYYYMMDD'),
+						startDate: $('#serverValue2').val(),
 						roomNo: '0',
 						page: '1',
 					}
@@ -299,7 +362,7 @@ $(document).ready(function(){
 				$('.wrapperCalendar').empty();
 				let reserveAndPage = {
 					buildCd: '7',
-					startDate: moment().format('YYYYMMDD'),
+					startDate: $('#serverValue2').val(),
 					roomNo: '0',
 					page: '1',
 				}
@@ -742,7 +805,7 @@ function changDataStatusOnBtn(data){
 							);
 							if(data.paymentFlg === '0' && data.cancelFlg === '0' && data.deleteFlg === '0'){
 								modal.find('.modal-body').find('.headModal-secondTr').append(
-									'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제대기중</label>'+
+									'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">決済待機中</label>'+
 									'<div class="col-sm-2"><input type="button" value="결제" class="btn btn-success search-modalPaymentBtn"></input></div>'
 								);
 								changDataStatusOnBtn(data)
@@ -763,7 +826,7 @@ function changDataStatusOnBtn(data){
 							}
 							if(data.deleteFlg === '1'){
 								modal.find('.modal-body').find('.headModal-secondTr').append(
-									'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">삭제됨</label>'+
+									'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">削除</label>'+
 									'<div class="col-sm-2"></div>'
 								);
 								changDataStatusOnBtn(data)
@@ -946,6 +1009,10 @@ function changDataStatusOnBtn(data){
 	
 	//calendar icon
 	$('.calendarMenu').on('click', function(){
+		$('.yearMonth').hide();
+		$('#MonthPicker_Button_AltMonthField2').hide();
+		$('.buildCdList').val('')
+		$('.roomNoList').val('')
 		if(!$('#calendar').length>0){
 			$(this).css('color','#ff7f50')
 			$('.tableMenu').css('color','black')
@@ -958,18 +1025,24 @@ function changDataStatusOnBtn(data){
 		
 	});
 	
-	
+	$(document).ready(function(){
+		
+	});
 	//table icon
 	$('.tableMenu').on('click', function(){
+		$('.yearMonth').show();
+		$('#MonthPicker_Button_AltMonthField2').show();
 		$('.buildCdList').val('')
 		$('.roomNoList').val('')
+		$('.yearMonth-year').text($('#serverValue2').val().slice(0,4))
+		$('.yearMonth-month').text($('#serverValue2').val().slice(4,6))
 		$(this).css('color','#ff7f50')
 		$('.calendarMenu').css('color','black')
 		const sysdate = moment();
 		$('.wrapperCalendar').empty();
 		let reserveAndPage = {
 			buildCd: '7',
-			startDate: sysdate.format('YYYYMMDD'),
+			startDate: $('#serverValue2').val(),
 			page: '1',
 		}
 		console.log(reserveAndPage)
@@ -987,14 +1060,17 @@ function changDataStatusOnBtn(data){
 		
 	});
 	
+	
+	
 	//paging
 	$('.wrapperCalendar').on('click', '.page-link', function(){
 		$('.wrapperCalendar').empty();
 		//console.log($(this).attr('data-modalheadpage'))
 		let modalHeadPage = $(this).attr('data-adminBookingPage');
 		let reserveAndPage = {
-			buildCd: '7',
-			startDate: '20220208',
+			buildCd: $('.buildCdList option:selected').val()==''?'7':$('.buildCdList option:selected').val(),
+			startDate: $('#serverValue2').val(),
+			roomNo: $('.roomNoList option:selected').val()==''?'0':$('.roomNoList option:selected').val(),
 			page: $(this).attr('data-adminBookingPage'),
 		}
 		console.log(reserveAndPage)
@@ -1093,7 +1169,7 @@ function changDataStatusOnBtn(data){
 							},300)
 							if(data[0][0].paymentFlg === '0' && data[0][0].cancelFlg === '0' && data[0][0].deleteFlg === '0'){
 								$('.loadData').find('th').find('.table-secondTr').append(
-									'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제대기중</label>'+
+									'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">決済待機中</label>'+
 									'<div class="col-sm-2"><input type="button" value="결제" class="btn btn-success table-statusBtn table-paymentBtn"></input></div>'
 								);
 								buttonFlgSetting(data)
@@ -1115,7 +1191,7 @@ function changDataStatusOnBtn(data){
 							}
 							if(data[0][0].deleteFlg === '1'){
 								$('.loadData').find('th').find('.table-secondTr').append(
-									'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">삭제됨</label>'+
+									'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">削除</label>'+
 									'<div class="col-sm-2"></div>'
 								);
 								buttonFlgSetting(data)
@@ -1560,7 +1636,7 @@ function changDataStatusOnBtn(data){
 				drawTable(datas, reserveAndPage); */
 				if(statusCode === '1'){
 					$('.toast').css('right','2%');
-					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 취소되었습니다.");
+					$('.toast-body').text('予約番号 '+datas[0][0].no + "番がキャンセルされました。");
 					$('.table-originTbody'+reserveNo).find('.result__status').html('<i class="fas fa-times" style="color: #e74c3c;"></i>');
 					$('.mr-auto').text("Success");
 					$('.toast-parent').show();
@@ -1574,14 +1650,14 @@ function changDataStatusOnBtn(data){
 					
 				} else if(statusCode === '2'){
 					$('.toast').css('right','2%');
-					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 삭제되었습니다.");
+					$('.toast-body').text('予約番号 '+datas[0][0].no + "番が削除されました。");
 					$('.table-originTbody'+reserveNo).find('.result__status').html('<i class="fas fa-trash" style="color: #e58e26;"></i>');
 					$('.mr-auto').text("Success");
 					$('.toast-parent').show();
 					$('.toast').toast('show')
 				} else if(statusCode === '3'){
 					$('.toast').css('right','2%');
-					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 결제되었습니다.");
+					$('.toast-body').text('予約番号 '+datas[0][0].no + "番が決済されました。");
 					$('.table-originTbody'+reserveNo).find('.result__status').html('<i class="fas fa-check" style="color: #2ecc71;"></i>');
 					$('.mr-auto').text("Success");
 					$('.toast-parent').show();
@@ -1612,7 +1688,7 @@ function changDataStatusOnBtn(data){
 						);
 						if(data.paymentFlg === '0' && data.cancelFlg === '0' && data.deleteFlg === '0'){
 							$('.wrapperCalendar ').find('.loadData').find('.table-secondTr').append(
-								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제대기중</label>'+
+								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">決済待機中</label>'+
 								'<div class="col-sm-2"><input type="button" value="결제" class="btn btn-success table-statusBtn"></input></div>'
 							);
 							buttonFlgSetting(datas)
@@ -1633,7 +1709,7 @@ function changDataStatusOnBtn(data){
 						}
 						if(data.deleteFlg === '1'){
 							$('.wrapperCalendar ').find('.loadData').find('.table-secondTr').append(
-								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">삭제됨</label>'+
+								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">削除</label>'+
 								'<div class="col-sm-2"></div>'
 							);
 							buttonFlgSetting(datas)
@@ -1814,7 +1890,7 @@ function changDataStatusOnBtn(data){
 				$('.colorMark').css('background-color',$('.colorCd').val());
 				$('.toast-parent').show();
 				$('.toast').toast('show')
-				$('.toast-body').text($('.table-originTbody'+data).find('.result__no').text()+"号室 "+data+"번 예약이 수정되었습니다.");
+				$('.toast-body').text($('.table-originTbody'+data).find('.result__no').text()+"号室 "+data+"番の予約が修正されました。");
 				//checkReserve(amount);
 				$('.loadData').hide(200)
 				setTimeout(() => {
@@ -1885,7 +1961,7 @@ function changDataStatusOnBtn(data){
 				modal.modal('hide');
 				$('.toast-parent').show();
 				$('.toast').toast('show')
-				$('.toast-body').text(eventObj.extendedProps.roomNo+"号室 "+eventObj.extendedProps.reserveNo+"번 예약이 수정되었습니다.");
+				$('.toast-body').text(eventObj.extendedProps.roomNo+"号室 "+eventObj.extendedProps.reserveNo+"番の予約が修正されました。");
 				checkReserve(amount);
 			}
 		});
@@ -2060,19 +2136,19 @@ function changDataStatusOnBtn(data){
 					$('.toast').css('right','2%');
 					$('.toast-parent').show();
 					$('.toast').toast('show')
-					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 취소되었습니다.");
+					$('.toast-body').text('予約番号 '+datas[0][0].no + "番がキャンセルされました。");
 					$('.mr-auto').text("Success");
 				} else if(statusCode === '2'){
 					$('.toast').css('right','2%');
 					$('.toast-parent').show();
 					$('.toast').toast('show')
-					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 삭제되었습니다.");
+					$('.toast-body').text('予約番号 '+datas[0][0].no + "番が削除されました。");
 					$('.mr-auto').text("Success");
 				} else {
 					$('.toast').css('right','2%');
 					$('.toast-parent').show();
 					$('.toast').toast('show')
-					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 결제되었습니다.");
+					$('.toast-body').text('予約番号 '+datas[0][0].no + "番が決済されました。");
 					$('.mr-auto').text("Success");
 				}
 				//console.log(dataArr)
@@ -2100,7 +2176,7 @@ function changDataStatusOnBtn(data){
 						);
 						if(data.paymentFlg === '0' && data.cancelFlg === '0' && data.deleteFlg === '0'){
 							modal.find('.modal-body').find('.headModal-secondTr').append(
-								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제대기중</label>'+
+								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">決済待機中</label>'+
 								'<div class="col-sm-2"><input type="button" value="결제" class="btn btn-success search-modalPaymentBtn"></input></div>'
 							);
 							changDataStatusOnBtn(data)
@@ -2121,7 +2197,7 @@ function changDataStatusOnBtn(data){
 						}
 						if(data.deleteFlg === '1'){
 							modal.find('.modal-body').find('.headModal-secondTr').append(
-								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">삭제됨</label>'+
+								'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">削除</label>'+
 								'<div class="col-sm-2"></div>'
 							);
 							changDataStatusOnBtn(data)

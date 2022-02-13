@@ -16,9 +16,9 @@
     		items:5,
     	    center:true,
     	    autoplay:true,
-    	    autoplayTimeout:5000,
+    	    autoplayTimeout:8000,
     	    autoplayHoverPause:true,
-    	    smartSpeed:700,
+    	    smartSpeed:800,
     	    loop:true,
     	    margin:10,
     	    nav:false,
@@ -241,10 +241,16 @@
         		}
         	}
         	if(!$(e.target).closest('.peoplePopup').hasClass("peoplePopup")){
-       			$('.numberOfPeople').css('display','none');
-       			if($('.startDate').val() !== '')
-       				$('.btn-Search').fadeIn('600');
-       			$('.peoplePopup').fadeOut('300');
+        		if($(e.target).hasClass('adminLink')){
+        			$('.btn-Search').fadeOut('200');
+        		} else if($(e.target).closest('.search-modal').hasClass('search-modal')){
+        		} else {
+        			$('.numberOfPeople').css('display','none');
+           			if($('.startDate').val() !== '')
+           				$('.btn-Search').fadeIn('600');
+           			$('.peoplePopup').fadeOut('300');
+        		}
+       			
         	}
         });//
         

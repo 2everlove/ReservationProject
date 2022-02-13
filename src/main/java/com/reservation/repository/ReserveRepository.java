@@ -37,7 +37,7 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 	//이름,폰으로 예약 검색 with page
 	@Query("select i, r from RoomInfo i "
 			+ "left join Reserve r on r.roomNo.no = i "
-			+ "where r.name = :name and r.phone = :phone and r.deleteFlg = :deleteFlg and i.deleteFlg = 0")
+			+ "where r.name = :name and r.phone = :phone and r.deleteFlg = :deleteFlg and i.deleteFlg = 0 order by to_date(r.startDate,'yyyy/mm/dd')")
 	Page<Object[]> findReserveByNameAndPhoneAndDeleteFlg(@Param("name") String name, @Param("phone") String phone, @Param("deleteFlg") String deleteFlg, Pageable pageable);
 	
 	//예약번호로 예약 검색 with page for admin

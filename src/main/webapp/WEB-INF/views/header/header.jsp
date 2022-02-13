@@ -686,7 +686,7 @@ $('.search-modal').on('click', '.search-modalSearchBtn, .search-modalListBtn' , 
 	}
 	let searchmodalListBtn = $(this)
 	$('.search-modal').find('.search-modal-content').find('.modal-calendar').empty();
-	
+	$('.search-modal').find('.search-modal-body').empty();
 	//console.log(reserve)
 	$.ajax({
 		url: '/api/getReserve/search',
@@ -723,6 +723,7 @@ $('.search-modal').on('click', '.search-modalSearchBtn, .search-modalListBtn' , 
 				$('.search-modal').find('.search-modal__phone').val('')
 				$('.search-modal').find('.search-modal__phone__clone').val('')
 			}
+			$('.search-modalListBtn').hide();
 		}
 	});
 });

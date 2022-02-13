@@ -18,7 +18,7 @@
 
 <!-- Footer-->
         <footer class="bg-light py-5">
-            <div class="container px-4 px-lg-5"><div class="small text-center text-muted">Copyright &copy; 2021 - (株式会社) Booking</div></div>
+            <div class="container px-4 px-lg-5"><div class="small text-center text-muted">Copyright &copy; 2022 - (株式会社) Booking</div></div>
             <div class="footer__map">
 	    		 <div id="map" style="position: relative;overflow: hidden;width: 800px;height: 500px; margin: 0 auto;margin-top: 1%;"></div>
 	    	</div>
@@ -64,8 +64,8 @@
     <script>
     
     
-    	/*function initMap() {
-    		const building = { lat: 35.691864243850034, lng: 139.8029598111616 };
+    	function initMap() {
+    		const building = { lat: 35.69550739387293, lng: 139.78156107560838 };
     		  const map = new google.maps.Map(document.getElementById("map"), {
     		    zoom: 18,
     		    center: building,
@@ -77,6 +77,7 @@
   		    '<h3 id="firstHeading" class="firstHeading">Hotel</h3>' +
   		    '<div id="bodyContent">' +
   		    '<p>ホテルの住所 : 東京都千代田区東神田　2-10-14　日本ｾﾝﾁﾞﾐｱﾋﾞﾙ4F</p>'+
+  		    '<a target="_blank" jstcache="6" href="https://goo.gl/maps/EsbKzmF9phWeNBh89" tabindex="0"> <span>Google 지도에서 보기</span> </a>'+
   		    "</div>" +
   		    "</div>";
   		  const infowindow = new google.maps.InfoWindow({
@@ -95,7 +96,7 @@
   		      shouldFocus: false,
   		    });
   		  });
-    	}*/
+    	}
 
 
 

@@ -86,7 +86,9 @@ a{text-decoration: none;}
 	                </div>
 					<div style="padding-top: 20px;"></div>
 					<hr style="border: none; font-size: 0; line-height: 0; margin: 40px 0 40px 0; color: rgba(132, 129, 122,1.0); background:rgba(132, 129, 122,1.0); height: 3px;"/>
-					<div style="padding-top: 20px;"></div>
+					<div style="padding: 20px 20px;">
+						${roomInfo.explanation}
+					</div>
             	
                 <!-- <div class="row gx-0 justify-content-center">
                     <div class="col-lg-6"><img class="img-fluid" src="/resources/assets/img/room/room3.jpg" alt="..." /></div>
@@ -179,7 +181,7 @@ $('.thumbList').on('mouseout', function(){
 let roomInfoDataArr = new Array();
 let reserveSearchJson ={};
 $(document).ready(function(){
-let disabledArr = [];
+	let disabledArr = [];
 	let amount = 0;
 	
 	let modal = $('.roomInfo-modal');
@@ -398,35 +400,37 @@ let disabledArr = [];
 		$('.endDate').val('${dateObject.endDate}');
 	 </c:if>
 	
+	let options = function(arg){
+
+        // Prepare the date comparision
+        var thisMonth = arg._d.getMonth()+1;   // Months are 0 based
+        if (thisMonth<10){
+            thisMonth = "0"+thisMonth; // Leading 0
+        }
+        var thisDate = arg._d.getDate();
+        if (thisDate<10){
+            thisDate = "0"+thisDate; // Leading 0
+        }
+        var thisYear = arg._d.getYear()+1900;   // Years are 1900 based
+
+        var thisCompare = thisYear +"-"+ thisMonth +"-"+ thisDate ;
+        console.log(thisCompare);
+        console.log(uniteUnique(disabledArr));
+		
+        if($.inArray(thisCompare,uniteUnique(disabledArr))!=-1){
+           console.log("      ^--------- DATE FOUND HERE");
+            return true;
+        }
+        if(disabledArr.length == 0){
+       	 console.log(disabledArr.length);
+       	 return false;
+        }
+    }
+	 
 	console.log(uniteUnique(disabledArr));
 	let today = new Date();
 	$('#demo').daterangepicker({
-		isInvalidDate: function(arg){
-
-	         // Prepare the date comparision
-	         var thisMonth = arg._d.getMonth()+1;   // Months are 0 based
-	         if (thisMonth<10){
-	             thisMonth = "0"+thisMonth; // Leading 0
-	         }
-	         var thisDate = arg._d.getDate();
-	         if (thisDate<10){
-	             thisDate = "0"+thisDate; // Leading 0
-	         }
-	         var thisYear = arg._d.getYear()+1900;   // Years are 1900 based
-
-	         var thisCompare = thisYear +"-"+ thisMonth +"-"+ thisDate ;
-	         console.log(thisCompare);
-	         console.log(uniteUnique(disabledArr));
-			
-	         if($.inArray(thisCompare,uniteUnique(disabledArr))!=-1){
-	            console.log("      ^--------- DATE FOUND HERE");
-	             return true;
-	         }
-	         if(disabledArr.length == 0){
-	        	 console.log(disabledArr.length);
-	        	 return false;
-	         }
-	     },
+		isInvalidDate: options,
 	     <c:if test="${dateObject.startDate != null && dateObject.startDate != ''}">
 		 	startDate:startDate1,
 		 	endDate:endDate1,
@@ -514,151 +518,279 @@ let disabledArr = [];
 		$(".phone__clone").val(tmp);
 	});
 	
+	function changDataStatusOnBtn(data){
+		$('.roomInfo-modal').find('.modal-body').find('.btn').attr('data-deleteFlg', data[0][0].deleteFlg)
+		$('.roomInfo-modal').find('.modal-body').find('.btn').attr('data-cancelFlg', data[0][0].cancelFlg)
+		$('.roomInfo-modal').find('.modal-body').find('.btn').attr('data-paymentFlg', data[0][0].paymentFlg)
+		$('.roomInfo-modal').find('.modal-body').find('.btn').attr('data-reserveNo', data[0][0].no)
+	}
+		
+	$('.checkOrder').on('click', function(){
+		$.ajax({
+			url: '/api/getReserve/search/'+reserveSearchJson.no,
+			method: 'post',
+			data: JSON.stringify(reserveSearchJson),
+			contentType: 'application/json; charset=utf-8',
+			dataType: 'json',
+			success: function(datas){
+				console.log(datas)
+				let json = new Object();
+				$.each(datas , function (i, data){
+					//console.log(data)
+			   		json.roomNo = data[1].no;
+			   		json.reserveNo = data[0].no;
+			   		json.title = (data[0].paymentFlg==0?"❌ ":"✔ ") + data[1].roomNum + "号室 " ;
+			   		json.roomNum = data[1].roomNum;
+			   		json.bankNo = data[0].bankNo;
+			   		json.adultCost = data[1].adultCost;
+			   		json.childCost = data[1].childCost;
+			   		json.buildCd = data[1].buildCd;
+			   		json.max = data[1].max;
+			   		json.colorCd = data[1].colorCd;
+			   		json.images = data[1].images;
+			   		json.start = moment(data[0].startDate).format('YYYY-MM-DD');
+			   		json.end = moment(moment(data[0].endDate).add(1, 'days')).format('YYYY-MM-DD');
+			   		json.color =data[1].colorCd;
+			   		roomInfoDataArr.push(json);
+				});
+				
+				$('.roomInfo-modal').find('.modal-content').css('width','900px');
+				$('.roomInfo-modal').find('.modal-body').html(
+					'<div class="form-group row" style="justify-content: flex-end;">'+
+					'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">phone</label>'+
+					'<div class="col-sm-2"><input class="form-control phone" type="text" placeholder="" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{3,4}" maxlength="13"/>'+
+					'<input class="form-control phone__clone" type="hidden" placeholder="" style="display: none;"/></div>'+
+					'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Bank</label>'+
+					'<div class="col-sm-2"><select class="bankSelect form-control mx-sm-10"><option value="">---</option></select></div>'+
+					'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">입실일</label>'+
+					'<div class="col-sm-2"><input class="form-control start" type="text" placeholder="" readonly style="background-color: #fff;"/></div>'+
+					'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">퇴실일</label>'+
+					'<div class="col-sm-2" ><input class="form-control end" type="text" placeholder="" readonly style="background-color: #fff;"/></div></div>'+
+					'<div class="form-group row headModal-secondTr" style="justify-content: flex-end;">'+
+					'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Adult</label>'+
+					'<div class="col-sm-1"><input class="form-control detail__count-adult" type="number" placeholder=""/></div>'+
+					'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Child</label>'+
+					'<div class="col-sm-1"><input class="form-control detail__count-child" type="number" placeholder=""/></div>'+
+					'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">総金額</label>'+
+					'<div class="col-sm-2"><input class="form-control detail__totalPrice" type="text" placeholder="" readonly style="background-color: #fff;"/></div>'+
+					
+					'</div>'
+				);
+				//console.log(data[0][0])
+				if(datas[0][0].paymentFlg === '0' && datas[0][0].cancelFlg === '0' && datas[0][0].deleteFlg === '0'){
+					$('.roomInfo-modal').find('.modal-body').find('.headModal-secondTr').append(
+						'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label statusLabel">결제대기중</label>'+
+						'<div class="col-sm-2 statusBtnDiv"><button type="button" class="btn btn-success search-modalPaymentBtn">결제</button></div>'
+					);
+					changDataStatusOnBtn(datas)
+				}
+				if(datas[0][0].paymentFlg === '1'){
+					$('.roomInfo-modal').find('.modal-body').find('.headModal-secondTr').append(
+						'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제완료</label>'
+					);
+					changDataStatusOnBtn(datas)
+				}
+				setTimeout(function(){
+					//bankInfo
+					$.getJSON('/api/payment/list' ,function(arr){
+						$('.bankSelect').html('<option value="">---</option>');
+						//console.log(arr);
+						$.each(arr, function(i, bank){
+							//console.log(bank);
+							let optionGroup = document.createElement('option');
+							//console.log(bank.bankName + bank.bankCd)
+							optionGroup.innerText = bank.bankName;
+							optionGroup.value=bank.bankCd;
+							if(bank.bankCd == datas[0][0].bankNo){
+								optionGroup.setAttribute ("selected", true);
+							}
+							
+							$('.bankSelect').append(optionGroup);
+						})
+					});//
+					$('.roomInfo-modal').find('.detail__totalPrice').val(datas[0][0].totalCost.toLocaleString('ja-JP'));
+					$('.roomInfo-modal').find('.detail__count-adult').val(datas[0][0].adult);
+					$('.roomInfo-modal').find('.detail__count-child').val(datas[0][0].child);
+					$('.roomInfo-modal').find('.start').val(moment(datas[0][0].startDate).format('YYYY/MM/DD'));
+					$('.roomInfo-modal').find('.end').val(moment(datas[0][0].endDate).format('YYYY/MM/DD'));
+					$('.roomInfo-modal').find('.modal-header').html('<h5 class="modal-title search-detail__romNum"></h5>'+
+						'<label for="" class="col-sm-1 col-form-label "></label>'+
+						'<div class="col-sm-2">'+
+							'<input class="form-control customer" type="text" placeholder=""/>'+
+							'<input class="reserveNo" type="hidden">'+
+							'<input class="startDate" type="hidden">'+
+							'<input class="endDate" type="hidden">'+
+						'</div>'+
+						'<label for="" class="col-sm-2 col-form-label">顧客様</label>'+
+						'<label for="" class="col-sm-1 col-form-label">regDate</label>'+
+						'<div class="col-sm-4">'+
+							'<input class="form-control regDate" type="text" placeholder="" readonly="readonly" style="background-color: #fff; border:none;"/>'+
+						'</div>'+
+						'<button type="button" class="close" data-dismiss="modal" aria-label="Close">'+
+							'<span aria-hidden="true">&times;</span>'+
+						'</button>'
+					);
+					$('.roomInfo-modal').find('.search-detail__romNum').text(datas[0][1].roomNum +"号室");
+					$('.roomInfo-modal').find('.customer').val(datas[0][0].name);
+					$('.roomInfo-modal').find('.phone').val( datas[0][0].phone.replace(/[^0-9]/g, "").replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3") );
+					$('.roomInfo-modal').find('.regDate').val(moment(datas[0][0].createdAt).format('YYYY年MM月DD日'));
+					
+					$('.roomInfo-modal').find('input').attr('disabled', true);
+					$('.roomInfo-modal').find('select').attr('disabled', true);
+					$('.roomInfo-modal').find('input').css('background-color','#fff');
+					$('.roomInfo-modal').find('input').css('border','none');
+					$('.roomInfo-modal').find('select').css('background-color','#fff');
+					$('.roomInfo-modal').find('select').css('border','none');
+				}, 50);
+				$('.modal-dialog').animate({margin: '5.75rem auto'},{transform: 'translateX(-35%)'});
+			}
+		});	
+	});
+
+	function searchedSpecificData(data){
+		//console.log(data[0][0])
+		if(data[0][0].paymentFlg === '0' && data[0][0].cancelFlg === '0' && data[0][0].deleteFlg === '0'){
+			$('.roomInfo-modal').find('.modal-body').find('.statusBtnDiv').append(
+				'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제대기중</label>'+
+				'<div class="col-sm-2 statusBtnDiv"><button type="button" class="btn btn-success search-modalPaymentBtn">결제</button></div>'
+			);
+			changDataStatusOnBtn(data)
+		}
+		if(data[0][0].paymentFlg === '1'){
+			$('.roomInfo-modal').find('.modal-body').find('.statusLabel').text(
+				'결제완료'
+			);
+			changDataStatusOnBtn(data)
+			$('.search-modalPaymentBtn').hide();
+		}
+	};
+
+	//Modify status
+	$('.roomInfo-modal').on('click','.modal-body .btn', function(){
+		//console.log($(this))
+		$('.roomInfo-modal').find('.modal-body').find('.btn').attr('data-deleteFlg')
+		$('.roomInfo-modal').find('.modal-body').find('.btn').attr('data-cancelFlg')
+		$('.roomInfo-modal').find('.modal-body').find('.btn').attr('data-paymentFlg')
+		//console.log($(this).attr('data-deleteFlg'))
+		//console.log($(this).attr('data-cancelFlg'))
+		//console.log($(this).attr('data-paymentFlg'))
+		let reserveNo = $(this).attr('data-reserveNo')
+		//결제 취소
+		let reserveStatus = {};
+		let statusCode = "";
+		if($(this).attr('data-cancelFlg') === '0' && $(this).attr('data-paymentFlg') === '1' && $(this).attr('data-deleteFlg') === '0'){
+			console.log("결제 취소"+$(this).attr('data-cancelFlg'))
+			reserveStatus = {
+				no: reserveNo,
+				deleteFlg: 0,
+				cancelFlg: 1,
+				paymentFlg: 0,
+			}
+			console.log(reserveStatus)
+			statusCode = '1';
+		}
+		//삭제 표시 - 재결제
+		else if($(this).attr('data-deleteFlg') === '0' && $(this).attr('data-cancelFlg') === '1' && $(this).attr('data-paymentFlg') === '0' && $(this).text() === '결제'){
+			console.log("삭제 표시-결제"+$(this).attr('data-cancelFlg'))
+			reserveStatus = {
+				no: reserveNo,
+				deleteFlg: 0,
+				cancelFlg: 0,
+				paymentFlg: 1,
+			}
+			console.log(reserveStatus)
+			statusCode = '3';
+		}
+		//삭제 표시 - 삭제
+		else if($(this).attr('data-deleteFlg') === '0' && $(this).attr('data-cancelFlg') === '1' && $(this).attr('data-paymentFlg') === '0' && $(this).text() === '삭제'){
+			console.log("삭제 표시"+$(this).attr('data-cancelFlg'))
+			reserveStatus = {
+				no: reserveNo,
+				deleteFlg: 1,
+				cancelFlg: 0,
+				paymentFlg: 0,
+			}
+			console.log(reserveStatus)
+			statusCode = '2';
+		}
+		//결제 가능
+		else if($(this).attr('data-cancelFlg') === '0' && $(this).attr('data-paymentFlg') === '0' && $(this).attr('data-deleteFlg') === '0'){
+			console.log("결제 가능"+$(this).attr('data-paymentFlg'))
+			reserveStatus = {
+				no: reserveNo,
+				deleteFlg: 0,
+				cancelFlg: 0,
+				paymentFlg: 1,
+			}
+			console.log(reserveStatus)
+			statusCode = '3';
+		}
+		$.ajax({
+			url: '/api/getReserve/search/statusChange',
+			method: 'post',
+			data: JSON.stringify(reserveStatus),
+			contentType: 'application/json; charset=utf-8',
+			dataType: 'json',
+			success: function(datas){
+				console.log(datas)
+				if(statusCode === '1'){
+					$('.toast').css('z-index','2560');
+					$('.toast').css('right','2%');
+					$('.toast').toast('show')
+					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 취소되었습니다.");
+					$('.mr-auto').text("Success");
+				} else if(statusCode === '2'){
+					$('.toast').css('z-index','2560');
+					$('.toast').css('right','2%');
+					$('.toast').toast('show')
+					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 삭제되었습니다.");
+					$('.mr-auto').text("Success");
+				} else {
+					$('.toast').css('z-index','2560');
+					$('.toast').css('right','2%');
+					$('.toast').toast('show')
+					$('.toast-body').text('예약번호 '+datas[0][0].no + "번이 결제되었습니다.");
+					$('.mr-auto').text("Success");
+				}
+				searchedSpecificData(datas);
+				$('.startDate').val('')
+				$('.endDate').val('')
+				$.getJSON('/api/checkReserveSpecify/'+amount+"/${roomNum}" ,function(arr){
+					console.log(arr);
+					let jsonList = new Array();
+			       	  $.each(arr, function(i, data){
+			       		disabledArr.push(getRange(data[1].startDate, data[1].endDate, 'days').flat(Infinity));
+			       		//console.log(data[1]);
+			       		console.log(data[1].startDate+ " " + data[1].endDate);
+			       		//console.log(uniteUnique(disabledArr));
+						//console.log(data);
+						let json = new Object();
+			       		json.title = data[1].roomNo.roomTitle;
+			       		json.start = moment(data[1].startDate).format('YYYY-MM-DD');
+			       		json.end = moment(data[1].endDate).format('YYYY-MM-DD');
+			       		json.color =data[0].colorCd;
+			     		jsonList.push(json);
+			       	  });
+			       	/* var calendarEl = document.getElementById('calendar');
+			        var calendar = new FullCalendar.Calendar(calendarEl, {
+			          initialView: 'dayGridMonth',
+			          initialDate: dateString,
+			          height: 650,
+			          dayMaxEvents: true, // allow "more" link when too many events
+			          aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
+			          events: jsonList,
+			       }); */
+					
+			        //calendar.render();
+			        
+				});
+			}
+		}); 
+	});
+	
 });//
 
-function changDataStatusOnBtn(data){
-	$('.roomInfo-modal').find('.modal-body').find('.btn').attr('data-deleteFlg', data[0][0].deleteFlg)
-	$('.roomInfo-modal').find('.modal-body').find('.btn').attr('data-cancelFlg', data[0][0].cancelFlg)
-	$('.roomInfo-modal').find('.modal-body').find('.btn').attr('data-paymentFlg', data[0][0].paymentFlg)
-	$('.roomInfo-modal').find('.modal-body').find('.btn').attr('data-reserveNo', data[0][0].no)
-}
-	
-$('.checkOrder').on('click', function(){
-	$.ajax({
-		url: '/api/getReserve/search/'+reserveSearchJson.no,
-		method: 'post',
-		data: JSON.stringify(reserveSearchJson),
-		contentType: 'application/json; charset=utf-8',
-		dataType: 'json',
-		success: function(datas){
-			console.log(datas)
-			let json = new Object();
-			$.each(datas , function (i, data){
-				//console.log(data)
-		   		json.roomNo = data[1].no;
-		   		json.reserveNo = data[0].no;
-		   		json.title = (data[0].paymentFlg==0?"❌ ":"✔ ") + data[1].roomNum + "号室 " ;
-		   		json.roomNum = data[1].roomNum;
-		   		json.bankNo = data[0].bankNo;
-		   		json.adultCost = data[1].adultCost;
-		   		json.childCost = data[1].childCost;
-		   		json.buildCd = data[1].buildCd;
-		   		json.max = data[1].max;
-		   		json.colorCd = data[1].colorCd;
-		   		json.images = data[1].images;
-		   		json.start = moment(data[0].startDate).format('YYYY-MM-DD');
-		   		json.end = moment(moment(data[0].endDate).add(1, 'days')).format('YYYY-MM-DD');
-		   		json.color =data[1].colorCd;
-		   		roomInfoDataArr.push(json);
-			});
-			
-			$('.roomInfo-modal').find('.modal-content').css('width','900px');
-			$('.roomInfo-modal').find('.modal-body').html(
-				'<div class="form-group row" style="justify-content: flex-end;">'+
-				'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">phone</label>'+
-				'<div class="col-sm-2"><input class="form-control phone" type="text" placeholder="" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{3,4}" maxlength="13"/>'+
-				'<input class="form-control phone__clone" type="hidden" placeholder="" style="display: none;"/></div>'+
-				'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Bank</label>'+
-				'<div class="col-sm-2"><select class="bankSelect form-control mx-sm-10"><option value="">---</option></select></div>'+
-				'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">입실일</label>'+
-				'<div class="col-sm-2"><input class="form-control start" type="text" placeholder="" readonly style="background-color: #fff;"/></div>'+
-				'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">퇴실일</label>'+
-				'<div class="col-sm-2" ><input class="form-control end" type="text" placeholder="" readonly style="background-color: #fff;"/></div></div>'+
-				'<div class="form-group row headModal-secondTr" style="justify-content: flex-end;">'+
-				'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Adult</label>'+
-				'<div class="col-sm-1"><input class="form-control detail__count-adult" type="number" placeholder=""/></div>'+
-				'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Child</label>'+
-				'<div class="col-sm-1"><input class="form-control detail__count-child" type="number" placeholder=""/></div>'+
-				'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">総金額</label>'+
-				'<div class="col-sm-2"><input class="form-control detail__totalPrice" type="text" placeholder="" readonly style="background-color: #fff;"/></div>'+
-				
-				'</div>'
-			);
-			//console.log(data[0][0])
-			if(datas[0][0].paymentFlg === '0' && datas[0][0].cancelFlg === '0' && datas[0][0].deleteFlg === '0'){
-				$('.roomInfo-modal').find('.modal-body').find('.headModal-secondTr').append(
-					'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제대기중</label>'+
-					'<div class="col-sm-2"><button type="button" class="btn btn-success search-modalPaymentBtn">결제</button></div>'
-				);
-				changDataStatusOnBtn(datas)
-			}
-			if(datas[0][0].paymentFlg === '1'){
-				$('.roomInfo-modal').find('.modal-body').find('.headModal-secondTr').append(
-					'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제완료</label>'+
-					'<div class="col-sm-2"><button type="button" class="btn btn-danger search-modalCancelBtn">주문취소</button></div>'
-				);
-				changDataStatusOnBtn(datas)
-			}
-			if(datas[0][0].cancelFlg === '1' && datas[0][0].paymentFlg === '0'){
-				$('.roomInfo-modal').find('.modal-body').find('.headModal-secondTr').append(
-					'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">취소됨</label>'+
-					'<div class="col-sm-2"><button type="button" class="btn btn-danger search-modalDeleteBtn">삭제</button></div>'
-				);
-				changDataStatusOnBtn(datas)
-			}
-			if(datas[0][0].deleteFlg === '1'){
-				$('.roomInfo-modal').find('.modal-body').find('.headModal-secondTr').append(
-					'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">삭제됨</label>'+
-					'<div class="col-sm-2"></div>'
-				);
-				changDataStatusOnBtn(datas)
-			}
-			setTimeout(function(){
-				//bankInfo
-				$.getJSON('/api/payment/list' ,function(arr){
-					$('.bankSelect').html('<option value="">---</option>');
-					//console.log(arr);
-					$.each(arr, function(i, bank){
-						//console.log(bank);
-						let optionGroup = document.createElement('option');
-						//console.log(bank.bankName + bank.bankCd)
-						optionGroup.innerText = bank.bankName;
-						optionGroup.value=bank.bankCd;
-						if(bank.bankCd == datas[0][0].bankNo){
-							optionGroup.setAttribute ("selected", true);
-						}
-						
-						$('.bankSelect').append(optionGroup);
-					})
-				});//
-				$('.roomInfo-modal').find('.detail__totalPrice').val(datas[0][0].totalCost.toLocaleString('ja-JP'));
-				$('.roomInfo-modal').find('.detail__count-adult').val(datas[0][0].adult);
-				$('.roomInfo-modal').find('.detail__count-child').val(datas[0][0].child);
-				$('.roomInfo-modal').find('.start').val(moment(datas[0][0].startDate).format('YYYY/MM/DD'));
-				$('.roomInfo-modal').find('.end').val(moment(datas[0][0].endDate).format('YYYY/MM/DD'));
-				$('.roomInfo-modal').find('.modal-header').html('<h5 class="modal-title search-detail__romNum"></h5>'+
-					'<label for="" class="col-sm-1 col-form-label "></label>'+
-					'<div class="col-sm-2">'+
-						'<input class="form-control customer" type="text" placeholder=""/>'+
-						'<input class="reserveNo" type="hidden">'+
-						'<input class="startDate" type="hidden">'+
-						'<input class="endDate" type="hidden">'+
-					'</div>'+
-					'<label for="" class="col-sm-2 col-form-label">顧客様</label>'+
-					'<label for="" class="col-sm-1 col-form-label">regDate</label>'+
-					'<div class="col-sm-4">'+
-						'<input class="form-control regDate" type="text" placeholder="" readonly="readonly" style="background-color: #fff; border:none;"/>'+
-					'</div>'+
-					'<button type="button" class="close" data-dismiss="modal" aria-label="Close">'+
-						'<span aria-hidden="true">&times;</span>'+
-					'</button>'
-				);
-				$('.roomInfo-modal').find('.search-detail__romNum').text(datas[0][1].roomNum +"号室");
-				$('.roomInfo-modal').find('.customer').val(datas[0][0].name);
-				$('.roomInfo-modal').find('.phone').val( datas[0][0].phone.replace(/[^0-9]/g, "").replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3") );
-				$('.roomInfo-modal').find('.regDate').val(moment(datas[0][0].createdAt).format('YYYY年MM月DD日'));
-				
-				$('.roomInfo-modal').find('input').attr('disabled', true);
-				$('.roomInfo-modal').find('select').attr('disabled', true);
-				$('.roomInfo-modal').find('input').css('background-color','#fff');
-				$('.roomInfo-modal').find('input').css('border','none');
-				$('.roomInfo-modal').find('select').css('background-color','#fff');
-				$('.roomInfo-modal').find('select').css('border','none');
-			}, 50);
-			$('.modal-dialog').animate({margin: '1.75rem 3.75rem 3.75rem 25%'});
-		}
-	});	
-});
+
 	
 		
 	

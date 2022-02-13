@@ -10,6 +10,10 @@
     let = tempDelete = '';
     let deleteFiles = [];
     $(document).ready(function(){
+    	$('.register').click(function(){
+    		$(this).hide("slide", { direction: "up" }, 300);
+    		$('.registerMenu').show("slide", { direction: "right" }, 300);
+    	})
     	let sortObject = $('.sortable');
     	 if(sortObject.find('li').length>0){
      		for(let i=0;i< sortObject.find('li').length; i++){
@@ -192,6 +196,8 @@
 								success: function(data){
 									console.log('slideImages/register: ');
 									console.log(data);
+									$('.registerMenu').hide(200);
+									$('.register').show(300);
 									$('.delete_image').remove();
 								}
 					   	 	});
@@ -439,6 +445,12 @@
       	<div class="bg-dark " style="height: 94px"></div>
         <header class="masthead" style="padding-top: 30px !important">
 			<div class="container">
+				<button type="button" class="register btn btn-primary" style="position:absolute;transform: translateX(1325%);top: 12%;">Register</button>
+				<div class="registerMenu" style="display: none; position:absolute;transform: translateX(254%);top: 12%;">
+					<input data-file="" type="file" class="form-control fileUpload" onchange="readInputFile(this)" multiple="multiple" accept="image/*" style=" max-width: 300px; margin: 0; display: inline-block;">
+					<input type="hidden" class="form-control result__sort order" style=" max-width: 200px; margin: 0; display: inline-block;">
+					<button type="button" class="confirm btn btn-success">登録</button>
+				</div>
 				<div onmouseover="loadSoratables(this)">
 				
 					<ul class="sortable imageOrder__${i.count}">
@@ -465,9 +477,7 @@
 						</c:forEach>
 					</ul>
 				</div>
-				<input data-file="" type="file" class="form-control fileUpload" onchange="readInputFile(this)" multiple="multiple" accept="image/*" style=" max-width: 300px; margin: 0; display: inline-block;">
-				<input type="text" class="form-control result__sort order" style=" max-width: 200px; margin: 0; display: inline-block;">
-				<button type="button" class="confirm btn btn-success">確認</button>
+				
 				<!-- <input type="checkbox" checked data-toggle="toggle" data-off="Disply" data-on="Delete" data-offstyle="primary" data-onstyle="danger">
 				<input type="checkbox" checked data-toggle="toggle" data-on="Activation" data-off="Disabled" data-onstyle="success" data-offstyle="outline-secondary"> -->
 			</div>

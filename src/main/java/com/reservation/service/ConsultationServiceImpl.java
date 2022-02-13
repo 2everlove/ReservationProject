@@ -108,8 +108,9 @@ public class ConsultationServiceImpl implements ConsultationService {
 	@Override
 	public int modifyDeleteByNo(Long no, String deleteFlg) {
 		Optional<Consultation> entityContent = consultationRepository.findById(no);
+		System.out.println("modifyDeleteByNo: "+no+"/ "+entityContent.get());
 		int result = 0;
-		if(entityContent.get().getGrno() == no) {
+		if(entityContent.get().getGrno().equals(no)) {
 			result = consultationRepository.modifyDeleteByGrno(no, deleteFlg);
 		} else {
 			result = consultationRepository.modifyDeleteByNo(no, deleteFlg);
