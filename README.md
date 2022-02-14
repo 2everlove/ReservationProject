@@ -35,6 +35,8 @@ Toy Project
     <li>Color: UI Colors<sub><<a href="https://flatuicolors.com/">Link</a>><sub></li>
     <li>Map: Google<sub><<a href="https://developers.google.com/maps/documentation">Link</a>><sub></li>
     <li>Date: Moment<sub><<a href="https://momentjs.com/">Link</a>><sub></li>
+    <li>DatePicker: Date Range Picker<sub><<a href="https://www.daterangepicker.com/">Link</a>><sub></li>
     <li>Calendar: FullCalendar<sub><<a href="https://fullcalendar.io/">Link</a>><sub></li>
     <li>TextEditor: Summernote<sub><<a href="https://summernote.org/">Link</a>><sub></li>
+    <li>CSS: Bootstrap<sub><<a href="https://getbootstrap.com/">Link</a>><sub></li>
   </ul>
