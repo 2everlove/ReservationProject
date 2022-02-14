@@ -22,7 +22,7 @@ Toy Project
     <li>JUnit: 4.12</li>
     <li>JQuery: 3.5.1</li>
     <li>Oracle SQL Developer: 20.4.1</li>
-    <li>JPA(jpa): 2.2.9.RELEASE</li>
+    <li>JPA: 2.2.9.RELEASE</li>
     <li>Apache Tomcat: 9.0.43</li>
     <li>STS: 3.9.11</li>
   </ul>
