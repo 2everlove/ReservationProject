@@ -1,5 +1,5 @@
-# ReservationProject
- Toy Project
+# Spring-WebProject [Booking]<br>
+Toy Project
  
  <p>
   <ul>
@@ -14,7 +14,8 @@
 <br>
 
 
-<h2>Configuration [開発環境]</h2>
+<hr>
+  <h2>Configuration [開発環境]</h2>
   <ul>
     <li>Java: jdk1.8.0_281</li>
     <li>Spring: 5.2.19.RELEASE</li>
