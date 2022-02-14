@@ -18,7 +18,7 @@ Toy Project
   <h2>Configuration [開発環境]</h2>
   <ul>
     <li>Java: jdk1.8.0_281</li>
-    <li>Spring: 5.2.19.RELEASE</li>
+    <li>Spring: 5.2.19.RELEASE <sub>Excluded Spring boot</sub></li>
     <li>JUnit: 4.12</li>
     <li>JQuery: 3.5.1</li>
     <li>Oracle SQL Developer: 20.4.1</li>
