@@ -33,7 +33,7 @@
 								部屋&予約
 							</a>
 							<div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
-								<a class="dropdown-item text-white" href="/booking/1">予約</a>
+								<!-- <a class="dropdown-item text-white" href="/booking/1">予約</a> -->
 								<a class="dropdown-item text-white" href="/booking">部屋</a>
 								<a class="reserveCheckModal dropdown-item text-white" href="javascript:void(0);">予約確認</a>
 							</div>

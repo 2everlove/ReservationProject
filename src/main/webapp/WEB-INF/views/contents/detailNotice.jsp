@@ -166,6 +166,7 @@ $('.result__modify').click(function(){
 				$('#summernote').summernote('destroy');
 				$('.result__delete').hide();
 				$('#contents').show();
+				$('.result__title').attr('disabled',true);
 				document.querySelector('.result__confirm').value = 'Modify';
 				document.querySelector('.result__confirm').classList.add('result__modify');
 				document.querySelector('.result__modify').classList.remove('result__confirm');

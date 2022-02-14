@@ -144,25 +144,33 @@
 				success: function(data){
 					console.log(data);
 					let dataLength = 0;
+					let j = 0;
 					for(let i in formArr){
 						console.log(typeof(formArr[i]));
 						if(typeof(formArr[i]) === 'object'){
+							storedFiles.splice($(li[i]).val()-1,1,data[dataLength].imageURL)
+							console.log(i)
+							console.log(formArr.length)
+							console.log(formArr.length-i-1)
+							console.log(j)
+							console.log(typeof(i-formArr.length-1))
 							formArr[i] = data[dataLength].imageURL
 							/* console.log(tbody);
 							console.log(tbody.find('.sortable li'));
 							console.log(tbody.find('.sortable li')[i]);
 							console.log(tbody.find('.sortable li')[i].getAttribute('file'));*/
 							console.log(li[i]);
+							$(li[i]).addClass('origin')
 							console.log(li[i].getAttribute('file'));
 							console.log($(li[i]).val());
 							li[i].setAttribute('file', data[dataLength].imageURL);
 							let url = '/api/display?fileName='+data[dataLength].imageURL;
-							li[i].find('img').attr('src', url);
+							$(li[i]).find('.card-body > img').attr('src', url);
 							
 							
 							let sliderImages = {
 								filename: data[dataLength].imageURL,
-								sortNo: registerLiList[i],
+								sortNo: registerLiList[j],
 								deleteFlg: '',
 								activity: '',
 								builldCd: '7',
@@ -196,9 +204,13 @@
 								success: function(data){
 									console.log('slideImages/register: ');
 									console.log(data);
+									$(li[i]).attr('data-no',data.no)
 									$('.registerMenu').hide(200);
 									$('.register').show(300);
 									$('.delete_image').remove();
+									$('.fileUpload').val('');
+									j++;
+									console.log(storedFiles)
 								}
 					   	 	});
 						}
@@ -283,6 +295,8 @@
 	   		//console.log(deleteFiles);
 	   		console.log(storedFiles);
 	   		console.log(deleteFiles.join(','));
+	   		reorder();
+	   		add_order($('.sortable '));
 	   		/* for(let i = 0; i < storedFiles.length; i++) {
 	   		    if(storedFiles[i].name == file) {
 	   		        //storedFiles.splice(i, 1);
@@ -299,14 +313,25 @@
        }
     function add_order(e) {
     	console.log(e);
+       	let i = 0;
+       	console.log(storedFiles)
         e.children().each(function(n) {
         	//console.log(n+1);
         	//console.log($(this));
         	//console.log($(this).find('li').attr('item'));
-        	if($(this).attr('item') === undefined){
+        	if(!$(this).hasClass('origin')){
+        		if($(this).attr('item') === undefined){
+            		$(this).val(n+1)
+                	$(this).attr('item',n);
+            	} else {
+            		$(this).val(Number(e.find('.origin').length)+i+1);
+                	$(this).attr('item',Number(e.find('.origin').length)+i);
+                	i++;
+            	}
+        	} else {
         		$(this).val(n+1)
-            	$(this).attr('item',n);
         	}
+        	
         });
         console.log('test');
     }
@@ -403,7 +428,7 @@
 											'<img src="'+e.target.result+'" height=200 width=200 style="cursor: pointer;"/>'+
 											'<input type="file" class="fileModify" accept="image/*" style="display: none;">'+
 											'<div class="modifyImage text-white">Modify</div>'+
-											'<div class="toggle btn btn-danger on deleteFlg" data-toggle="toggle" role="button" style="width: 118.062px; height: 38px; position: absolute; top: 30%;transform: translateX(20px);"><input type="checkbox" checked="" data-toggle="toggle" data-off="Disply" data-on="Delete" data-offstyle="primary" data-onstyle="danger"><div class="toggle-group"><label for="" class="btn btn-danger toggle-on">Delete</label><label for="" class="btn btn-primary toggle-off">Disply</label><span class="toggle-handle btn btn-light"></span></div></div>'+
+											'<div class="toggle btn btn-danger off deleteFlg" data-toggle="toggle" role="button" style="width: 118.062px; height: 38px; position: absolute; top: 30%;transform: translateX(20px);"><input type="checkbox" checked="" data-toggle="toggle" data-off="Disply" data-on="Delete" data-offstyle="primary" data-onstyle="danger"><div class="toggle-group"><label for="" class="btn btn-danger toggle-on">Delete</label><label for="" class="btn btn-primary toggle-off">Disply</label><span class="toggle-handle btn btn-light"></span></div></div>'+
 											'<div class="toggle btn btn-success on activation" data-toggle="toggle" role="button" style="width: 118.062px; height: 38px; position: absolute; top: 50%;transform: translateX(20px);"><input type="checkbox" checked="" data-toggle="toggle" data-on="Activation" data-off="Disabled" data-onstyle="success" data-offstyle="outline-secondary"><div class="toggle-group"><label for="" class="btn btn-success toggle-on">Activation</label><label for="" class="btn btn-secondary toggle-off">Disabled</label><span class="toggle-handle btn btn-light"></span></div></div>'+
 											'<span style="position: absolute;top: -80px;left: 240px;height: 20px;">'+moment().format('YYYY-MM-DD')+'</span>'+
 											"<a href='javascript:void(0);' class='delete_image' title='Cancel'><img class='delete-btn' src='https://w7.pngwing.com/pngs/776/921/png-transparent-x-mark-check-mark-scalable-graphics-computer-file-red-cross-mark-red-x-illustration-miscellaneous-angle-hand.png' /></a>"+

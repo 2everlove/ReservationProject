@@ -79,12 +79,33 @@ a{text-decoration: none;}
 						</div>
 					<div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 1rem">
 						<c:if test="${result != null}">
-							<input type="button" value="Delete" class="btn btn-danger result__delete" style="display: none;">
-							<input type="button" value="List" class="btn btn-secondary result__List">
-							<input type="button" value="Reply" class="btn btn-primary result__reply">
-							<input type="button" value="Cancel" class="btn btn-warning result__cancel" style="display: none;" onclick="displayCancel(this)">
-							<input type="button" value="Register" class="btn btn-primary result__register" style="display: none;">
-							<input type="button" value="Modify" class="btn btn-primary result__modify">
+							<c:if test="${result.name != 'Admin'}">
+								<c:if test="${result.lockFlg == '0'}">
+									<input type="button" value="List" class="btn btn-secondary result__List">
+								</c:if>
+								<c:if test="${result.lockFlg == '1'}">
+									<input type="button" value="Delete" class="btn btn-danger result__delete" style="display: none;">
+									<input type="button" value="List" class="btn btn-secondary result__List">
+									<input type="button" value="Reply" class="btn btn-primary result__reply">
+									<input type="button" value="Cancel" class="btn btn-warning result__cancel" style="display: none;" onclick="displayCancel(this)">
+									<input type="button" value="Register" class="btn btn-primary result__register" style="display: none;">
+									<input type="button" value="Modify" class="btn btn-primary result__modify">
+								</c:if>
+							</c:if>
+							<c:if test="${result.name == 'Admin'}">
+								<c:if test="${result.lockFlg == '1'}">
+									<input type="button" value="Delete" class="btn btn-danger result__delete" style="display: none;">
+									<input type="button" value="List" class="btn btn-secondary result__List">
+									<input type="button" value="Reply" class="btn btn-primary result__reply">
+									<input type="button" value="Cancel" class="btn btn-warning result__cancel" style="display: none;" onclick="displayCancel(this)">
+									<input type="button" value="Register" class="btn btn-primary result__register" style="display: none;">
+									<input type="button" value="Modify" class="btn btn-primary result__modify">
+								</c:if>
+								<c:if test="${result.lockFlg == '0'}">
+									<input type="button" value="List" class="btn btn-secondary result__List">
+								</c:if>
+							</c:if>
+							
 						</c:if>
 						<c:if test="${result == null}">
 							<input type="button" value="List" class="btn btn-secondary result__List">

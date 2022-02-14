@@ -4,11 +4,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <link rel="stylesheet" href="/resources/css/MonthPicker.css">
 <script type="text/javascript" src="/resources/js/MonthPicker.js"></script>
-
+ <link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" />
 <style>
+#MonthPicker_Button_AltMonthField2{
+	width: 30px;
+    height: 30px;
+}
 a{text-decoration: none;}
 .ui-button .ui-icon{
     background-image: url(https://code.jquery.com/ui/1.11.4/themes/smoothness/images/ui-icons_888888_256x240.png) !important;
+    zoom: 2;
 }
 #MonthPicker_Button_AltMonthField2{
 }

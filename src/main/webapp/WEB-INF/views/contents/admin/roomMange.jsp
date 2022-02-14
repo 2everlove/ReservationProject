@@ -264,7 +264,7 @@ function initHtml(){
 		<span class="span__roomNum" style="display: none;"> </span> <span style="display: none;">&nbsp;</span>
 		<input type="text" class="form-control result__roomNum" value="" style="max-width: 150px !important;">
 		<input type="hidden" class="form-control result__roomNo" value="">
-		<span class="dot span__colorCd" style="height: 15px; width: 15px; background-color: #fffff; border-radius: 50%; display: none; border: 0.5px solid;"></span>
+		<span class="dot span__colorCd" style="height: 15px; width: 15px; background-color: #00bfff; border-radius: 50%; display: inline-block; border: 0.5px solid;"></span>
 	</th>
 	<td>
 		<input type="color" class="form-control result__color" value="" style="">
@@ -512,7 +512,7 @@ $('.baseLine').on('click', '.registerBtn', function(){
 					tbody.find('.span__roomTitle').text(data.roomTitle);
 					
 					tbody.find('.ts-result__deleteFlg').after(
-						'<td class="result__regDate" style="">'+moment().format('YYYY-MM-DD')+'</td>'		
+						'<td class="result__regDate" style="">'+moment().format('YYYY/MM/DD')+'</td>'		
 					);
 					
 					
@@ -531,7 +531,7 @@ $('.baseLine').on('click', '.registerBtn', function(){
 					let fileObject = $(fileTr);
 					let imageTrObject = $(imageTr);
 					$('.result__regDate').show();
-					
+					$('.imagesShowing__new').hide();
 					$('.baseLine').removeClass('baseLine');
 					tbody.find('.registerCancelBtn').detach();
 					tbody.find('.registerBtn').detach();

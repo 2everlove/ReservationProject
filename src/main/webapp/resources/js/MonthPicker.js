@@ -175,7 +175,7 @@ along with this program.  If not, see
             prev12Years: 'Jump Back 12 Years',
             nextLabel: 'Next',
             prevLabel: 'Prev',
-            buttonText: 'Open Month Chooser',
+            buttonText: '',
             jumpYears: 'Jump Years',
             backTo: '戻る',
             months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
