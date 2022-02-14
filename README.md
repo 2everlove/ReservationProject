@@ -26,3 +26,15 @@ Toy Project
     <li>Apache Tomcat: 9.0.43</li>
     <li>STS: 3.9.11</li>
   </ul>
+ <br>
+<hr>
+  <h3>References [参考にしたAPI]</h3>
+  <ul>
+    <li>Font: Google Fonts<sub><<a href="https://fonts.google.com/">Link</a>><sub></li>
+    <li>Icon: Font Awesome<sub><<a href="https://fontawesome.com/icons">Link</a>><sub></li>
+    <li>Color: UI Colors<sub><<a href="https://flatuicolors.com/">Link</a>><sub></li>
+    <li>Map: Google<sub><<a href="https://developers.google.com/maps/documentation">Link</a>><sub></li>
+    <li>Date: Moment<sub><<a href="https://momentjs.com/">Link</a>><sub></li>
+    <li>Calendar: FullCalendar<sub><<a href="https://fullcalendar.io/">Link</a>><sub></li>
+    <li>TextEditor: Summernote<sub><<a href="https://summernote.org/">Link</a>><sub></li>
+  </ul>
