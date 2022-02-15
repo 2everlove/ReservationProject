@@ -5,7 +5,7 @@ Toy Project
   <ul>
     <li>주관 [主管] : <a href = "http://www.cosmo-global.com//">コスモコンサルティング株式会社 [Cosmo Global Systems]</a></li>
     <br>
-    <li>개발 기간 [開発期間] : 22.02.07(月) ~ 22.02.15(火) (約 1週間)</li>
+    <li>개발 기간 [開発期間] : 22.01.10(月) ~ 22.02.15(火) (約 1ヶ月)</li>
     <br>
     <li>발표일 [発表日] : 22.02.15(火) <sub></sub></li>
   </ul>
