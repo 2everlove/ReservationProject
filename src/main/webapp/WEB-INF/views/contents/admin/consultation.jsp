@@ -47,7 +47,14 @@ a{text-decoration: none;}
 											</c:if>
 												${dto.no }
 										</th>
-										<td class="result__title"><a href="/admin/consultation/${dto.no }?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">${dto.title } </a>
+										<td class="result__title"><a href="/admin/consultation/${dto.no }?page=${result.page}&type=${pageRequestDTO.type}&keyword=${pageRequestDTO.keyword}">
+											<c:if test="${dto.name == 'Admin'}">
+												<span style="background-color: #dfe6e9;border-radius: 3px;">${dto.title }</span>
+											</c:if>
+											<c:if test="${dto.name != 'Admin'}">
+												${dto.title }
+											</c:if>
+										 </a>
 											<c:if test="${nowDate == reg}">&nbsp;&nbsp;<i class="fas fa-plus-square"></i></c:if>
 											<c:if test="${dto.lockFlg == '1'}">&nbsp;&nbsp;<i class="fas fa-lock" style="color: #FFC312;"></i></c:if>
 											<c:if test="${dto.deleteFlg == '1'}">&nbsp;&nbsp;<i class="fas fa-trash" style="color: #44bd32;"></i></c:if>

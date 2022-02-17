@@ -62,9 +62,24 @@ public class RestReserve {
 	//search reserve acc name, phone
 	@PostMapping(value = "/getReserve/search", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PageResultDTO<Object[], Object[]>> AjaxGetReserveByNameAndPhone(@RequestBody Map<String, String> map, PageRequestDTO requestDTO){
-		log.info("AjaxGetReserveByNameAndPhone: " + map.get("name")+ map.get("phone")+map.get("page"));
+		log.info("AjaxGetReserveByNameAndPhone: " + map.get("name")+ map.get("phone")+map.get("page")+"/"+map.get("roomNo"));
 		requestDTO.setPage(Integer.parseInt(map.get("page")));
-		return new ResponseEntity<PageResultDTO<Object[], Object[]>>(reserveService.findReserveByNameAndPhoneAndDeleteFlg(requestDTO, map.get("name"), map.get("phone")) ,HttpStatus.OK);
+		PageResultDTO<Object[], Object[]> result = null;
+		try {
+			Long roomNo = 0L;
+			if(map.get("roomNo") != null) {
+				roomNo = Long.parseLong(map.get("roomNo"));
+			}
+			if(roomNo == 0L) {
+				result = reserveService.findReserveByNameAndPhoneAndDeleteFlg(requestDTO, map.get("name"), map.get("phone"));
+			} else {
+				result = reserveService.findReserveByNameAndReserveNo(requestDTO, map.get("name"), roomNo);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<PageResultDTO<Object[], Object[]>>(result ,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<PageResultDTO<Object[], Object[]>>(result ,HttpStatus.OK);
 	}
 	
 	//monthly reserve data
@@ -103,7 +118,18 @@ public class RestReserve {
 	@PostMapping(value = "/getReserve/search/{reserveNo}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Object[]>> AjaxGetReserveByNameAndPhone(@RequestBody ReserveDTO dto, @PathVariable("reserveNo") Long reserveNo){
 		log.info("AjaxGetReserveByNameAndPhone: " + dto);
-		return new ResponseEntity<List<Object[]>>(reserveService.findReserveByNameAndPhone(dto.getName(), dto.getPhone(), reserveNo) ,HttpStatus.OK);
+		List<Object[]> result = null;
+		try {
+			if(dto.getPhone() != null) {
+				result=reserveService.findReserveByNameAndPhone(dto.getName(), dto.getPhone(), reserveNo);
+			} else {
+				result = reserveService.findReserveByNameAndPhone(dto.getName(), reserveNo);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<Object[]>>(result ,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<List<Object[]>>(result ,HttpStatus.OK);
 	}
 	//modify specific data's status
 	@PostMapping(value = "/getReserve/search/statusChange", produces = MediaType.APPLICATION_JSON_VALUE)

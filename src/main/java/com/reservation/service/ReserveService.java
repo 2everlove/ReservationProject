@@ -31,6 +31,8 @@ public interface ReserveService {
 	//이름,폰으로 예약 검색
 	PageResultDTO<Object[], Object[]> findReserveByNameAndPhoneAndDeleteFlg(PageRequestDTO pageable, String name, String phone);
 	
+	PageResultDTO<Object[], Object[]> findReserveByNameAndReserveNo(PageRequestDTO pageable, String name, Long reserveNo);
+	
 	List<ReserveDTO> getDateList(Date dateStart, Date dateEnd, Long roomno);
 	
 	List<Object[]> getDateObjectList(Date dateStart, Date dateEnd, Long roomno);
@@ -50,6 +52,8 @@ public interface ReserveService {
 	int modifyPaymentReserve(ReserveDTO dto);
 
 	List<Object[]> findReserveByNameAndPhone(String name, String phone, Long reserveNo);
+	
+	List<Object[]> findReserveByNameAndPhone(String name, Long reserveNo);
 	
 	PageResultDTO<Object[], Object[]> getReserveAndRoomMonthlyData(PageRequestDTO requestDTO, Date inputDate, int buildCd);
 	

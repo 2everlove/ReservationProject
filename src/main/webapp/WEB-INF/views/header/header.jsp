@@ -53,6 +53,7 @@ let amount = 0;
 let dataArr = new Array();
 let reserve = {};
 console.log(window.location.pathname)
+let nameInModal = '';
 $(document).ready(function(){
 	
 	$('.search-modal__phone').keyup(function(){
@@ -83,9 +84,16 @@ $(document).ready(function(){
 		name: $('.search-modal').find('.search-modal__name').val(),
 		phone: $('.search-modal').find('.search-modal__phone__clone').val(),
 	};
+	
+	
 });//ready
-
-$('.search-modal').on('keyup', '.search-modal__password', function(key){
+$('.search-modal').on('keyup','.search-modal__name', function(){
+	console.log(nameInModal)
+	if($('.search-modal__name').val()!=''){
+		nameInModal = $('.search-modal__name').val()
+	}
+});
+$('.search-modal').on('keyup', '.search-modal__password, .search-modal__orderNo', function(key){
     if(key.keyCode==13) {
     	$('.login-modalLoginBtn').click();
     }
@@ -94,40 +102,43 @@ let flag = "${sessionScope.loginFlg}";
 let inteFlag = "${interceptorMsg}";
 console.log(flag)
 console.log(inteFlag)
+function loginInit() {
+	$('.search-modal').append(`
+			<div class="modal-dialog search-modal-dialog" style="margin: 10.75rem auto;width: 600px;">
+			<div class="modal-content search-modal-content" style="width: 600px;">
+				<div class="modal-header">
+					<i class="fas fa-hotel" id="navbar__log-bar"></i>
+					<span>&nbsp;</span>
+					<h5 class="modal-title">Login</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body search-modal-body">
+					<div class="form-group row" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
+						<label for="" class="col-sm-2 col-form-label">ID</label>
+						<div class="col-sm-6">
+							<input class="form-control search-modal__username" type="text"/>
+						</div>
+					</div>
+					<div class="form-group row" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
+						<label for="" class="col-sm-2 col-form-label">PassWord</label>
+						<div class="col-sm-6">
+							<input class="form-control search-modal__password" type="password"/>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary login-modalLoginBtn">Login</button>
+				</div>
+			</div>
+		</div>
+	`);
+}
 $('.adminLink').click(function(){
 	$('.search-modal').empty();
 	if(flag === "0"){
-		$('.search-modal').append(`
-				<div class="modal-dialog search-modal-dialog" style="margin: 10.75rem auto;width: 600px;">
-				<div class="modal-content search-modal-content" style="width: 600px;">
-					<div class="modal-header">
-						<i class="fas fa-hotel" id="navbar__log-bar"></i>
-						<span>&nbsp;</span>
-						<h5 class="modal-title">Login</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body search-modal-body">
-						<div class="form-group row" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
-							<label for="" class="col-sm-2 col-form-label">ID</label>
-							<div class="col-sm-6">
-								<input class="form-control search-modal__username" type="text"/>
-							</div>
-						</div>
-						<div class="form-group row" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
-							<label for="" class="col-sm-2 col-form-label">PassWord</label>
-							<div class="col-sm-6">
-								<input class="form-control search-modal__password" type="password"/>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-primary login-modalLoginBtn">Login</button>
-					</div>
-				</div>
-			</div>
-		`);
+		 loginInit();
 		$('.search-modal').modal('show');
 		$('.search-modal').find('.search-modal__username').focus();
 	} else {
@@ -138,36 +149,7 @@ $('.adminLink').click(function(){
 if(inteFlag === "0"){
 	$('.search-modal').empty();
 	if(flag === "0"){
-		
-		$('.search-modal').append(`
-				<div class="modal-dialog search-modal-dialog" style="margin: 10.75rem auto;width: 600px;">
-				<div class="modal-content search-modal-content" style="width: 600px;">
-					<div class="modal-header">
-						<i class="fas fa-hotel" id="navbar__log-bar"></i>
-						<span>&nbsp;</span>
-						<h5 class="modal-title">Login</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body search-modal-body">
-						<div class="form-group row" style="justify-content: flex-end;">
-					<label for="" class="col-sm-2 col-form-label">Name</label>
-					<div class="col-sm-4">
-						<input class="form-control search-modal__username" type="text" placeholder=""/>
-						</div>
-						<label for="" class="col-sm-2 col-form-label">password</label>
-						<div class="col-sm-4">
-							<input class="form-control search-modal__password" type="password"/>
-						</div>
-					</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-primary login-modalLoginBtn">Login</button>
-					</div>
-				</div>
-			</div>
-		`);
+		 loginInit();
 		$('.search-modal').modal('show');
 	} else {
 		location.href = "/admin";
@@ -328,31 +310,40 @@ function popupInitBody(data){
 	);
 }
 
-//처음 예약 확인 클릭 시 inner setting
-function headerInitModal(){
-	dataArr.length = 0;
-	$('.search-modal').empty();
+function bookingInit(){
 	$('.search-modal').append(`
 			<div class="modal-dialog search-modal-dialog" style="margin: 10.75rem auto;width: 600px;transform: translateX(-70%);left: 50%;position: absolute;">
 			<div class="modal-content search-modal-content" style="width: 600px;">
 				<div class="modal-header">
 					<h5 class="modal-title">予約確認</h5>
+						<div class="form-check" style="display: flex;flex-wrap: wrap; flex-direction: row;margin-left: 20px;">
+						  <input class="form-check-input namePhone" type="radio" name="orderCheck" id="flexRadioDefault1" value="1" checked>
+						  <label class="form-check-label namePhoneLabe" for="flexRadioDefault1">
+						    Name&Phone
+						  </label>
+					    <div class="form-check" style="margin-left: 20px;">
+					    <input class="form-check-input orderNo" type="radio" name="orderCheck" id="flexRadioDefault2" value="2">
+					    <label class="form-check-label orderNoLabel" for="flexRadioDefault2">
+					      Order NO.
+					    </label>
+					  </div>
+						</div>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body search-modal-body">
 					<div class="form-group row" style="justify-content: flex-end;">
-				<label for="" class="col-sm-2 col-form-label">Name</label>
-				<div class="col-sm-4">
-					<input class="form-control search-modal__name" type="text" placeholder="" value=""/>
-					</div>
-					<label for="" class="col-sm-2 col-form-label">phone</label>
+					<label for="" class="col-sm-2 col-form-label">Name</label>
 					<div class="col-sm-4">
-						<input class="form-control search-modal__phone" type="text" placeholder="" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{3,4}" maxlength="13"/>
-						<input class="form-control search-modal__phone__clone" type="hidden" placeholder="" value="" style="display: none;"/>
+						<input class="form-control search-modal__name" type="text" placeholder="" value=""/>
+						</div>
+						<label for="" class="col-sm-2 col-form-label">phone</label>
+						<div class="col-sm-4">
+							<input class="form-control search-modal__phone" type="text" placeholder="" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{3,4}" maxlength="13"/>
+							<input class="form-control search-modal__phone__clone" type="hidden" placeholder="" value="" style="display: none;"/>
+						</div>
 					</div>
-				</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary search-modalModifyBtn" data-dismiss="modal">Close</button>
@@ -362,6 +353,53 @@ function headerInitModal(){
 			</div>
 		</div>
 		`);
+}
+$('.search-modal').on('click','.orderNo, .orderNoLabel', function(){
+	$('.search-modal-body').empty();
+	$('.search-modal-body').append(`
+		<div class="form-group row" style="justify-content: flex-end;">
+			<label for="" class="col-sm-2 col-form-label">Name</label>
+			<div class="col-sm-4">
+				<input class="form-control search-modal__name" type="text" placeholder="" value=""/>
+			</div>
+			<label for="" class="col-sm-2 col-form-label">Order No</label>
+			<div class="col-sm-4">
+				<input class="form-control search-modal__orderNo" type="text" placeholder="" value=""/>
+			</div>
+		</div>
+	`)
+	$('.search-modal').find('.search-modal__name').val(nameInModal)
+});
+
+
+$('.search-modal').on('click','.namePhone, .namePhoneLabel', function(){
+	console.log("---")
+	$('.search-modal-body').empty();
+	$('.search-modal-body').append(`
+		<div class="form-group row" style="justify-content: flex-end;">
+		<label for="" class="col-sm-2 col-form-label">Name</label>
+		<div class="col-sm-4">
+			<input class="form-control search-modal__name" type="text" placeholder="" value=""/>
+			</div>
+			<label for="" class="col-sm-2 col-form-label">phone</label>
+			<div class="col-sm-4">
+				<input class="form-control search-modal__phone" type="text" placeholder="" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{3,4}" maxlength="13"/>
+				<input class="form-control search-modal__phone__clone" type="hidden" placeholder="" value="" style="display: none;"/>
+			</div>
+		</div>
+	`)
+	$('.search-modal').find('.search-modal__name').val(nameInModal)
+	
+});
+
+
+
+
+//처음 예약 확인 클릭 시 inner setting
+function headerInitModal(){
+	dataArr.length = 0;
+	$('.search-modal').empty();
+	bookingInit()
 }
 
 //검색 후 데이터 있을 시 테이블 생성
@@ -560,28 +598,28 @@ function searchedSpecificData(data, dataArr){
 	//console.log(data[0][0])
 	if(data[0][0].paymentFlg === '0' && data[0][0].cancelFlg === '0' && data[0][0].deleteFlg === '0'){
 		$('.search-modal').find('.search-modal-body').find('.headModal-secondTr').append(
-			'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제대기중</label>'+
+			'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">決済待機中</label>'+
 			'<div class="col-sm-2"><button type="button" class="btn btn-success search-modalPaymentBtn">결제</button></div>'
 		);
 		buttonFlgSetting(data)
 	}
 	if(data[0][0].paymentFlg === '1'){
 		$('.search-modal').find('.search-modal-body').find('.headModal-secondTr').append(
-			'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">결제완료</label>'+
+			'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">決済完了</label>'+
 			'<div class="col-sm-2"><button type="button" class="btn btn-danger search-modalCancelBtn">주문취소</button></div>'
 		);
 		buttonFlgSetting(data)
 	}
 	if(data[0][0].cancelFlg === '1' && data[0][0].paymentFlg === '0'){
 		$('.search-modal').find('.search-modal-body').find('.headModal-secondTr').append(
-			'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">취소됨</label>'+
+			'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">取り消し</label>'+
 			'<div class="col-sm-2"><button type="button" class="btn btn-danger search-modalDeleteBtn">삭제</button><button type="button" class="btn btn-success search-modalPaymentBtn">결제</button></div>'
 		);
 		buttonFlgSetting(data)
 	}
 	if(data[0][0].deleteFlg === '1'){
 		$('.search-modal').find('.search-modal-body').find('.headModal-secondTr').append(
-			'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">삭제됨</label>'+
+			'<label for="" class="col-sm-1 col-form-label" style="background-color: #dfe6e9;border-radius: 5px;">Status</label><label for="" class="col-sm-2 col-form-label">削除</label>'+
 			'<div class="col-sm-2"></div>'
 		);
 		buttonFlgSetting(data)
@@ -664,13 +702,15 @@ $('.search-modal').on('click', '.close' , function(){
 	$('.search-modal').modal('hide');
 });
 
-$('.search-modal').on('keyup', '.search-modal__phone', function(key){
+$('.search-modal').on('keyup', '.search-modal__phone, .search-modal__orderNo', function(key){
 		if(key.keyCode == 13)
 			$('.search-modalSearchBtn').click();
 });
 $('.search-modal').on('click', '.search-modalSearchBtn, .search-modalListBtn' , function(){
+	console.log($('.search-modal').find('.search-modal__orderNo').val())
 	if($('.search-modal').find('.search-modal__name').val() !== undefined){
 		reserve = {
+				roomNo: $('.search-modal').find('.search-modal__orderNo').val()!=='undefined'?$('.search-modal').find('.search-modal__orderNo').val():'0',
 				name: $('.search-modal').find('.search-modal__name').val(),
 				phone: $('.search-modal').find('.search-modal__phone__clone').val(),
 				page: '1',
@@ -684,6 +724,14 @@ $('.search-modal').on('click', '.search-modalSearchBtn, .search-modalListBtn' , 
 		$('.search-modal__phone').focus();
 		return false;
 	}
+	if($('input[name="orderCheck"]:checked').val() === '1'){
+	} else {
+		if($('.search-modal__orderNo').val()==''){
+			$('.search-modal__orderNo').focus();
+			return false;
+		}
+	}
+	
 	let searchmodalListBtn = $(this)
 	$('.search-modal').find('.search-modal-content').find('.modal-calendar').empty();
 	$('.search-modal').find('.search-modal-body').empty();
@@ -696,6 +744,7 @@ $('.search-modal').on('click', '.search-modalSearchBtn, .search-modalListBtn' , 
 		dataType: 'json',
 		success: function(datas){
 			console.log(reserve)
+			console.log(datas)
 			if(searchmodalListBtn.hasClass('search-modalListBtn')){
 				dataArr.length = 0;
 				bodyGetDataModal(datas, reserve);
@@ -717,7 +766,18 @@ $('.search-modal').on('click', '.search-modalSearchBtn, .search-modalListBtn' , 
 				$('.toast').css('right','2%');
 				$('.toast').toast('show')
 				$('.toast-body').text("일치하는 사용자가 없습니다.");
+				
 				$('.mr-auto').text("Fail");
+				if($('input[name="orderCheck"]:checked').val() === '1'){
+					$('.search-modal').empty();
+					bookingInit();
+					$('.namePhone').click();
+				} else {
+					$('.search-modal').empty();
+					bookingInit();
+					$('.orderNo').click();
+				}
+				nameInModal='';
 				$('.search-modal').find('.search-modal__name').val('');
 				$('.search-modal').find('.search-modal__name').select();
 				$('.search-modal').find('.search-modal__phone').val('')
@@ -760,6 +820,7 @@ $('.search-modal').on('click', 'td', function(){
 	let reserveAndPage = {
 			name: reserve.name,
 			phone: reserve.phone,
+			no: $('.search-modal').find('.search-modal__orderNo').val()!=='undefined'?$('.search-modal').find('.search-modal__orderNo').val():'0',
 		}
 		//console.log(reserveAndPage);
 		$.ajax({
@@ -888,8 +949,11 @@ $('.search-modal').on('click','.search-modal-body .btn', function(){
 			searchedSpecificData(datas, dataArr)
 			initheadCaledarModal(amount, dataArr, datas);
 		}
-	}); 
+	});
+	
 });
+
+
 
 
 </script>

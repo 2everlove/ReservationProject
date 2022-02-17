@@ -40,6 +40,12 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 			+ "where r.name = :name and r.phone = :phone and r.deleteFlg = :deleteFlg and i.deleteFlg = 0 order by to_date(r.startDate,'yyyy/mm/dd')")
 	Page<Object[]> findReserveByNameAndPhoneAndDeleteFlg(@Param("name") String name, @Param("phone") String phone, @Param("deleteFlg") String deleteFlg, Pageable pageable);
 	
+	//이름,에약번호로 예약 검색 with page
+	@Query("select i, r from RoomInfo i "
+			+ "left join Reserve r on r.roomNo.no = i "
+			+ "where r.name = :name and r.no = :reserveNo and r.deleteFlg = :deleteFlg order by to_date(r.startDate,'yyyy/mm/dd')")
+	Page<Object[]> findReserveByNameAndReserveNo(@Param("name") String name, @Param("reserveNo") Long reserveNo, @Param("deleteFlg") String deleteFlg, Pageable pageable);
+	
 	//예약번호로 예약 검색 with page for admin
 	@Query("select i, r from RoomInfo i "
 			+ "left join Reserve r on r.roomNo.no = i "
@@ -49,6 +55,10 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long>, Queryds
 	//이름,폰,에약 번호로 예약 검색
 	@Query("select i,r from RoomInfo i left join Reserve r on r.roomNo.no = i where r.name = :name and r.phone = :phone and r.no = :reserveNo and i.deleteFlg = 0")
 	List<Object[]> findReserveByNameAndPhone(@Param("name") String name, @Param("phone") String phone, @Param("reserveNo") Long reserveNo);
+	
+	//이름,폰,에약 번호로 예약 검색
+	@Query("select i,r from RoomInfo i left join Reserve r on r.roomNo.no = i where r.name = :name and r.no = :reserveNo and i.deleteFlg = 0")
+	List<Object[]> findReserveByNameAndPhone(@Param("name") String name, @Param("reserveNo") Long reserveNo);
 	
 	//주문번호로 예약 검색
 	@Query("select i,r from RoomInfo i left join Reserve r on r.roomNo.no = i where r.no = :reserveNo and i.deleteFlg = 0")
